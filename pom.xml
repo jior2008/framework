@@ -5,7 +5,7 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>com.glaf</groupId>
-	<artifactId>glaf_framework</artifactId>
+	<artifactId>glaf-framework</artifactId>
 	<version>1.0.0</version>
 	<packaging>jar</packaging>
 
