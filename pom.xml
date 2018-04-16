@@ -5,12 +5,12 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>com.glaf</groupId>
-	<artifactId>glaf_app</artifactId>
-	<version>1.0.1</version>
+	<artifactId>glaf_framework</artifactId>
+	<version>1.0.0</version>
 	<packaging>jar</packaging>
 
-	<name>MyApplication</name>
-	<description>Demo project for Spring Boot</description>
+	<name>framework</name>
+	<description>Framework project for Spring Boot</description>
 
 	<parent>
 		<groupId>org.springframework.boot</groupId>
