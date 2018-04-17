@@ -18,7 +18,10 @@
 
 package com.glaf.framework.system.config;
 
-import java.util.*;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -31,11 +34,10 @@ import com.alibaba.fastjson.JSONObject;
 import com.glaf.core.config.Environment;
 import com.glaf.core.config.SystemProperties;
 import com.glaf.core.context.ContextFactory;
-
 import com.glaf.core.util.DateUtils;
 import com.glaf.core.util.StringTools;
 import com.glaf.framework.system.domain.SystemProperty;
-import com.glaf.framework.system.domain.util.SystemPropertyJsonFactory;
+import com.glaf.framework.system.factory.SystemPropertyJsonFactory;
 import com.glaf.framework.system.service.ISystemPropertyService;
 
 public class SystemConfig {

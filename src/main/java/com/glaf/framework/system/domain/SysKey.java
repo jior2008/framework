@@ -38,7 +38,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import com.glaf.core.base.*;
 
 import com.glaf.core.util.*;
-import com.glaf.framework.system.domain.util.SysKeyJsonFactory;
+import com.glaf.framework.system.factory.SysKeyJsonFactory;
 
 /**
  * 

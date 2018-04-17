@@ -34,7 +34,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.glaf.core.base.JSONable;
-import com.glaf.framework.system.domain.util.SystemPropertyJsonFactory;
+import com.glaf.framework.system.factory.SystemPropertyJsonFactory;
 
 @Entity
 @Table(name = "SYS_PROPERTY")

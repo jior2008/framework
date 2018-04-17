@@ -82,6 +82,19 @@ public class SystemProperties {
 		return null;
 	}
 
+	/**
+	 * 获取主数据库数据源配置文件
+	 * 
+	 * @return
+	 */
+	public static String getMasterDataSourceConfigFile() {
+		String deploymentSystemName = getDeploymentSystemName();
+		if (deploymentSystemName != null && deploymentSystemName.length() > 0) {
+			return Constants.DEPLOYMENT_JDBC_PATH + deploymentSystemName + "/jdbc.properties";
+		}
+		return Constants.DEFAULT_MASTER_JDBC_CONFIG;
+	}
+
 	public static String getRegionName(String region) {
 		if (getDeploymentSystemName() != null) {
 			return getDeploymentSystemName() + "_" + region;

@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-package com.glaf.framework.system.domain.util;
+package com.glaf.framework.system.factory;
 
 import com.alibaba.fastjson.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
