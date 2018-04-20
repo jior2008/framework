@@ -21,6 +21,7 @@ import com.alibaba.druid.pool.DruidDataSource;
 import com.alibaba.druid.support.http.StatViewServlet;
 import com.alibaba.druid.support.http.WebStatFilter;
 import com.glaf.core.jdbc.DBConnectionFactory;
+import com.glaf.framework.system.factory.DatabaseFactory;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -118,6 +119,13 @@ public class DruidConfig {
 
 		DBConnectionFactory.setDatabaseType(DBConnectionFactory.getDatabaseType(this.dbUrl));
 		com.glaf.core.config.Environment.setDatabaseType(DBConnectionFactory.getDatabaseType(this.dbUrl));
+
+		logger.info("数据库连接已经成功.");
+		try {
+			DatabaseFactory.getInstance().reload();
+		} catch (java.lang.Throwable ex) {
+			ex.printStackTrace();
+		}
 
 		return datasource;
 	}
