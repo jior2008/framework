@@ -25,33 +25,32 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
- 
 import com.glaf.core.security.LoginContext;
- 
 
-@SuppressWarnings("rawtypes")
 public class BaseQuery extends AbstractQuery<Object> {
 	private static final long serialVersionUID = 1L;
 	protected String actorId;
-	protected List<String> actorIds = new java.util.concurrent.CopyOnWriteArrayList<String>();
-	protected List<String> businessKeys = new java.util.concurrent.CopyOnWriteArrayList<String>();
+	protected String tenantId;
+	protected List<String> actorIds = new java.util.ArrayList<String>();
+	protected List<String> businessKeys = new java.util.ArrayList<String>();
 	protected String createBy;
+	protected Date createDate;
 	protected boolean isFilterPermission = true;
 	protected boolean isInitialized = false;
 	protected boolean isOwner = false;
 	protected Integer locked;
+	protected Integer deleteFlag;
 	protected LoginContext loginContext;
 	protected String orderBy;
 	protected int pageNo;
 	protected int pageSize;
 	protected Object parameter;
-	protected List rowIds = new java.util.concurrent.CopyOnWriteArrayList();
 	protected String serviceKey;
+	protected String sortColumn;
 	protected String sortField;
 	protected String sortOrder;
 	protected Date afterCreateDate;
 	protected Date beforeCreateDate;
-
 
 	public BaseQuery() {
 
@@ -102,6 +101,19 @@ public class BaseQuery extends AbstractQuery<Object> {
 			throw new RuntimeException("createBy is null");
 		}
 		this.createBy = createBy;
+		return this;
+	}
+
+	public BaseQuery createDate(Date createDate) {
+		if (createDate == null) {
+			throw new RuntimeException("createDate is null");
+		}
+		this.createDate = createDate;
+		return this;
+	}
+
+	public BaseQuery deleteFlag(Integer deleteFlag) {
+		this.deleteFlag = deleteFlag;
 		return this;
 	}
 
@@ -161,8 +173,6 @@ public class BaseQuery extends AbstractQuery<Object> {
 		return beforeCreateDate;
 	}
 
-
-
 	public List<String> getBusinessKeys() {
 		return businessKeys;
 	}
@@ -171,7 +181,9 @@ public class BaseQuery extends AbstractQuery<Object> {
 		return createBy;
 	}
 
-	
+	public Integer getDeleteFlag() {
+		return deleteFlag;
+	}
 
 	public Integer getLocked() {
 		return locked;
@@ -204,17 +216,16 @@ public class BaseQuery extends AbstractQuery<Object> {
 		return pageNo;
 	}
 
-
 	public Object getParameter() {
 		return parameter;
 	}
 
-	public List getRowIds() {
-		return rowIds;
-	}
-
 	public String getServiceKey() {
 		return serviceKey;
+	}
+
+	public String getSortColumn() {
+		return sortColumn;
 	}
 
 	public String getSortField() {
@@ -223,6 +234,10 @@ public class BaseQuery extends AbstractQuery<Object> {
 
 	public String getSortOrder() {
 		return sortOrder;
+	}
+
+	public String getTenantId() {
+		return tenantId;
 	}
 
 	public boolean isFilterPermission() {
@@ -235,14 +250,6 @@ public class BaseQuery extends AbstractQuery<Object> {
 
 	public BaseQuery locked(Integer locked) {
 		this.locked = locked;
-		return this;
-	}
-
-	public BaseQuery rowIds(List rowIds) {
-		if (rowIds == null) {
-			throw new RuntimeException("rowIds is null");
-		}
-		this.rowIds = rowIds;
 		return this;
 	}
 
@@ -278,6 +285,10 @@ public class BaseQuery extends AbstractQuery<Object> {
 		this.createBy = createBy;
 	}
 
+	public void setDeleteFlag(Integer deleteFlag) {
+		this.deleteFlag = deleteFlag;
+	}
+
 	public void setLocked(Integer locked) {
 		this.locked = locked;
 	}
@@ -306,12 +317,12 @@ public class BaseQuery extends AbstractQuery<Object> {
 		this.parameter = parameter;
 	}
 
-	public void setRowIds(List rowIds) {
-		this.rowIds = rowIds;
-	}
-
 	public void setServiceKey(String serviceKey) {
 		this.serviceKey = serviceKey;
+	}
+
+	public void setSortColumn(String sortColumn) {
+		this.sortColumn = sortColumn;
 	}
 
 	public void setSortField(String sortField) {
@@ -320,6 +331,18 @@ public class BaseQuery extends AbstractQuery<Object> {
 
 	public void setSortOrder(String sortOrder) {
 		this.sortOrder = sortOrder;
+	}
+
+	public void setTenantId(String tenantId) {
+		this.tenantId = tenantId;
+	}
+
+	public BaseQuery tenantId(String tenantId) {
+		if (tenantId == null) {
+			throw new RuntimeException("tenantId is null");
+		}
+		this.tenantId = tenantId;
+		return this;
 	}
 
 	public String toString() {

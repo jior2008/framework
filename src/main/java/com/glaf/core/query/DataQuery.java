@@ -26,9 +26,6 @@ import java.util.List;
 public class DataQuery extends BaseQuery {
 	private static final long serialVersionUID = 1L;
 	protected String businessKey;
-	protected Date createDate;
-	protected Integer deleteFlag;
-	protected String formName;
 	protected String objectId;
 	protected String objectValue;
 	protected Long parentId;
@@ -40,13 +37,11 @@ public class DataQuery extends BaseQuery {
 	protected String processName;
 	protected String processNameLike;
 	protected List<String> processNames;
-	protected String sortColumn;
 	protected Integer status;
 	protected Integer statusGreaterThanOrEqual;
 	protected Integer statusLessThanOrEqual;
 	protected Integer statusNotEqual;
 	protected List taskInstanceIds = new ArrayList();
-	protected String tenantId;
 	protected String treeId;
 	protected String treeIdLike;
 	protected Integer wfStatus;
@@ -67,19 +62,6 @@ public class DataQuery extends BaseQuery {
 		return this;
 	}
 
-	public DataQuery createDate(Date createDate) {
-		if (createDate == null) {
-			throw new RuntimeException("createDate is null");
-		}
-		this.createDate = createDate;
-		return this;
-	}
-
-	public DataQuery deleteFlag(Integer deleteFlag) {
-		this.deleteFlag = deleteFlag;
-		return this;
-	}
-
 	public void ensureInitialized() {
 		super.ensureInitialized();
 
@@ -95,14 +77,6 @@ public class DataQuery extends BaseQuery {
 
 	public Date getCreateDate() {
 		return createDate;
-	}
-
-	public Integer getDeleteFlag() {
-		return deleteFlag;
-	}
-
-	public String getFormName() {
-		return formName;
 	}
 
 	public String getObjectId() {
@@ -145,10 +119,6 @@ public class DataQuery extends BaseQuery {
 		return processNames;
 	}
 
-	public String getSortColumn() {
-		return sortColumn;
-	}
-
 	public Integer getStatus() {
 		return status;
 	}
@@ -167,10 +137,6 @@ public class DataQuery extends BaseQuery {
 
 	public List getTaskInstanceIds() {
 		return taskInstanceIds;
-	}
-
-	public String getTenantId() {
-		return tenantId;
 	}
 
 	public String getTreeId() {
@@ -288,18 +254,6 @@ public class DataQuery extends BaseQuery {
 		this.businessKey = businessKey;
 	}
 
-	public void setCreateDate(Date createDate) {
-		this.createDate = createDate;
-	}
-
-	public void setDeleteFlag(Integer deleteFlag) {
-		this.deleteFlag = deleteFlag;
-	}
-
-	public void setFormName(String formName) {
-		this.formName = formName;
-	}
-
 	public void setObjectId(String objectId) {
 		this.objectId = objectId;
 	}
@@ -348,10 +302,6 @@ public class DataQuery extends BaseQuery {
 		this.processNames = processNames;
 	}
 
-	public void setSortColumn(String sortColumn) {
-		this.sortColumn = sortColumn;
-	}
-
 	public void setStatus(Integer status) {
 		this.status = status;
 	}
@@ -370,10 +320,6 @@ public class DataQuery extends BaseQuery {
 
 	public void setTaskInstanceIds(List taskInstanceIds) {
 		this.taskInstanceIds = taskInstanceIds;
-	}
-
-	public void setTenantId(String tenantId) {
-		this.tenantId = tenantId;
 	}
 
 	public void setTreeId(String treeId) {
@@ -430,14 +376,6 @@ public class DataQuery extends BaseQuery {
 			throw new RuntimeException("status is null");
 		}
 		this.statusNotEqual = statusNotEqual;
-		return this;
-	}
-
-	public DataQuery tenantId(String tenantId) {
-		if (tenantId == null) {
-			throw new RuntimeException("tenantId is null");
-		}
-		this.tenantId = tenantId;
 		return this;
 	}
 
