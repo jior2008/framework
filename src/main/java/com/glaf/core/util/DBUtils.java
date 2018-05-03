@@ -2161,15 +2161,15 @@ public class DBUtils {
 		boolean exists = false;
 		try {
 			dbmd = connection.getMetaData();
-			rs = dbmd.getTables(null, null, null, new String[] { "TABLE" });
+			rs = dbmd.getTables(null, null, "", new String[] { "TABLE" });
 			while (rs.next()) {
 				String table = rs.getString("TABLE_NAME");
+				//logger.debug("table:"+table);
 				if (StringUtils.equalsIgnoreCase(tableName, table)) {
 					exists = true;
 				}
 			}
 		} catch (Exception ex) {
-
 			throw new RuntimeException(ex);
 		} finally {
 			JdbcUtils.close(rs);
@@ -2190,7 +2190,6 @@ public class DBUtils {
 			conn = DBConnectionFactory.getConnection();
 			return tableExists(conn, tableName);
 		} catch (Exception ex) {
-
 			throw new RuntimeException(ex);
 		} finally {
 			JdbcUtils.close(conn);

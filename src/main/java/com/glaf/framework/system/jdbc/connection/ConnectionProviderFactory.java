@@ -52,7 +52,6 @@ public final class ConnectionProviderFactory {
 
 	static {
 		SPECIAL_PROPERTIES = new HashSet<String>();
-		SPECIAL_PROPERTIES.add(DBConfiguration.JDBC_DATASOURCE);
 		SPECIAL_PROPERTIES.add(DBConfiguration.JDBC_URL);
 		SPECIAL_PROPERTIES.add(DBConfiguration.JDBC_DRIVER);
 		SPECIAL_PROPERTIES.add(DBConfiguration.JDBC_ISOLATION);
@@ -97,10 +96,10 @@ public final class ConnectionProviderFactory {
 
 	private static boolean c3p0ProviderPresent() {
 		try {
-			ClassUtils.classForName("com.glaf.core.jdbc.connection.C3P0ConnectionProvider");
+			ClassUtils.classForName("com.glaf.framework.system.jdbc.connection.C3P0ConnectionProvider");
 		} catch (Exception e) {
 			log.warn(
-					"c3p0 properties is specificed, but could not find com.glaf.core.jdbc.connection.C3P0ConnectionProvider from the classpath, "
+					"c3p0 properties is specificed, but could not find com.glaf.framework.system.jdbc.connection.C3P0ConnectionProvider from the classpath, "
 							+ "these properties are going to be ignored.");
 			return false;
 		}
@@ -109,10 +108,10 @@ public final class ConnectionProviderFactory {
 
 	private static boolean druidProviderPresent() {
 		try {
-			ClassUtils.classForName("com.glaf.core.jdbc.connection.DruidConnectionProvider");
+			ClassUtils.classForName("com.glaf.framework.system.jdbc.connection.DruidConnectionProvider");
 		} catch (Exception e) {
 			log.warn(
-					"druid properties is specificed, but could not find com.glaf.core.jdbc.connection.DruidConnectionProvider from the classpath, "
+					"druid properties is specificed, but could not find com.glaf.framework.system.jdbc.connection.DruidConnectionProvider from the classpath, "
 							+ "these properties are going to be ignored.");
 			return false;
 		}
@@ -145,13 +144,13 @@ public final class ConnectionProviderFactory {
 		if (providerClass != null) {
 			provider = initializeConnectionProviderFromConfig(providerClass);
 		} else if (c3p0ConfigDefined(properties) && c3p0ProviderPresent()) {
-			provider = initializeConnectionProviderFromConfig("com.glaf.core.jdbc.connection.C3P0ConnectionProvider");
+			provider = initializeConnectionProviderFromConfig("com.glaf.framework.system.jdbc.connection.C3P0ConnectionProvider");
 		} else if (druidConfigDefined(properties) && druidProviderPresent()) {
-			provider = initializeConnectionProviderFromConfig("com.glaf.core.jdbc.connection.DruidConnectionProvider");
+			provider = initializeConnectionProviderFromConfig("com.glaf.framework.system.jdbc.connection.DruidConnectionProvider");
 		}
 
 		if (provider == null) {
-			provider = initializeConnectionProviderFromConfig("com.glaf.core.jdbc.connection.DruidConnectionProvider");
+			provider = initializeConnectionProviderFromConfig("com.glaf.framework.system.jdbc.connection.DruidConnectionProvider");
 			if (StringUtils.equals(properties.getProperty(DBConfiguration.JDBC_DRIVER), "org.sqlite.JDBC")) {
 				provider = initializeConnectionProviderFromConfig(
 						"com.glaf.core.jdbc.connection.C3P0ConnectionProvider");

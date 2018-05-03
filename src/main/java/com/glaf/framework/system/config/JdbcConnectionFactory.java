@@ -23,7 +23,6 @@ import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
 import java.util.Properties;
 
-import javax.naming.InitialContext;
 import javax.sql.DataSource;
 
 import org.apache.commons.lang3.StringUtils;
@@ -72,15 +71,9 @@ public class JdbcConnectionFactory {
 	public static boolean checkConnection(java.util.Properties props) {
 		Connection connection = null;
 		try {
-			if (StringUtils.isNotEmpty(props.getProperty(DBConfiguration.JDBC_DATASOURCE))) {
-				InitialContext ctx = new InitialContext();
-				DataSource ds = (DataSource) ctx.lookup(props.getProperty(DBConfiguration.JDBC_DATASOURCE));
-				connection = ds.getConnection();
-			} else {
-				ConnectionProvider provider = ConnectionProviderFactory.createProvider(props);
-				if (provider != null) {
-					connection = provider.getConnection();
-				}
+			ConnectionProvider provider = ConnectionProviderFactory.createProvider(props);
+			if (provider != null) {
+				connection = provider.getConnection();
 			}
 			if (connection != null) {
 				return true;
@@ -103,15 +96,9 @@ public class JdbcConnectionFactory {
 			Properties props = DBConfiguration.getDataSourcePropertiesByName(systemName);
 			logger.debug("props:" + props);
 			if (props != null) {
-				if (StringUtils.isNotEmpty(props.getProperty(DBConfiguration.JDBC_DATASOURCE))) {
-					InitialContext ctx = new InitialContext();
-					DataSource ds = (DataSource) ctx.lookup(props.getProperty(DBConfiguration.JDBC_DATASOURCE));
-					connection = ds.getConnection();
-				} else {
-					ConnectionProvider provider = ConnectionProviderFactory.createProvider(systemName);
-					if (provider != null) {
-						connection = provider.getConnection();
-					}
+				ConnectionProvider provider = ConnectionProviderFactory.createProvider(systemName);
+				if (provider != null) {
+					connection = provider.getConnection();
 				}
 			} else {
 				// DataSource ds = ContextFactory.getBean("dataSource");
@@ -139,22 +126,16 @@ public class JdbcConnectionFactory {
 		Connection connection = null;
 		try {
 			if (props != null) {
-				if (StringUtils.isNotEmpty(props.getProperty(DBConfiguration.JDBC_DATASOURCE))) {
-					InitialContext ctx = new InitialContext();
-					DataSource ds = (DataSource) ctx.lookup(props.getProperty(DBConfiguration.JDBC_DATASOURCE));
-					connection = ds.getConnection();
+				String systemName = props.getProperty(DBConfiguration.JDBC_NAME);
+				if (StringUtils.isNotEmpty(systemName)) {
+					ConnectionProvider provider = ConnectionProviderFactory.createProvider(systemName);
+					if (provider != null) {
+						connection = provider.getConnection();
+					}
 				} else {
-					String systemName = props.getProperty(DBConfiguration.JDBC_NAME);
-					if (StringUtils.isNotEmpty(systemName)) {
-						ConnectionProvider provider = ConnectionProviderFactory.createProvider(systemName);
-						if (provider != null) {
-							connection = provider.getConnection();
-						}
-					} else {
-						ConnectionProvider provider = ConnectionProviderFactory.createProvider(props);
-						if (provider != null) {
-							connection = provider.getConnection();
-						}
+					ConnectionProvider provider = ConnectionProviderFactory.createProvider(props);
+					if (provider != null) {
+						connection = provider.getConnection();
 					}
 				}
 			}
@@ -177,15 +158,9 @@ public class JdbcConnectionFactory {
 		try {
 			Properties props = DBConfiguration.getDataSourcePropertiesByName(systemName);
 			if (props != null) {
-				if (StringUtils.isNotEmpty(props.getProperty(DBConfiguration.JDBC_DATASOURCE))) {
-					InitialContext ctx = new InitialContext();
-					DataSource ds = (DataSource) ctx.lookup(props.getProperty(DBConfiguration.JDBC_DATASOURCE));
-					connection = ds.getConnection();
-				} else {
-					ConnectionProvider provider = ConnectionProviderFactory.createProvider(systemName);
-					if (provider != null) {
-						connection = provider.getConnection();
-					}
+				ConnectionProvider provider = ConnectionProviderFactory.createProvider(systemName);
+				if (provider != null) {
+					connection = provider.getConnection();
 				}
 			} else {
 				// DataSource ds = ContextFactory.getBean("dataSource");
@@ -285,14 +260,9 @@ public class JdbcConnectionFactory {
 		try {
 			Properties props = DBConfiguration.getDataSourcePropertiesByName(systemName);
 			if (props != null) {
-				if (StringUtils.isNotEmpty(props.getProperty(DBConfiguration.JDBC_DATASOURCE))) {
-					InitialContext ctx = new InitialContext();
-					dataSource = (DataSource) ctx.lookup(props.getProperty(DBConfiguration.JDBC_DATASOURCE));
-				} else {
-					ConnectionProvider provider = ConnectionProviderFactory.createProvider(systemName);
-					if (provider != null) {
-						dataSource = provider.getDataSource();
-					}
+				ConnectionProvider provider = ConnectionProviderFactory.createProvider(systemName);
+				if (provider != null) {
+					dataSource = provider.getDataSource();
 				}
 			}
 			return dataSource;

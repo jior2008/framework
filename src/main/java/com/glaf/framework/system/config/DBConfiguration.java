@@ -65,32 +65,30 @@ public class DBConfiguration {
 
 	public static final String DIALECT = "dialect";
 
-	public static final String JDBC_PROVIDER = "jdbc.provider";
+	public static final String JDBC_PROVIDER = "spring.datasource.provider";
 
-	public static final String JDBC_AUTOCOMMIT = "jdbc.autocommit";
+	public static final String JDBC_AUTOCOMMIT = "spring.datasource.autocommit";
 
-	public static final String JDBC_TYPE = "jdbc.type";
+	public static final String JDBC_TYPE = "spring.datasource.type";
 
-	public static final String JDBC_NAME = "jdbc.name";
+	public static final String JDBC_NAME = "spring.datasource.name";
 
-	public static final String JDBC_PREFIX = "jdbc";
+	public static final String JDBC_PREFIX = "spring.datasource";
 
-	public static final String JDBC_DATASOURCE = "jdbc.datasource";
+	public static final String JDBC_URL = "spring.datasource.url";
 
-	public static final String JDBC_URL = "jdbc.url";
+	public static final String JDBC_USER = "spring.datasource.username";
 
-	public static final String JDBC_USER = "jdbc.user";
+	public static final String JDBC_DRIVER = "spring.datasource.driverClassName";
 
-	public static final String JDBC_DRIVER = "jdbc.driver";
+	public static final String JDBC_PASSWORD = "spring.datasource.password";
 
-	public static final String JDBC_PASSWORD = "jdbc.password";
-
-	public static final String JDBC_ISOLATION = "jdbc.isolation";
+	public static final String JDBC_ISOLATION = "spring.datasource.isolation";
 
 	/**
-	 * 连接池类型，支持druid,C3P0,DBCP,TomcatJdbc,默认是druid
+	 * 连接池类型，支持druid,C3P0,DBCP,默认是druid
 	 */
-	public static final String JDBC_POOL_TYPE = "jdbc.pool_type";
+	public static final String JDBC_POOL_TYPE = "spring.datasource.pool_type";
 
 	public static final String HOST = "host";
 
@@ -605,14 +603,6 @@ public class DBConfiguration {
 		}
 	}
 
-	public static boolean isJndiDataSource(String systemName) {
-		Properties props = getDataSourcePropertiesByName(systemName);
-		if (props != null && StringUtils.isNotEmpty(props.getProperty(JDBC_DATASOURCE))) {
-			return true;
-		}
-		return false;
-	}
-
 	public static String isolationLevelToString(int isolation) {
 		return (String) ISOLATION_LEVELS.get(new Integer(isolation));
 	}
@@ -805,7 +795,7 @@ public class DBConfiguration {
 	public static ConnectionDefinition toConnectionDefinition(Properties props) {
 		if (props != null && !props.isEmpty()) {
 			ConnectionDefinition model = new ConnectionDefinition();
-			model.setDatasource(props.getProperty(JDBC_DATASOURCE));
+
 			model.setDriver(props.getProperty(JDBC_DRIVER));
 			model.setUrl(props.getProperty(JDBC_URL));
 			model.setName(props.getProperty(JDBC_NAME));
@@ -847,9 +837,7 @@ public class DBConfiguration {
 			if (conn.getSubject() != null) {
 				props.setProperty(SUBJECT, conn.getSubject());
 			}
-			if (conn.getDatasource() != null) {
-				props.setProperty(JDBC_DATASOURCE, conn.getDatasource());
-			}
+
 			if (conn.getName() != null) {
 				props.setProperty(JDBC_NAME, conn.getName());
 			}

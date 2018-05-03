@@ -79,7 +79,7 @@ public final class Constants {
 	 */
 	public final static int DB_PARTITION = 32;
 
-	public static final String DEFAULT_MASTER_JDBC_CONFIG = "/conf/jdbc.properties";
+	public static final String DEFAULT_MASTER_JDBC_CONFIG = "/jdbc.properties";
 
 	public static final String DEPLOYMENT_JDBC_PATH = "/conf/deployment/";
 

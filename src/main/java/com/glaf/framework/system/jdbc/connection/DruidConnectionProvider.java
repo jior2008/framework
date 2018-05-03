@@ -37,6 +37,7 @@ import com.glaf.core.config.BaseConfiguration;
 import com.glaf.core.config.Configuration;
 import com.glaf.core.util.PropertiesHelper;
 import com.glaf.core.util.ReflectUtils;
+import com.glaf.framework.system.config.DBConfiguration;
 
 /**
  * Druid连接池基本属性配置 druid.minPoolSize=5 druid.maxPoolSize=50
@@ -84,12 +85,12 @@ public class DruidConnectionProvider implements ConnectionProvider {
 		Properties connectionProps = ConnectionProviderFactory.getConnectionProperties(properties);
 		log.info("Connection properties: " + PropertiesHelper.maskOut(connectionProps, "password"));
 
-		String jdbcDriverClass = properties.getProperty("jdbc.driver");
-		String jdbcUrl = properties.getProperty("jdbc.url");
+		String jdbcDriverClass = properties.getProperty(DBConfiguration.JDBC_DRIVER);
+		String jdbcUrl = properties.getProperty(DBConfiguration.JDBC_URL);
 
 		log.info("Druid using driver: " + jdbcDriverClass + " at URL: " + jdbcUrl);
 
-		autocommit = PropertiesHelper.getBoolean("jdbc.autocommit", properties);
+		autocommit = PropertiesHelper.getBoolean(DBConfiguration.JDBC_AUTOCOMMIT, properties);
 		log.info("autocommit mode: " + autocommit);
 
 		if (jdbcDriverClass == null) {
@@ -116,8 +117,8 @@ public class DruidConnectionProvider implements ConnectionProvider {
 					.getInteger(ConnectionConstants.PROP_TIMEBETWEENEVICTIONRUNS, properties);
 			Integer maxWait = PropertiesHelper.getInteger(ConnectionConstants.PROP_MAXWAIT, properties);
 			String validationQuery = properties.getProperty(ConnectionConstants.PROP_VALIDATIONQUERY);
-			String dbUser = properties.getProperty("jdbc.user");
-			String dbPassword = properties.getProperty("jdbc.password");
+			String dbUser = properties.getProperty(DBConfiguration.JDBC_USER);
+			String dbPassword = properties.getProperty(DBConfiguration.JDBC_PASSWORD);
 
 			if (maxPoolSize == null) {
 				maxPoolSize = 50;
@@ -185,7 +186,7 @@ public class DruidConnectionProvider implements ConnectionProvider {
 			throw new RuntimeException("Could not instantiate Druid connection pool", ex);
 		}
 
-		String i = properties.getProperty("jdbc.isolation");
+		String i = properties.getProperty(DBConfiguration.JDBC_ISOLATION);
 		if (i == null) {
 			isolation = null;
 		} else {
