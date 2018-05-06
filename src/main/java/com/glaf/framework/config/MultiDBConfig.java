@@ -39,6 +39,7 @@ public class MultiDBConfig {
 			DatabaseFactory.getInstance().reload();
 			logger.info("多数据库配置装载完成。");
 		} catch (java.lang.Throwable ex) {
+			logger.error("multi datasource load error", ex);
 			ex.printStackTrace();
 		}
 	}
