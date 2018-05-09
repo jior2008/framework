@@ -660,7 +660,6 @@ public class DBConfiguration {
 					}
 				}
 			} catch (Exception ex) {
-
 				logger.error(ex);
 			} finally {
 				loading.set(false);

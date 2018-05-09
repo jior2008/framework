@@ -18,7 +18,8 @@
 
 package com.glaf.core.config;
 
-import java.io.IOException;
+import java.io.File;
+import java.net.URL;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.springframework.core.io.ClassPathResource;
@@ -107,11 +108,20 @@ public class SystemProperties {
 			try {
 				loading.set(true);
 				Resource resource = new ClassPathResource(Constants.SYSTEM_CONFIG);
-				ROOT_CONF_PATH = resource.getFile().getParentFile().getAbsolutePath();
-				ROOT_APP_PATH = resource.getFile().getParentFile().getAbsolutePath();
-				System.out.println("load system config:" + resource.getFile().getAbsolutePath());
-			} catch (IOException ex) {
-				throw new RuntimeException(ex);
+				if (resource != null) {
+					ROOT_CONF_PATH = resource.getFile().getParentFile().getAbsolutePath();
+					ROOT_APP_PATH = resource.getFile().getParentFile().getAbsolutePath();
+					System.out.println("load system config:" + resource.getFile().getAbsolutePath());
+				}
+			} catch (Exception ex) {
+				ex.printStackTrace();
+				URL url = SystemProperties.class.getResource(Constants.SYSTEM_CONFIG);
+				if (url != null) {
+					File file = new File(url.getFile());
+					ROOT_CONF_PATH = file.getParentFile().getAbsolutePath();
+					ROOT_APP_PATH = file.getParentFile().getAbsolutePath();
+					System.out.println("load system config:" + file.getParentFile().getAbsolutePath());
+				}
 			} finally {
 				loading.set(false);
 			}

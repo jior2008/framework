@@ -38,6 +38,7 @@ import org.slf4j.LoggerFactory;
 import com.glaf.core.base.ConnectionDefinition;
 import com.glaf.core.config.Environment;
 import com.glaf.core.context.ContextFactory;
+import com.glaf.core.jdbc.DBConnectionFactory;
 import com.glaf.core.security.LoginContext;
 import com.glaf.core.security.SecurityUtils;
 import com.glaf.core.util.DBUtils;
@@ -66,7 +67,7 @@ public class DatabaseConnectionConfig implements ConnectionConfig {
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
 		try {
-			conn = JdbcConnectionFactory.getConnection();
+			conn = DBConnectionFactory.getConnection();
 			conn.setAutoCommit(false);
 			if (!DBUtils.tableExists(conn, "SYS_DATABASE")) {
 				DBUtils.createTable(conn, DatabaseDomainFactory.getTableDefinition());
@@ -411,7 +412,7 @@ public class DatabaseConnectionConfig implements ConnectionConfig {
 		Statement stmt = null;
 		ResultSet rs = null;
 		try {
-			conn = JdbcConnectionFactory.getConnection();
+			conn = DBConnectionFactory.getConnection();
 			stmt = conn.createStatement();
 			rs = stmt.executeQuery(" select * from SYS_DATABASE where ACTIVE_ = '1' and TYPE_ <> 'mongodb' ");
 			while (rs.next()) {
@@ -586,7 +587,7 @@ public class DatabaseConnectionConfig implements ConnectionConfig {
 		Connection conn = null;
 		PreparedStatement stmt = null;
 		try {
-			conn = JdbcConnectionFactory.getConnection();
+			conn = DBConnectionFactory.getConnection();
 			conn.setAutoCommit(false);
 			stmt = conn.prepareStatement(" update SYS_DATABASE set VERIFY_ = ? where NAME_ = ? ");
 			if (verify) {

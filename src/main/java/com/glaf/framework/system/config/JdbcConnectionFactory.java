@@ -32,9 +32,9 @@ import org.apache.commons.logging.LogFactory;
 import com.glaf.core.config.BaseConfiguration;
 import com.glaf.core.config.Configuration;
 import com.glaf.core.config.Environment;
-import com.glaf.core.context.ContextFactory;
 import com.glaf.core.jdbc.ConnectionThreadHolder;
 import com.glaf.core.util.JdbcUtils;
+
 import com.glaf.framework.system.jdbc.connection.ConnectionProvider;
 import com.glaf.framework.system.jdbc.connection.ConnectionProviderFactory;
 
@@ -45,28 +45,6 @@ public class JdbcConnectionFactory {
 	protected static Configuration conf = BaseConfiguration.create();
 
 	protected static Properties databaseTypeMappings = getDatabaseTypeMappings();
-
-	public static boolean checkConnection() {
-		Connection connection = null;
-		DataSource ds = null;
-		try {
-			Properties props = DBConfiguration.getDefaultDataSourceProperties();
-			if (props != null) {
-				connection = getConnection(props);
-			} else {
-				ds = ContextFactory.getBean("dataSource");
-				connection = ds.getConnection();
-			}
-			if (connection != null) {
-				return true;
-			}
-		} catch (Exception ex) {
-			logger.error(ex);
-		} finally {
-			JdbcUtils.close(connection);
-		}
-		return false;
-	}
 
 	public static boolean checkConnection(java.util.Properties props) {
 		Connection connection = null;
@@ -116,10 +94,6 @@ public class JdbcConnectionFactory {
 			JdbcUtils.close(connection);
 		}
 		return false;
-	}
-
-	public static Connection getConnection() {
-		return getConnection(Environment.DEFAULT_SYSTEM_NAME);
 	}
 
 	public static Connection getConnection(java.util.Properties props) {
@@ -172,6 +146,7 @@ public class JdbcConnectionFactory {
 			return connection;
 		} catch (Exception ex) {
 			logger.error(ex);
+			ex.printStackTrace();
 			throw new RuntimeException(ex);
 		}
 	}
