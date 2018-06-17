@@ -151,12 +151,13 @@ public final class ConnectionProviderFactory {
 
 		if (provider == null) {
 			provider = initializeConnectionProviderFromConfig("com.glaf.framework.system.jdbc.connection.DruidConnectionProvider");
-			if (StringUtils.equals(properties.getProperty(DBConfiguration.JDBC_DRIVER), "org.sqlite.JDBC")) {
-				provider = initializeConnectionProviderFromConfig(
-						"com.glaf.core.jdbc.connection.C3P0ConnectionProvider");
-			}
 		}
 
+		if (StringUtils.equals(properties.getProperty(DBConfiguration.JDBC_DRIVER), "org.sqlite.JDBC")) {
+			provider = initializeConnectionProviderFromConfig(
+					"com.glaf.core.jdbc.connection.HikariCPConnectionProvider");
+		}
+		
 		if (connectionProviderInjectionData != null && connectionProviderInjectionData.size() != 0) {
 			try {
 				BeanInfo info = Introspector.getBeanInfo(provider.getClass());

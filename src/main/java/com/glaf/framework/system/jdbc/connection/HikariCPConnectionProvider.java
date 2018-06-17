@@ -70,7 +70,8 @@ public class HikariCPConnectionProvider implements ConnectionProvider {
 
 	public void configure(Properties props) throws RuntimeException {
 		Properties properties = new Properties();
-
+		properties.putAll(props);
+		
 		for (Iterator<?> ii = props.keySet().iterator(); ii.hasNext();) {
 			String key = (String) ii.next();
 			properties.put(key, props.get(key));
