@@ -154,6 +154,10 @@
 			<version>1.2.47</version>
 		</dependency>
 		<dependency>
+			<groupId>com.zaxxer</groupId>
+			<artifactId>HikariCP</artifactId>
+		</dependency>
+		<dependency>
 			<groupId>org.javassist</groupId>
 			<artifactId>javassist</artifactId>
 			<version>3.22.0-GA</version>
@@ -170,7 +174,7 @@
 		<dependency>
 			<groupId>net.oschina.j2cache</groupId>
 			<artifactId>j2cache-core</artifactId>
-			<version>2.3.21-release</version>
+			<version>2.3.22-release</version>
 		</dependency>
 		<dependency>
 			<groupId>org.xerial.snappy</groupId>
