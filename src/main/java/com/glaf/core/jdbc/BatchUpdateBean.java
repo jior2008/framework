@@ -27,6 +27,7 @@ import java.sql.Blob;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.sql.Types;
 import java.util.ArrayList;
 import java.util.List;
@@ -41,6 +42,7 @@ import com.glaf.core.model.TableDefinition;
 import com.glaf.core.security.LoginContext;
 import com.glaf.core.util.FileUtils;
 import com.glaf.core.util.JdbcUtils;
+import com.glaf.core.util.LowerLinkedMap;
 import com.glaf.core.util.ParamUtils;
 
 public class BatchUpdateBean {
@@ -72,6 +74,7 @@ public class BatchUpdateBean {
 		int index = 1;
 		String columnName = null;
 		String javaType = null;
+		LowerLinkedMap dataMap = null;
 		PreparedStatement psmt = null;
 		ByteArrayInputStream bais = null;
 		BufferedInputStream bis = null;
@@ -81,7 +84,10 @@ public class BatchUpdateBean {
 			for (int k = 0, l = dataList.size(); k < l; k++) {
 				index = 1;
 				buffer.delete(0, buffer.length());
-				Map<String, Object> dataMap = dataList.get(k);
+				// Map<String, Object> dataMap = dataList.get(k);
+				Map<String, Object> rowMap = dataList.get(k);
+				dataMap = new LowerLinkedMap();
+				dataMap.putAll(rowMap);
 				buffer.append(" update ").append(tableDefinition.getTableName()).append(" set ");
 				for (ColumnDefinition column : cols) {
 					if (dataMap.get(column.getColumnName().toLowerCase()) != null) {
@@ -108,7 +114,12 @@ public class BatchUpdateBean {
 							psmt.setDouble(index++, ParamUtils.getDouble(dataMap, columnName));
 							break;
 						case "Date":
-							psmt.setTimestamp(index++, ParamUtils.getTimestamp(dataMap, columnName));
+							Timestamp t = ParamUtils.getTimestamp(dataMap, columnName);
+							if (t != null) {
+								psmt.setTimestamp(index++, t);
+							} else {
+								psmt.setNull(index++, java.sql.Types.TIMESTAMP);
+							}
 							break;
 						case "String":
 							psmt.setString(index++, ParamUtils.getString(dataMap, columnName));
@@ -206,7 +217,12 @@ public class BatchUpdateBean {
 					psmt.setDouble(index++, ParamUtils.getDouble(dataMap, columnName));
 					break;
 				case "Date":
-					psmt.setTimestamp(index++, ParamUtils.getTimestamp(dataMap, columnName));
+					Timestamp t = ParamUtils.getTimestamp(dataMap, columnName);
+					if (t != null) {
+						psmt.setTimestamp(index++, t);
+					} else {
+						psmt.setNull(index++, java.sql.Types.TIMESTAMP);
+					}
 					break;
 				case "String":
 					psmt.setString(index++, ParamUtils.getString(dataMap, columnName));
@@ -303,7 +319,12 @@ public class BatchUpdateBean {
 						}
 						break;
 					case "Date":
-						psmt.setTimestamp(index++, ParamUtils.getTimestamp(dataMap, columnName));
+						Timestamp t = ParamUtils.getTimestamp(dataMap, columnName);
+						if (t != null) {
+							psmt.setTimestamp(index++, t);
+						} else {
+							psmt.setNull(index++, java.sql.Types.TIMESTAMP);
+						}
 						break;
 					case "String":
 						psmt.setString(index++, ParamUtils.getString(dataMap, columnName));
