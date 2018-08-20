@@ -21,7 +21,6 @@ package com.glaf.framework.system.config;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -30,11 +29,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
-import org.apache.commons.dbcp.BasicDataSource;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.alibaba.druid.pool.DruidDataSource;
 import com.glaf.core.base.ConnectionDefinition;
 import com.glaf.core.config.Environment;
 import com.glaf.core.context.ContextFactory;
@@ -137,7 +136,7 @@ public class DatabaseConnectionConfig implements ConnectionConfig {
 		String user = connectionDefinition.getUser();
 		Connection connection = null;
 		HikariDataSource ds = null;
-		BasicDataSource bds = null;
+		DruidDataSource bds = null;
 		try {
 			String password = connectionDefinition.getPassword();
 			Properties props = DBConfiguration.getTemplateProperties(dbType);
@@ -183,7 +182,7 @@ public class DatabaseConnectionConfig implements ConnectionConfig {
 						connection = ds.getConnection();
 					}
 				} else {
-					bds = new BasicDataSource();
+					bds = new DruidDataSource();
 					bds.setInitialSize(1);
 					bds.setMaxActive(2);
 					bds.setDriverClassName(driver);
@@ -209,7 +208,7 @@ public class DatabaseConnectionConfig implements ConnectionConfig {
 			if (bds != null) {
 				try {
 					bds.close();
-				} catch (SQLException e) {
+				} catch (Exception e) {
 				}
 				bds = null;
 			}
@@ -225,7 +224,7 @@ public class DatabaseConnectionConfig implements ConnectionConfig {
 		String user = database.getUser();
 		Connection connection = null;
 		HikariDataSource ds = null;
-		BasicDataSource bds = null;
+		DruidDataSource bds = null;
 		try {
 			String password = SecurityUtils.decode(database.getKey(), database.getPassword());
 			Properties props = DBConfiguration.getTemplateProperties(dbType);
@@ -271,7 +270,7 @@ public class DatabaseConnectionConfig implements ConnectionConfig {
 						connection = ds.getConnection();
 					}
 				} else {
-					bds = new BasicDataSource();
+					bds = new DruidDataSource();
 					bds.setInitialSize(1);
 					bds.setMaxActive(2);
 					bds.setDriverClassName(driver);
@@ -297,7 +296,7 @@ public class DatabaseConnectionConfig implements ConnectionConfig {
 			if (bds != null) {
 				try {
 					bds.close();
-				} catch (SQLException e) {
+				} catch (Exception e) {
 				}
 				bds = null;
 			}
@@ -339,7 +338,7 @@ public class DatabaseConnectionConfig implements ConnectionConfig {
 		String user = database.getUser();
 		Connection connection = null;
 		HikariDataSource ds = null;
-		BasicDataSource bds = null;
+		DruidDataSource bds = null;
 		try {
 			String password = SecurityUtils.decode(database.getKey(), database.getPassword());
 			Properties props = DBConfiguration.getTemplateProperties(dbType);
@@ -385,7 +384,7 @@ public class DatabaseConnectionConfig implements ConnectionConfig {
 						connection = ds.getConnection();
 					}
 				} else {
-					bds = new BasicDataSource();
+					bds = new DruidDataSource();
 					bds.setInitialSize(1);
 					bds.setMaxActive(2);
 					bds.setDriverClassName(driver);
