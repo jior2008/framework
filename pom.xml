@@ -67,8 +67,16 @@
 			<artifactId>spring-boot-starter-freemarker</artifactId>
 		</dependency>
 		<dependency>
-		   <groupId>org.springframework.kafka</groupId>
-		   <artifactId>spring-kafka</artifactId>
+			<groupId>org.springframework.kafka</groupId>
+			<artifactId>spring-kafka</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-web</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-config</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>com.github.pagehelper</groupId>
@@ -144,7 +152,7 @@
 			<version>1.60</version>
 			<type>jar</type>
 		</dependency>
-        <dependency>
+		<dependency>
 			<groupId>org.bouncycastle</groupId>
 			<artifactId>bcpkix-jdk15on</artifactId>
 			<version>1.60</version>
@@ -164,7 +172,7 @@
 		<dependency>
 			<groupId>com.alibaba</groupId>
 			<artifactId>fastjson</artifactId>
-			<version>1.2.49</version>
+			<version>1.2.51</version>
 		</dependency>
 		<dependency>
 			<groupId>com.zaxxer</groupId>
@@ -232,6 +240,11 @@
 		<dependency>
 			<groupId>mysql</groupId>
 			<artifactId>mysql-connector-java</artifactId>
+			<optional>true</optional>
+		</dependency>
+		<dependency>
+			<groupId>org.postgresql</groupId>
+			<artifactId>postgresql</artifactId>
 			<optional>true</optional>
 		</dependency>
 	</dependencies>
