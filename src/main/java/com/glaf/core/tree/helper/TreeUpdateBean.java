@@ -27,7 +27,6 @@ import org.apache.commons.logging.LogFactory;
 
 import com.glaf.core.base.BaseTree;
 import com.glaf.core.base.TreeModel;
-import com.glaf.core.jdbc.DBConnectionFactory;
 import com.glaf.core.util.JdbcUtils;
 
 public class TreeUpdateBean {
@@ -56,22 +55,14 @@ public class TreeUpdateBean {
 
 	/**
 	 * 
-	 * @param conn
-	 *            数据库连接
-	 * @param tableName
-	 *            树表名称
-	 * @param primaryKeyColumn
-	 *            主键列，如果和树id列是一样的，可以为空，否则必须是字符串类型的主键
-	 * @param idColumn
-	 *            树表的id字段，Long类型，必须的
-	 * @param parentIdColumn
-	 *            树表的parentId字段，Long类型，必须的
-	 * @param treeIdColumn
-	 *            树表的treeId字段，String类型，必须的
-	 * @param levelColumn
-	 *            树表的level字段，Integer类型，可以为空
-	 * @param sqlCondition
-	 *            过滤的SQL条件，可以为空
+	 * @param conn             数据库连接
+	 * @param tableName        树表名称
+	 * @param primaryKeyColumn 主键列，如果和树id列是一样的，可以为空，否则必须是字符串类型的主键
+	 * @param idColumn         树表的id字段，Long类型，必须的
+	 * @param parentIdColumn   树表的parentId字段，Long类型，必须的
+	 * @param treeIdColumn     树表的treeId字段，String类型，必须的
+	 * @param levelColumn      树表的level字段，Integer类型，可以为空
+	 * @param sqlCondition     过滤的SQL条件，可以为空
 	 */
 	public void updateTreeIds(Connection conn, String tableName, String primaryKeyColumn, String idColumn,
 			String parentIdColumn, String treeIdColumn, String levelColumn, String sqlCondition) {
@@ -197,24 +188,6 @@ public class TreeUpdateBean {
 			JdbcUtils.close(pstmt2);
 			JdbcUtils.close(rs);
 		}
-	}
-
-	public void updateTreeIds(String tableName, String primaryKeyColumn, String idColumn, String parentIdColumn,
-			String treeIdColumn, String levelColumn, String sqlCondition) {
-		long start = System.currentTimeMillis();
-		Connection conn = null;
-		try {
-			conn = DBConnectionFactory.getConnection();
-			this.updateTreeIds(conn, tableName, primaryKeyColumn, idColumn, parentIdColumn, treeIdColumn, levelColumn,
-					sqlCondition);
-		} catch (Exception ex) {
-			logger.error("update treeid error", ex);
-			throw new RuntimeException(ex);
-		} finally {
-			JdbcUtils.close(conn);
-		}
-		long ts = System.currentTimeMillis() - start;
-		logger.debug("总共用时(ms):" + ts);
 	}
 
 }
