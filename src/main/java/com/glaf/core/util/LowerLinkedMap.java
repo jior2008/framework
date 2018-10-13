@@ -51,12 +51,14 @@ public class LowerLinkedMap extends LinkedHashMap<String, Object> {
 	}
 
 	public boolean containsKey(Object key) {
-		return (key instanceof String)
-				&& super.containsKey(convertKey((String) key));
+		return (key instanceof String) && super.containsKey(convertKey((String) key));
 	}
 
 	protected String convertKey(String key) {
-		return key.toLowerCase(locale);
+		if (key != null) {
+			return key.toLowerCase(locale);
+		}
+		return "";
 	}
 
 	public Object get(Object key) {
