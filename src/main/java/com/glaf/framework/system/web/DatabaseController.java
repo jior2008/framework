@@ -132,8 +132,12 @@ public class DatabaseController {
 	public byte[] deleteById(HttpServletRequest request) throws IOException {
 		long databaseId = RequestUtils.getLong(request, "id");
 		if (databaseId > 0) {
-			databaseService.deleteById(databaseId);
-			return ResponseUtils.responseJsonResult(true);
+			try {
+				databaseService.deleteById(databaseId);
+				return ResponseUtils.responseJsonResult(true);
+			} catch (Exception ex) {
+				logger.error(ex);
+			}
 		}
 		return ResponseUtils.responseJsonResult(false);
 	}
