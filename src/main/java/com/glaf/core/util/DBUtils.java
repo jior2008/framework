@@ -2161,7 +2161,7 @@ public class DBUtils {
 		boolean exists = false;
 		try {
 			dbmd = connection.getMetaData();
-			rs = dbmd.getTables(null, null, "", new String[] { "TABLE" });
+			rs = dbmd.getTables(null, null, null, new String[] { "TABLE" });
 			while (rs.next()) {
 				String table = rs.getString("TABLE_NAME");
 				//logger.debug("table:"+table);
