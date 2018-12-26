@@ -158,34 +158,7 @@ public class CacheFactory {
 	}
 
 	public static void put(final String region, final String key, final String value) {
-		try {
-			Cache cache = getCache();
-			if (cache != null && key != null && value != null) {
-				// remove(region, key);
-				String _region = SystemProperties.getRegionName(region);
-				String cacheKey = _region + "_" + key;
-				cacheKey = DigestUtils.md5Hex(cacheKey.getBytes());
-				int limitSize = 5120000;// 5MB
-				if (value.length() < limitSize) {
-					String val = com.glaf.core.util.Hex.byte2hex(value.getBytes("UTF-8"));
-					cache.put(_region, cacheKey, val);
-					logger.debug("put object into cache.");
-					if (!regions.contains(_region)) {
-						regions.add(_region);
-					}
-					CacheItem item = new CacheItem();
-					item.setRegion(region);
-					item.setName(key);
-					item.setKey(cacheKey);
-					item.setLastModified(System.currentTimeMillis());
-					item.setSize(value.length());
-					items.add(item);
-					cacheKeyMap.put(cacheKey, item);
-				}
-			}
-		} catch (Throwable ex) {
-			ex.printStackTrace();
-		}
+		 put(region, key, value, 1800L);
 	}
 
 	public static void put(final String region, final String key, final String value, long timeToLiveInSeconds) {
