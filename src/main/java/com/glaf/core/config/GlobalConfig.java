@@ -78,8 +78,10 @@ public class GlobalConfig {
 				String value = rs.getString(2);
 				props.put(name, value);
 			}
+			JdbcUtils.close(rs);
+			JdbcUtils.close(pstmt);
 		} catch (Exception ex) {
-			ex.printStackTrace();
+			//ex.printStackTrace();
 			logger.error("get system config data error", ex);
 		} finally {
 			JdbcUtils.close(rs);
@@ -124,10 +126,11 @@ public class GlobalConfig {
 			}
 
 			pstmt.executeBatch();
+			JdbcUtils.close(pstmt);
 			conn.commit();
 
 		} catch (Exception ex) {
-			ex.printStackTrace();
+			//ex.printStackTrace();
 			logger.error("save system config data error", ex);
 		} finally {
 			JdbcUtils.close(rs);

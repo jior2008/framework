@@ -92,21 +92,7 @@ public class J2CacheImpl implements Cache {
 
 	@Override
 	public void put(String region, String key, String value) {
-		if (value != null) {
-			try {
-				cacheChannel.set(region, key, com.glaf.core.util.Hex.byte2hex(value.getBytes("UTF-8")), 1800L);
-				if (!regions.contains(region)) {
-					regions.add(region);
-				}
-				logger.debug("put object into j2cache.");
-			} catch (Exception ex) {
-				// logger.error("put j2cache error", ex);
-				try {
-					cacheChannel.set(region, key, com.glaf.core.util.Hex.byte2hex(value.getBytes()), 1800L);
-				} catch (Exception e) {
-				}
-			}
-		}
+		 this.put(region, key, value,1800L);
 	}
 
 	@Override

@@ -18,122 +18,122 @@
 
 package com.glaf.core.cache;
 
+import com.glaf.core.config.GlobalConfig;
+
 import java.util.Enumeration;
 import java.util.Properties;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import com.glaf.core.config.GlobalConfig;
-
 public class CacheProperties {
-	private static volatile Properties properties = new Properties();
+    private static volatile Properties properties = new Properties();
 
-	protected static AtomicBoolean loading = new AtomicBoolean(false);
+    protected static AtomicBoolean loading = new AtomicBoolean(false);
 
-	static {
-		reload();
-	}
+    static {
+        reload();
+    }
 
-	public static boolean getBoolean(String key) {
-		if (hasObject(key)) {
-			String value = properties.getProperty(key);
-			return Boolean.valueOf(value).booleanValue();
-		}
-		return false;
-	}
+    public static boolean getBoolean(String key) {
+        if (hasObject(key)) {
+            String value = properties.getProperty(key);
+            return Boolean.valueOf(value).booleanValue();
+        }
+        return false;
+    }
 
-	public static boolean getBoolean(String key, boolean defaultValue) {
-		if (hasObject(key)) {
-			String value = properties.getProperty(key);
-			return Boolean.valueOf(value).booleanValue();
-		}
-		return defaultValue;
-	}
+    public static boolean getBoolean(String key, boolean defaultValue) {
+        if (hasObject(key)) {
+            String value = properties.getProperty(key);
+            return Boolean.valueOf(value).booleanValue();
+        }
+        return defaultValue;
+    }
 
-	public static double getDouble(String key) {
-		if (hasObject(key)) {
-			String value = properties.getProperty(key);
-			return Double.parseDouble(value);
-		}
-		return 0;
-	}
+    public static double getDouble(String key) {
+        if (hasObject(key)) {
+            String value = properties.getProperty(key);
+            return Double.parseDouble(value);
+        }
+        return 0;
+    }
 
-	public static int getInt(String key) {
-		if (hasObject(key)) {
-			String value = properties.getProperty(key);
-			return Integer.parseInt(value);
-		}
-		return 0;
-	}
+    public static int getInt(String key) {
+        if (hasObject(key)) {
+            String value = properties.getProperty(key);
+            return Integer.parseInt(value);
+        }
+        return 0;
+    }
 
-	public static long getLong(String key) {
-		if (hasObject(key)) {
-			String value = properties.getProperty(key);
-			return Long.parseLong(value);
-		}
-		return 0;
-	}
+    public static long getLong(String key) {
+        if (hasObject(key)) {
+            String value = properties.getProperty(key);
+            return Long.parseLong(value);
+        }
+        return 0;
+    }
 
-	public static Properties getProperties() {
-		Properties p = new Properties();
-		Enumeration<?> e = properties.keys();
-		while (e.hasMoreElements()) {
-			String key = (String) e.nextElement();
-			String value = properties.getProperty(key);
-			p.put(key, value);
-		}
-		return p;
-	}
+    public static Properties getProperties() {
+        Properties p = new Properties();
+        Enumeration<?> e = properties.keys();
+        while (e.hasMoreElements()) {
+            String key = (String) e.nextElement();
+            String value = properties.getProperty(key);
+            p.put(key, value);
+        }
+        return p;
+    }
 
-	public static String getString(String key) {
-		if (hasObject(key)) {
-			String value = properties.getProperty(key);
-			return value;
-		}
-		return null;
-	}
+    public static String getString(String key) {
+        if (hasObject(key)) {
+            String value = properties.getProperty(key);
+            return value;
+        }
+        return null;
+    }
 
-	public static String getString(String key, String defaultValue) {
-		if (hasObject(key)) {
-			String value = properties.getProperty(key);
-			return value;
-		}
-		return defaultValue;
-	}
+    public static String getString(String key, String defaultValue) {
+        if (hasObject(key)) {
+            String value = properties.getProperty(key);
+            return value;
+        }
+        return defaultValue;
+    }
 
-	public static boolean hasObject(String key) {
-		String value = properties.getProperty(key);
-		if (value != null) {
-			return true;
-		}
-		return false;
-	}
+    public static boolean hasObject(String key) {
+        String value = properties.getProperty(key);
+        if (value != null) {
+            return true;
+        }
+        return false;
+    }
 
-	public static void reload() {
-		if (!loading.get()) {
-			try {
-				loading.set(true);
-				Properties props = GlobalConfig.getConfigProperties("cache.properties");
-				if (props != null) {
-					Enumeration<?> e = props.keys();
-					while (e.hasMoreElements()) {
-						String key = (String) e.nextElement();
-						String value = props.getProperty(key);
-						properties.setProperty(key, value);
-						properties.setProperty(key.toLowerCase(), value);
-						properties.setProperty(key.toUpperCase(), value);
-					}
-				}
-			} catch (Exception ex) {
-				ex.printStackTrace();
-				throw new RuntimeException(ex);
-			} finally {
-				loading.set(false);
-			}
-		}
-	}
+    public static void reload() {
+        if (!loading.get()) {
+            try {
+                loading.set(true);
+                Properties props = GlobalConfig.getConfigProperties("cache.properties");
+                if (props != null) {
+                    Enumeration<?> e = props.keys();
+                    while (e.hasMoreElements()) {
+                        String key = (String) e.nextElement();
+                        String value = props.getProperty(key);
+                        properties.setProperty(key, value);
+                        properties.setProperty(key.toLowerCase(), value);
+                        properties.setProperty(key.toUpperCase(), value);
+                    }
+                }
+            } catch (Exception ex) {
+                ex.printStackTrace();
+                throw new RuntimeException(ex);
+            } finally {
+                loading.set(false);
+            }
+        }
+    }
 
-	private CacheProperties() {
+    private CacheProperties() {
 
-	}
+    }
 
 }

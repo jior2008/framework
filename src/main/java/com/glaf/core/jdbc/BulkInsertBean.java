@@ -107,6 +107,7 @@ public class BulkInsertBean {
 		int index = 1;
 		String columnName = null;
 		String javaType = null;
+		Map<String, Object> rowMap = null;
 		LowerLinkedMap dataMap = null;
 		PreparedStatement psmt = null;
 		ByteArrayInputStream bais = null;
@@ -117,7 +118,7 @@ public class BulkInsertBean {
 			psmt = conn.prepareStatement(insertBuffer.toString());
 			for (int k = 0, l = dataList.size(); k < l; k++) {
 				// Map<String, Object> dataMap = dataList.get(k);
-				Map<String, Object> rowMap = dataList.get(k);
+				rowMap = dataList.get(k);
 				dataMap = new LowerLinkedMap();
 				dataMap.putAll(rowMap);
 				// logger.debug("dataMap:" + dataMap);
@@ -270,6 +271,7 @@ public class BulkInsertBean {
 		int index = 1;
 		String columnName = null;
 		String javaType = null;
+		Map<String, Object> rowMap = null;
 		LowerLinkedMap dataMap = null;
 		PreparedStatement psmt = null;
 		ByteArrayInputStream bais = null;
@@ -281,7 +283,7 @@ public class BulkInsertBean {
 			for (int k = 0, l = dataList.size(); k < l; k++) {
 				index = 1;
 				// Map<String, Object> dataMap = dataList.get(k);
-				Map<String, Object> rowMap = dataList.get(k);
+				rowMap = dataList.get(k);
 				dataMap = new LowerLinkedMap();
 				dataMap.putAll(rowMap);
 				// logger.debug("dataMap:" + dataMap);

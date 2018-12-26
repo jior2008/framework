@@ -75,6 +75,7 @@ public class BatchUpdateBean {
 		String columnName = null;
 		String javaType = null;
 		LowerLinkedMap dataMap = null;
+		Map<String, Object> rowMap = null;
 		PreparedStatement psmt = null;
 		ByteArrayInputStream bais = null;
 		BufferedInputStream bis = null;
@@ -85,7 +86,7 @@ public class BatchUpdateBean {
 				index = 1;
 				buffer.delete(0, buffer.length());
 				// Map<String, Object> dataMap = dataList.get(k);
-				Map<String, Object> rowMap = dataList.get(k);
+				rowMap = dataList.get(k);
 				dataMap = new LowerLinkedMap();
 				dataMap.putAll(rowMap);
 				buffer.append(" update ").append(tableDefinition.getTableName()).append(" set ");
@@ -283,6 +284,7 @@ public class BatchUpdateBean {
 		int index = 1;
 		String columnName = null;
 		String javaType = null;
+		Map<String, Object> dataMap = null;
 		PreparedStatement psmt = null;
 		ByteArrayInputStream bais = null;
 		BufferedInputStream bis = null;
@@ -292,7 +294,7 @@ public class BatchUpdateBean {
 			psmt = conn.prepareStatement(buffer.toString());
 			for (int k = 0, l = dataList.size(); k < l; k++) {
 				index = 1;
-				Map<String, Object> dataMap = dataList.get(k);
+				dataMap = dataList.get(k);
 				for (ColumnDefinition column : cols) {
 					columnName = column.getColumnName().toLowerCase();
 					javaType = column.getJavaType();
