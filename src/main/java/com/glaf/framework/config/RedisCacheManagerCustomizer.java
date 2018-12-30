@@ -21,6 +21,8 @@ import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Conditional;
 import org.springframework.context.annotation.Configuration;
@@ -38,6 +40,7 @@ import org.springframework.data.redis.serializer.RedisSerializationContext.Seria
 @Configuration
 @Conditional(RedisCacheCondition.class)
 public class RedisCacheManagerCustomizer {
+	protected final Logger logger = LoggerFactory.getLogger(getClass());
 
 	@Bean
 	public RedisCacheManager getRedisCacheManager(RedisConnectionFactory connectionFactory) {
@@ -56,7 +59,7 @@ public class RedisCacheManagerCustomizer {
 		initialCacheConfigurations.put("menuTree", cacheConfig.entryTtl(Duration.ofSeconds(600)));
 
 		RedisCacheManager cacheManager = new RedisCacheManager(cacheWriter, cacheConfig, initialCacheConfigurations);
-
+		logger.debug("--------------redis cache manager init finished-----------");
 		return cacheManager;
 	}
 }
