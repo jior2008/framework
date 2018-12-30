@@ -2,25 +2,34 @@
 
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.glaf.framework.system.mapper.SystemPropertyMapper">
+<mapper
+	namespace="com.glaf.framework.system.mapper.SystemPropertyMapper">
 
-	<resultMap id="systemPropertyResultMap" type="com.glaf.framework.system.domain.SystemProperty">
+	<resultMap id="systemPropertyResultMap"
+		type="com.glaf.framework.system.domain.SystemProperty">
 		<id property="id" column="ID_" jdbcType="VARCHAR" />
 		<result property="name" column="NAME_" jdbcType="VARCHAR" />
 		<result property="title" column="TITLE_" jdbcType="VARCHAR" />
-		<result property="inputType" column="INPUTTYPE_" jdbcType="VARCHAR" />
+		<result property="inputType" column="INPUTTYPE_"
+			jdbcType="VARCHAR" />
 		<result property="type" column="TYPE_" jdbcType="VARCHAR" />
-		<result property="description" column="DESCRIPTION_" jdbcType="VARCHAR" />
-		<result property="category" column="CATEGORY_" jdbcType="VARCHAR" />
-		<result property="initValue" column="INITVALUE_" jdbcType="VARCHAR" />
-		<result property="maxValue" column="MAXVALUE_" jdbcType="DOUBLE" />
-		<result property="minValue" column="MINVALUE_" jdbcType="DOUBLE" />
+		<result property="description" column="DESCRIPTION_"
+			jdbcType="VARCHAR" />
+		<result property="category" column="CATEGORY_"
+			jdbcType="VARCHAR" />
+		<result property="initValue" column="INITVALUE_"
+			jdbcType="VARCHAR" />
+		<result property="maxValue" column="MAXVALUE_"
+			jdbcType="DOUBLE" />
+		<result property="minValue" column="MINVALUE_"
+			jdbcType="DOUBLE" />
 		<result property="value" column="VALUE_" jdbcType="VARCHAR" />
 		<result property="locked" column="LOCKED_" jdbcType="INTEGER" />
 	</resultMap>
 
 
-	<insert id="insertSystemProperty" parameterType="com.glaf.framework.system.domain.SystemProperty">
+	<insert id="insertSystemProperty"
+		parameterType="com.glaf.framework.system.domain.SystemProperty">
 		insert into
 		SYS_PROPERTY ( ID_
 		,NAME_
@@ -58,12 +67,14 @@
 	</insert>
 
 
-	<update id="updateSystemProperty" parameterType="com.glaf.framework.system.domain.SystemProperty">
+	<update id="updateSystemProperty"
+		parameterType="com.glaf.framework.system.domain.SystemProperty">
 
 		update
 		SYS_PROPERTY
 		set
-		TITLE_ = #{title, jdbcType=VARCHAR},
+		TITLE_ = #{title,
+		jdbcType=VARCHAR},
 		DESCRIPTION_ =
 		#{description, jdbcType=VARCHAR},
 		VALUE_ = #{value, jdbcType=VARCHAR}
@@ -81,7 +92,8 @@
 	</delete>
 
 
-	<delete id="deleteSystemProperties" parameterType="com.glaf.framework.system.query.SystemPropertyQuery">
+	<delete id="deleteSystemProperties"
+		parameterType="com.glaf.framework.system.query.SystemPropertyQuery">
 		delete from SYS_PROPERTY
 		where (
 		ID_ IN
@@ -99,7 +111,8 @@
 	</select>
 
 
-	<select id="getSystemProperties" parameterType="com.glaf.framework.system.query.SystemPropertyQuery"
+	<select id="getSystemProperties"
+		parameterType="com.glaf.framework.system.query.SystemPropertyQuery"
 		resultMap="systemPropertyResultMap">
 		select E.*
 		<include refid="selectSystemPropertysSql" />
@@ -109,7 +122,8 @@
 	</select>
 
 
-	<select id="getSystemPropertyCount" parameterType="com.glaf.framework.system.query.SystemPropertyQuery"
+	<select id="getSystemPropertyCount"
+		parameterType="com.glaf.framework.system.query.SystemPropertyQuery"
 		resultType="int">
 		select count(*)
 		<include refid="selectSystemPropertysSql" />

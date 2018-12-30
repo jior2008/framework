@@ -39,7 +39,6 @@
 		<result property="userNameKey" column="USERNAMEKEY_" jdbcType="VARCHAR" />
 		<result property="serverId" column="SERVERID_" jdbcType="BIGINT" />
 		<result property="sysId" column="SYSID_" jdbcType="VARCHAR" />
-		<result property="queueName" column="QUEUENAME_" jdbcType="VARCHAR" />
 		<result property="active" column="ACTIVE_" jdbcType="VARCHAR" />
 		<result property="verify" column="VERIFY_" jdbcType="VARCHAR" />
 		<result property="initFlag" column="INITFLAG_" jdbcType="VARCHAR" />
@@ -154,9 +153,6 @@
 			</if>
 			<if test="sysId != null">
 				,SYSID_
-			</if>
-			<if test="queueName != null">
-				,QUEUENAME_
 			</if>
 			<if test="providerClass != null">
 				,PROVIDERCLASS_
@@ -292,9 +288,6 @@
 			<if test="sysId != null">
 				,#{sysId, jdbcType=VARCHAR}
 			</if>
-			<if test="queueName != null">
-				,#{queueName, jdbcType=VARCHAR}
-			</if>
 			<if test="providerClass != null">
 				,#{providerClass, jdbcType=VARCHAR}
 			</if>
@@ -413,9 +406,6 @@
 			</if>
 			<if test="sysId != null">
 				SYSID_ = #{sysId, jdbcType=VARCHAR},
-			</if>
-			<if test="queueName != null">
-				QUEUENAME_ = #{queueName, jdbcType=VARCHAR},
 			</if>
 			<if test="intToken != null">
 				INTTOKEN_ = #{intToken, jdbcType=INTEGER},

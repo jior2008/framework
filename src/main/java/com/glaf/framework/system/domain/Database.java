@@ -250,12 +250,6 @@ public class Database implements java.lang.Comparable<Database>, Cloneable, Seri
 	protected String sysId;
 
 	/**
-	 * QueueName
-	 */
-	@Column(name = "QUEUENAME_", length = 200)
-	protected String queueName;
-
-	/**
 	 * 激活标记
 	 */
 	@Column(name = "ACTIVE_", length = 10)
@@ -375,7 +369,6 @@ public class Database implements java.lang.Comparable<Database>, Cloneable, Seri
 		model.setUserNameKey(this.getUserNameKey());
 		model.setServerId(this.getServerId());
 		model.setSysId(this.getSysId());
-		model.setQueueName(this.getQueueName());
 		return model;
 	}
 
@@ -534,19 +527,6 @@ public class Database implements java.lang.Comparable<Database>, Cloneable, Seri
 
 	public String getProviderClass() {
 		return providerClass;
-	}
-
-	public String getQueueName() {
-		if (queueName == null) {
-			/*
-			 * if (this.getHost() != null && this.getDbname() != null) { queueName =
-			 * this.getHost() + "_" + this.getDbname(); queueName =
-			 * StringTools.replace(queueName, ".", "_"); queueName =
-			 * queueName.toLowerCase(); }
-			 */
-			queueName = this.getSysId();
-		}
-		return queueName;
 	}
 
 	public String getRemoteUrl() {
@@ -751,10 +731,6 @@ public class Database implements java.lang.Comparable<Database>, Cloneable, Seri
 
 	public void setProviderClass(String providerClass) {
 		this.providerClass = providerClass;
-	}
-
-	public void setQueueName(String queueName) {
-		this.queueName = queueName;
 	}
 
 	public void setRemoteUrl(String remoteUrl) {

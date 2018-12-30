@@ -4,42 +4,52 @@
 
 <mapper namespace="com.glaf.framework.system.mapper.SysKeyMapper">
 
-	<resultMap id="sysKeyResultMap" type="com.glaf.framework.system.domain.SysKey">
+	<resultMap id="sysKeyResultMap"
+		type="com.glaf.framework.system.domain.SysKey">
 		<id property="id" column="ID_" jdbcType="VARCHAR" />
 		<result property="title" column="TITLE_" jdbcType="VARCHAR" />
 		<result property="name" column="NAME_" jdbcType="VARCHAR" />
 		<result property="type" column="TYPE_" jdbcType="VARCHAR" />
 		<result property="path" column="PATH_" jdbcType="VARCHAR" />
-		<result property="createBy" column="CREATEBY_" jdbcType="VARCHAR" />
-		<result property="createDate" column="CREATEDATE_" jdbcType="TIMESTAMP" />
+		<result property="createBy" column="CREATEBY_"
+			jdbcType="VARCHAR" />
+		<result property="createDate" column="CREATEDATE_"
+			jdbcType="TIMESTAMP" />
 	</resultMap>
 
 
-	<resultMap id="sysKeyResultMap_global" type="com.glaf.framework.system.domain.SysKey">
+	<resultMap id="sysKeyResultMap_global"
+		type="com.glaf.framework.system.domain.SysKey">
 		<id property="id" column="ID_" jdbcType="VARCHAR" />
 		<result property="title" column="TITLE_" jdbcType="VARCHAR" />
 		<result property="name" column="NAME_" jdbcType="VARCHAR" />
 		<result property="type" column="TYPE_" jdbcType="VARCHAR" />
 		<result property="path" column="PATH_" jdbcType="VARCHAR" />
 		<result property="data" column="DATA_" jdbcType="BLOB" />
-		<result property="createBy" column="CREATEBY_" jdbcType="VARCHAR" />
-		<result property="createDate" column="CREATEDATE_" jdbcType="TIMESTAMP" />
+		<result property="createBy" column="CREATEBY_"
+			jdbcType="VARCHAR" />
+		<result property="createDate" column="CREATEDATE_"
+			jdbcType="TIMESTAMP" />
 	</resultMap>
 
 
-	<resultMap id="sysKeyResultMap_postgres" type="com.glaf.framework.system.domain.SysKey">
+	<resultMap id="sysKeyResultMap_postgres"
+		type="com.glaf.framework.system.domain.SysKey">
 		<id property="id" column="ID_" jdbcType="VARCHAR" />
 		<result property="title" column="TITLE_" jdbcType="VARCHAR" />
 		<result property="name" column="NAME_" jdbcType="VARCHAR" />
 		<result property="type" column="TYPE_" jdbcType="VARCHAR" />
 		<result property="path" column="PATH_" jdbcType="VARCHAR" />
 		<result property="data" column="DATA_" jdbcType="BINARY" />
-		<result property="createBy" column="CREATEBY_" jdbcType="VARCHAR" />
-		<result property="createDate" column="CREATEDATE_" jdbcType="TIMESTAMP" />
+		<result property="createBy" column="CREATEBY_"
+			jdbcType="VARCHAR" />
+		<result property="createDate" column="CREATEDATE_"
+			jdbcType="TIMESTAMP" />
 	</resultMap>
 
 
-	<insert id="insertSysKey" parameterType="com.glaf.framework.system.domain.SysKey">
+	<insert id="insertSysKey"
+		parameterType="com.glaf.framework.system.domain.SysKey">
 		insert into SYS_KEY
 		<trim prefix="(" suffix=")" suffixOverrides=",">
 			ID_
@@ -94,7 +104,8 @@
 	</insert>
 
 
-	<insert id="insertSysKey_postgres" parameterType="com.glaf.framework.system.domain.SysKey">
+	<insert id="insertSysKey_postgres"
+		parameterType="com.glaf.framework.system.domain.SysKey">
 		insert into SYS_KEY
 		<trim prefix="(" suffix=")" suffixOverrides=",">
 			ID_
@@ -155,7 +166,8 @@
 	</delete>
 
 
-	<delete id="deleteSysKeys" parameterType="com.glaf.framework.system.query.SysKeyQuery">
+	<delete id="deleteSysKeys"
+		parameterType="com.glaf.framework.system.query.SysKeyQuery">
 		delete from SYS_KEY
 		where (
 		ID_ IN
@@ -179,7 +191,8 @@
 	</select>
 
 
-	<select id="getSysKeys" parameterType="com.glaf.framework.system.query.SysKeyQuery"
+	<select id="getSysKeys"
+		parameterType="com.glaf.framework.system.query.SysKeyQuery"
 		resultMap="sysKeyResultMap">
 		select E.*
 		<include refid="selectSysKeysSql" />
@@ -194,7 +207,8 @@
 	</select>
 
 
-	<select id="getSysKeyCount" parameterType="com.glaf.framework.system.query.SysKeyQuery"
+	<select id="getSysKeyCount"
+		parameterType="com.glaf.framework.system.query.SysKeyQuery"
 		resultType="int">
 		select count(*)
 		<include refid="selectSysKeysSql" />

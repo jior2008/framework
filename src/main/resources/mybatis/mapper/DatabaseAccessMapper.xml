@@ -2,19 +2,24 @@
 
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.glaf.framework.system.mapper.DatabaseAccessMapper">
+<mapper
+	namespace="com.glaf.framework.system.mapper.DatabaseAccessMapper">
 
-	<resultMap id="databaseAccessResultMap" type="com.glaf.framework.system.domain.DatabaseAccess">
+	<resultMap id="databaseAccessResultMap"
+		type="com.glaf.framework.system.domain.DatabaseAccess">
 		<id property="id" column="ID_" jdbcType="BIGINT" />
-		<result property="databaseId" column="DATABASEID_" jdbcType="BIGINT" />
+		<result property="databaseId" column="DATABASEID_"
+			jdbcType="BIGINT" />
 		<result property="actorId" column="ACTORID_" jdbcType="VARCHAR" />
 	</resultMap>
 
 
-	<insert id="insertDatabaseAccess" parameterType="com.glaf.framework.system.domain.DatabaseAccess">
+	<insert id="insertDatabaseAccess"
+		parameterType="com.glaf.framework.system.domain.DatabaseAccess">
 
 		insert into
-		SYS_DATABASE_ACCESS (ID_, DATABASEID_, ACTORID_ )
+		SYS_DATABASE_ACCESS (ID_, DATABASEID_,
+		ACTORID_ )
 		values
 		(#{id,jdbcType=BIGINT},
 		#{databaseId, jdbcType=BIGINT},
@@ -24,32 +29,39 @@
 	</insert>
 
 
-	<delete id="deleteAccessor" parameterType="com.glaf.framework.system.domain.DatabaseAccess">
+	<delete id="deleteAccessor"
+		parameterType="com.glaf.framework.system.domain.DatabaseAccess">
 		delete from
 		SYS_DATABASE_ACCESS
-		where DATABASEID_ = #{databaseId}
+		where DATABASEID_ =
+		#{databaseId}
 		and ACTORID_ =
 		#{actorId}
 	</delete>
 
 
-	<delete id="deleteDatabaseAccessByDatabaseId" parameterType="long">
+	<delete id="deleteDatabaseAccessByDatabaseId"
+		parameterType="long">
 		delete from SYS_DATABASE_ACCESS
-		where DATABASEID_ = #{databaseId}
+		where DATABASEID_ =
+		#{databaseId}
 	</delete>
 
 
-	<delete id="deleteDatabaseAccessByActorId" parameterType="string">
+	<delete id="deleteDatabaseAccessByActorId"
+		parameterType="string">
 		delete
 		from SYS_DATABASE_ACCESS
-		where ACTORID_ = #{actorId}
+		where ACTORID_ =
+		#{actorId}
 	</delete>
 
 
-	<select id="getDatabaseAccessesByDatabaseId" parameterType="long"
-		resultMap="databaseAccessResultMap">
+	<select id="getDatabaseAccessesByDatabaseId"
+		parameterType="long" resultMap="databaseAccessResultMap">
 		select * from SYS_DATABASE_ACCESS
-		where DATABASEID_ =
+		where
+		DATABASEID_ =
 		#{databaseId}
 	</select>
 
@@ -60,8 +72,10 @@
 		from SYS_DATABASE_ACCESS
 		where ACTORID_ = #{actorId}
 	</select>
+	
 
-	<select id="getAllDatabaseAccesses" resultMap="databaseAccessResultMap">
+	<select id="getAllDatabaseAccesses"
+		resultMap="databaseAccessResultMap">
 		select *
 		from
 		SYS_DATABASE_ACCESS

@@ -17,8 +17,9 @@
  */
 package com.glaf.framework.config;
 
+import javax.annotation.Resource;
+
 import org.springframework.beans.BeansException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnJava;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnJava.Range;
@@ -33,10 +34,10 @@ public class EnvConfig implements BeanPostProcessor {
 	private Environment environment;
 
 	public int getServerPort() {
-		return environment.getProperty("server.port", Integer.class);
+		return environment.getProperty("server.port", int.class);
 	}
 
-	@Autowired
+	@Resource
 	public void setEnvironment(Environment environment) {
 		this.environment = environment;
 	}

@@ -127,7 +127,7 @@ public class DatabaseController {
 
 		return new ModelAndView("/sys/database/chooseDatabases", modelMap);
 	}
-	
+
 	@RequestMapping("/delete")
 	public byte[] deleteById(HttpServletRequest request) throws IOException {
 		long databaseId = RequestUtils.getLong(request, "id");
@@ -408,7 +408,6 @@ public class DatabaseController {
 		database.setRemoteUrl(request.getParameter("remoteUrl"));
 		database.setServerId(RequestUtils.getLong(request, "serverId"));
 		database.setSysId(request.getParameter("sysId"));
-		database.setQueueName(request.getParameter("queueName"));
 		database.setActive(request.getParameter("active"));
 		database.setIntToken(RequestUtils.getInt(request, "intToken"));
 		database.setSort(RequestUtils.getInt(request, "sort"));
@@ -503,7 +502,6 @@ public class DatabaseController {
 			database.setSort(RequestUtils.getInt(request, "sort"));
 			database.setServerId(RequestUtils.getLong(request, "serverId"));
 			database.setSysId(request.getParameter("sysId"));
-			database.setQueueName(request.getParameter("queueName"));
 
 			String name = database.getName();
 			String dbType = database.getType();

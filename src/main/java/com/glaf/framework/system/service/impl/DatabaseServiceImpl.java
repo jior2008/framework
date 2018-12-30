@@ -367,9 +367,10 @@ public class DatabaseServiceImpl implements IDatabaseService {
 	@Transactional
 	public void insert(Database database) {
 		database.setId(idGenerator.nextId("SYS_DATABASE"));
-		database.setName("db_" + database.getId());
-		database.setCode("db_" + database.getId());
-		database.setToken(UUID32.getUUID() + UUID32.getUUID());
+		String uuid = UUID32.getUUID();
+		database.setName("db_" + uuid);
+		database.setCode("db_" + uuid);
+		database.setToken(uuid);
 		database.setCreateTime(new Date());
 		database.setActive("1");
 
@@ -414,9 +415,10 @@ public class DatabaseServiceImpl implements IDatabaseService {
 			}
 
 			database.setId(idGenerator.nextId("SYS_DATABASE"));
-			database.setName("db_" + database.getId());
-			database.setCode("db_" + database.getId());
-			database.setToken(UUID32.getUUID() + UUID32.getUUID());
+			String uuid = UUID32.getUUID();
+			database.setName("db_" + uuid);
+			database.setCode("db_" + uuid);
+			database.setToken(uuid);
 			database.setCreateTime(new Date());
 			database.setActive("1");
 
@@ -425,18 +427,6 @@ public class DatabaseServiceImpl implements IDatabaseService {
 			}
 
 			sysKey.setId("sys_database_" + database.getId());
-
-			if (StringUtils.isEmpty(database.getQueueName())) {
-				String queueName = database.getSysId();
-				if (StringUtils.isEmpty(queueName)) {
-					// queueName = database.getHost() + "_" +
-					// database.getDbname();
-					// queueName = StringTools.replace(queueName, ".", "_");
-					queueName = database.getSysId();
-					// queueName=queueName.toLowerCase();
-				}
-				database.setQueueName(queueName);
-			}
 
 			databaseMapper.insertDatabase(database);
 
@@ -476,7 +466,6 @@ public class DatabaseServiceImpl implements IDatabaseService {
 			model.setUserNameKey(database.getUserNameKey());
 			model.setServerId(database.getServerId());
 			model.setSysId(database.getSysId());
-			model.setQueueName(database.getQueueName());
 			model.setDiscriminator(database.getDiscriminator());
 			model.setIntToken(database.getIntToken());
 			model.setToken(database.getToken());
@@ -523,14 +512,6 @@ public class DatabaseServiceImpl implements IDatabaseService {
 
 			if (StringUtils.isEmpty(model.getToken())) {
 				model.setToken(UUID32.getUUID() + UUID32.getUUID());
-			}
-
-			if (StringUtils.isEmpty(model.getQueueName())) {
-				// String queueName = model.getHost() + "_" + model.getDbname();
-				// queueName = StringTools.replace(queueName, ".", "_");
-				// model.setQueueName(queueName.toLowerCase());
-				String queueName = model.getSysId();
-				model.setQueueName(queueName);
 			}
 
 			databaseMapper.updateDatabase(model);

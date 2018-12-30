@@ -106,10 +106,6 @@ public class DatabaseJsonFactory {
 			model.setSysId(jsonObject.getString("sysId"));
 		}
 
-		if (jsonObject.containsKey("queueName")) {
-			model.setQueueName(jsonObject.getString("queueName"));
-		}
-
 		if (jsonObject.containsKey("user")) {
 			model.setUser(jsonObject.getString("user"));
 		}
@@ -245,10 +241,6 @@ public class DatabaseJsonFactory {
 
 		if (model.getSysId() != null) {
 			jsonObject.put("sysId", model.getSysId());
-		}
-
-		if (model.getQueueName() != null) {
-			jsonObject.put("queueName", model.getQueueName());
 		}
 
 		if (model.getUser() != null) {
@@ -399,9 +391,6 @@ public class DatabaseJsonFactory {
 			jsonObject.put("sysId", model.getSysId());
 		}
 
-		if (model.getQueueName() != null) {
-			jsonObject.put("queueName", model.getQueueName());
-		}
 		if (model.getUser() != null) {
 			jsonObject.put("user", model.getUser());
 		}

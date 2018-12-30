@@ -79,7 +79,6 @@ public class DatabaseDomainFactory {
 		columnMap.put("remoteUrl", "REMOTEURL_");
 		columnMap.put("serverId", "SERVERID_");
 		columnMap.put("sysId", "SYSID_");
-		columnMap.put("queueName", "QUEUENAME_");
 		columnMap.put("sort", "SORTNO_");
 		columnMap.put("createBy", "CREATEBY_");
 		columnMap.put("createTime", "CREATETIME_");
@@ -119,7 +118,6 @@ public class DatabaseDomainFactory {
 		javaTypeMap.put("userNameKey", "String");
 		javaTypeMap.put("serverId", "Long");
 		javaTypeMap.put("sysId", "String");
-		javaTypeMap.put("queueName", "String");
 		javaTypeMap.put("active", "String");
 		javaTypeMap.put("verify", "String");
 		javaTypeMap.put("initFlag", "String");
@@ -353,13 +351,6 @@ public class DatabaseDomainFactory {
 		sysId.setJavaType("String");
 		sysId.setLength(50);
 		tableDefinition.addColumn(sysId);
-
-		ColumnDefinition queueName = new ColumnDefinition();
-		queueName.setName("queueName");
-		queueName.setColumnName("QUEUENAME_");
-		queueName.setJavaType("String");
-		queueName.setLength(200);
-		tableDefinition.addColumn(queueName);
 
 		ColumnDefinition type = new ColumnDefinition();
 		type.setName("type");

@@ -45,7 +45,6 @@
 		<result property="ext18" column="ext18" jdbcType="DOUBLE" />
 		<result property="ext19" column="ext19" jdbcType="DOUBLE" />
 		<result property="ext20" column="ext20" jdbcType="DOUBLE" />
-
 	</resultMap>
 
 
