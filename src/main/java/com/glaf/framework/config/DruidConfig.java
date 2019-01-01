@@ -21,7 +21,6 @@ import com.alibaba.druid.pool.DruidDataSource;
 import com.alibaba.druid.support.http.StatViewServlet;
 import com.alibaba.druid.support.http.WebStatFilter;
 import com.glaf.core.jdbc.DBConnectionFactory;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -38,7 +37,7 @@ import javax.sql.DataSource;
 @PropertySource(value = "classpath:jdbc.properties")
 public class DruidConfig {
 
-	protected final Logger logger = LoggerFactory.getLogger(getClass());
+	private final Logger logger = LoggerFactory.getLogger(getClass());
 
 	@Value("${spring.datasource.url}")
 	private String dbUrl;

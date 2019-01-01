@@ -18,33 +18,35 @@
 
 package com.glaf.framework.system.query;
 
-import java.util.*;
-
 import com.glaf.core.query.DataQuery;
+
+import java.util.Collection;
+import java.util.Date;
+import java.util.List;
 
 public class DatabaseQuery extends DataQuery {
 	private static final long serialVersionUID = 1L;
-	protected List<Long> databaseIds;
-	protected Collection<String> appActorIds;
-	protected String titleLike;
-	protected String code;
-	protected String host;
-	protected String hostLike;
-	protected String type;
-	protected String runType;
-	protected String runTypeLike;
-	protected String keywordsLike;
-	protected String ticket;
-	protected String programId;
-	protected String programName;
-	protected String userNameKey;
-	protected Long serverId;
-	protected String useType;
-	protected String active;
-	protected String initFlag;
-	protected String removeFlag;
-	protected Date createTimeGreaterThanOrEqual;
-	protected Date createTimeLessThanOrEqual;
+	private List<Long> databaseIds;
+	private Collection<String> appActorIds;
+	private String titleLike;
+	private String code;
+	private String host;
+	private String hostLike;
+	private String type;
+	private String runType;
+	private String runTypeLike;
+	private String keywordsLike;
+	private String ticket;
+	private String programId;
+	private String programName;
+	private String userNameKey;
+	private Long serverId;
+	private String useType;
+	private String active;
+	private String initFlag;
+	private String removeFlag;
+	private Date createTimeGreaterThanOrEqual;
+	private Date createTimeLessThanOrEqual;
 
 	public DatabaseQuery() {
 

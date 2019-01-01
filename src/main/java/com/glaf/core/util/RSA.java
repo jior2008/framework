@@ -30,7 +30,7 @@ import java.util.Map;
 /**
  * RSA 加解密工具类
  */
-public class RSA {
+class RSA {
 	/**
 	 * 定义加密方式
 	 */
@@ -52,7 +52,7 @@ public class RSA {
 		try {
 			String provider = "org.bouncycastle.jce.provider.BouncyCastleProvider";
 			java.security.Security.addProvider((Provider) Class.forName(provider).newInstance());
-		} catch (Exception ex) {
+		} catch (Exception ignored) {
 
 		}
 	}
@@ -75,7 +75,7 @@ public class RSA {
 
 			map.put(KEY_RSA_PUBLICKEY, publicKey);
 			map.put(KEY_RSA_PRIVATEKEY, privateKey);
-		} catch (NoSuchAlgorithmException ex) {
+		} catch (NoSuchAlgorithmException ignored) {
 
 		}
 		return map;
@@ -296,7 +296,7 @@ public class RSA {
 	 *            需要解码的字符串
 	 * @return 字节数组
 	 */
-	public static byte[] decodeBase64(String data) {
+	private static byte[] decodeBase64(String data) {
 		return org.apache.commons.codec.binary.Base64.decodeBase64(data);
 	}
 
@@ -307,7 +307,7 @@ public class RSA {
 	 *            需要编码的字节数组
 	 * @return 字符串
 	 */
-	public static String encodeBase64String(byte[] data) {
+	private static String encodeBase64String(byte[] data) {
 		return org.apache.commons.codec.binary.Base64.encodeBase64String(data);
 	}
 

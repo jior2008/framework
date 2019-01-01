@@ -18,33 +18,30 @@
 
 package com.glaf.framework.system.config;
 
-import java.sql.Connection;
-import java.sql.DatabaseMetaData;
-import java.sql.SQLException;
-import java.util.Properties;
-
-import javax.sql.DataSource;
-
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import com.glaf.core.config.BaseConfiguration;
 import com.glaf.core.config.Configuration;
 import com.glaf.core.config.Environment;
 import com.glaf.core.jdbc.ConnectionThreadHolder;
 import com.glaf.core.util.JdbcUtils;
-
 import com.glaf.framework.system.jdbc.connection.ConnectionProvider;
 import com.glaf.framework.system.jdbc.connection.ConnectionProviderFactory;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+import javax.sql.DataSource;
+import java.sql.Connection;
+import java.sql.DatabaseMetaData;
+import java.sql.SQLException;
+import java.util.Properties;
 
 public class JdbcConnectionFactory {
 
-	protected final static Log logger = LogFactory.getLog(JdbcConnectionFactory.class);
+	private final static Log logger = LogFactory.getLog(JdbcConnectionFactory.class);
 
 	protected static Configuration conf = BaseConfiguration.create();
 
-	protected static Properties databaseTypeMappings = getDatabaseTypeMappings();
+	private static final Properties databaseTypeMappings = getDatabaseTypeMappings();
 
 	public static boolean checkConnection(java.util.Properties props) {
 		Connection connection = null;
@@ -78,9 +75,6 @@ public class JdbcConnectionFactory {
 				if (provider != null) {
 					connection = provider.getConnection();
 				}
-			} else {
-				// DataSource ds = ContextFactory.getBean("dataSource");
-				// connection = ds.getConnection();
 			}
 			if (connection != null) {
 				ConnectionThreadHolder.addConnection(connection);
@@ -136,9 +130,6 @@ public class JdbcConnectionFactory {
 				if (provider != null) {
 					connection = provider.getConnection();
 				}
-			} else {
-				// DataSource ds = ContextFactory.getBean("dataSource");
-				// connection = ds.getConnection();
 			}
 			if (connection != null) {
 				ConnectionThreadHolder.addConnection(connection);
@@ -158,7 +149,7 @@ public class JdbcConnectionFactory {
 
 	public static String getDatabaseType(Connection connection) {
 		if (connection != null) {
-			String databaseProductName = null;
+			String databaseProductName;
 			try {
 				DatabaseMetaData databaseMetaData = connection.getMetaData();
 				databaseProductName = databaseMetaData.getDatabaseProductName();
@@ -178,7 +169,7 @@ public class JdbcConnectionFactory {
 	}
 
 	public static String getDatabaseType(DataSource dataSource) {
-		String dbType = null;
+		String dbType;
 		Connection con = null;
 		try {
 			con = dataSource.getConnection();
@@ -192,7 +183,7 @@ public class JdbcConnectionFactory {
 		return dbType;
 	}
 
-	public static Properties getDatabaseTypeMappings() {
+	private static Properties getDatabaseTypeMappings() {
 		Properties databaseTypeMappings = new Properties();
 		databaseTypeMappings.setProperty("H2", "h2");
 		databaseTypeMappings.setProperty("MySQL", "mysql");
@@ -226,7 +217,7 @@ public class JdbcConnectionFactory {
 		return getDataSource(Environment.DEFAULT_SYSTEM_NAME);
 	}
 
-	public static DataSource getDataSource(String systemName) {
+	private static DataSource getDataSource(String systemName) {
 		if (systemName == null) {
 			throw new RuntimeException("systemName is required.");
 		}

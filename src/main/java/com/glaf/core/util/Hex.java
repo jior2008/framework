@@ -51,15 +51,15 @@ public class Hex {
 	 * @param buff
 	 * @return
 	 */
-	public static String byte2hex(byte buff[]) {
+	public static String byte2hex(byte[] buff) {
 		StringBuilder sb = new StringBuilder();
-		for (int i = 0; i < buff.length; i++) {
-			String hex = Integer.toHexString(buff[i] & 0xFF);
-			if (hex.length() == 1) {
-				hex = '0' + hex;
-			}
-			sb.append(hex.toUpperCase());
-		}
+        for (byte b : buff) {
+            String hex = Integer.toHexString(b & 0xFF);
+            if (hex.length() == 1) {
+                hex = '0' + hex;
+            }
+            sb.append(hex.toUpperCase());
+        }
 		return sb.toString();
 	}
 
@@ -85,7 +85,7 @@ public class Hex {
 	 * @return Constructor if successful, null if the constructor cannot be
 	 *         accessed
 	 */
-	public static Constructor<String> getProtectedConstructor(Class<String> klass, Class<?>... paramTypes) {
+	private static Constructor<String> getProtectedConstructor(Class<String> klass, Class<?>... paramTypes) {
 		Constructor<String> c;
 		try {
 			c = klass.getDeclaredConstructor(paramTypes);
@@ -150,7 +150,7 @@ public class Hex {
 		return s == null ? new String(c) : s;
 	}
 
-	public static final byte[] decodeHex(String hex) {
+	public static byte[] decodeHex(String hex) {
 		char[] chars = hex.toCharArray();
 		byte[] bytes = new byte[chars.length / 2];
 		int byteCount = 0;
@@ -165,19 +165,19 @@ public class Hex {
 		return bytes;
 	}
 
-	public static final String encodeHex(byte[] bytes) {
+	public static String encodeHex(byte[] bytes) {
 		StringBuilder buff = new StringBuilder(bytes.length * 2);
 
-		for (int i = 0; i < bytes.length; i++) {
-			if (((int) bytes[i] & 0xff) < 0x10) {
-				buff.append("0");
-			}
-			buff.append(Long.toString((int) bytes[i] & 0xff, 16));
-		}
+        for (byte aByte : bytes) {
+            if (((int) aByte & 0xff) < 0x10) {
+                buff.append("0");
+            }
+            buff.append(Long.toString((int) aByte & 0xff, 16));
+        }
 		return buff.toString();
 	}
 
-	private static final byte hexCharToByte(char ch) {
+	private static byte hexCharToByte(char ch) {
 		switch (ch) {
 		case '0':
 			return 0x00;

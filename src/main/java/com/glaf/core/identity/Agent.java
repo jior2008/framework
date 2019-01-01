@@ -17,10 +17,10 @@
  */
 package com.glaf.core.identity;
 
+import com.alibaba.fastjson.JSONObject;
+
 import java.io.Serializable;
 import java.util.Date;
-
-import com.alibaba.fastjson.JSONObject;
 
 public interface Agent extends Serializable {
 

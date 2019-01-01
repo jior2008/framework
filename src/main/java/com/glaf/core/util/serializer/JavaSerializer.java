@@ -18,11 +18,7 @@
 
 package com.glaf.core.util.serializer;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+import java.io.*;
 
 /**
  * 标准的 Java 序列化
@@ -44,7 +40,7 @@ public class JavaSerializer implements Serializer {
 			if (ois != null)
 				try {
 					ois.close();
-				} catch (IOException e) {
+				} catch (IOException ignored) {
 				}
 		}
 	}
@@ -66,7 +62,7 @@ public class JavaSerializer implements Serializer {
 			if (oos != null)
 				try {
 					oos.close();
-				} catch (IOException e) {
+				} catch (IOException ignored) {
 				}
 		}
 	}

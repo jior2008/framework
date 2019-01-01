@@ -18,11 +18,11 @@
 
 package com.glaf.framework.system.config;
 
-import java.util.List;
-
 import com.glaf.core.base.ConnectionDefinition;
 
-public interface ConnectionConfig {
+import java.util.List;
+
+interface ConnectionConfig {
 
 	List<ConnectionDefinition> getConnectionDefinitions();
 

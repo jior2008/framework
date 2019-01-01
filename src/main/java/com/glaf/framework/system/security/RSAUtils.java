@@ -18,42 +18,28 @@
 
 package com.glaf.framework.system.security;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.InputStream;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.math.BigInteger;
-import java.security.InvalidParameterException;
-import java.security.KeyFactory;
-import java.security.KeyPair;
-import java.security.KeyPairGenerator;
-import java.security.PrivateKey;
-import java.security.Provider;
-import java.security.PublicKey;
-import java.security.SecureRandom;
-import java.security.interfaces.RSAPrivateKey;
-import java.security.interfaces.RSAPublicKey;
-import java.security.spec.InvalidKeySpecException;
-import java.security.spec.RSAPrivateKeySpec;
-import java.security.spec.RSAPublicKeySpec;
-
-import javax.crypto.Cipher;
-
+import com.glaf.core.context.ContextFactory;
+import com.glaf.core.util.UUID32;
+import com.glaf.framework.system.domain.SysKey;
+import com.glaf.framework.system.service.SysKeyService;
 import org.apache.commons.codec.DecoderException;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.codec.binary.Hex;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.glaf.core.context.ContextFactory;
-
-import com.glaf.core.util.UUID32;
-import com.glaf.framework.system.domain.SysKey;
-import com.glaf.framework.system.service.SysKeyService;
+import javax.crypto.Cipher;
+import java.io.*;
+import java.math.BigInteger;
+import java.nio.charset.StandardCharsets;
+import java.security.*;
+import java.security.interfaces.RSAPrivateKey;
+import java.security.interfaces.RSAPublicKey;
+import java.security.spec.InvalidKeySpecException;
+import java.security.spec.RSAPrivateKeySpec;
+import java.security.spec.RSAPublicKeySpec;
 
 /**
  * RSA算法加密/解密工具类。
@@ -71,9 +57,9 @@ public final class RSAUtils {
 	/** 默认的安全服务提供者 */
 	private static Provider DEFAULT_PROVIDER = null;
 
-	private static volatile KeyPairGenerator keyPairGen = null;
+	private static KeyPairGenerator keyPairGen = null;
 
-	private static volatile KeyFactory keyFactory = null;
+	private static KeyFactory keyFactory = null;
 
 	/** 缓存的密钥对。 */
 	private static volatile KeyPair oneKeyPair = null;
@@ -104,7 +90,7 @@ public final class RSAUtils {
 	 *            要解密的数据。
 	 * @return 原数据。
 	 */
-	public static byte[] decrypt(PrivateKey privateKey, byte[] data) throws Exception {
+	private static byte[] decrypt(PrivateKey privateKey, byte[] data) throws Exception {
 		Cipher ci = Cipher.getInstance(ALGORITHOM, DEFAULT_PROVIDER);
 		ci.init(Cipher.DECRYPT_MODE, privateKey);
 		return ci.doFinal(data);
@@ -119,7 +105,7 @@ public final class RSAUtils {
 	 *            要解密的数据。
 	 * @return 原数据。
 	 */
-	public static byte[] decrypt(PrivateKey privateKey, String algorithom, byte[] data) throws Exception {
+	private static byte[] decrypt(PrivateKey privateKey, String algorithom, byte[] data) throws Exception {
 		Cipher ci = Cipher.getInstance(algorithom, DEFAULT_PROVIDER);
 		ci.init(Cipher.DECRYPT_MODE, privateKey);
 		return ci.doFinal(data);
@@ -161,7 +147,7 @@ public final class RSAUtils {
 	 *            密文。
 	 * @return 原文字符串。
 	 */
-	public static String decryptString(String encrypttext) {
+	private static String decryptString(String encrypttext) {
 		if (StringUtils.isEmpty(encrypttext)) {
 			return null;
 		}
@@ -196,7 +182,7 @@ public final class RSAUtils {
 			byte[] en_data = Base64.decodeBase64(encrypttext);
 			// LOGGER.debug("encrypttext:" + new String(en_data));
 			byte[] data = decrypt((RSAPrivateKey) keyPair.getPrivate(), en_data);
-			return new String(data, "UTF-8");
+			return new String(data, StandardCharsets.UTF_8);
 		} catch (Exception ex) {
 			ex.printStackTrace();
 			LOGGER.error(String.format("\"%s\" Decryption failed. Cause: %s", encrypttext, ex.getMessage()));
@@ -224,7 +210,7 @@ public final class RSAUtils {
 			byte[] en_data = Base64.decodeBase64(encrypttext);
 			// LOGGER.debug("encrypttext:" + new String(en_data));
 			byte[] data = decrypt((RSAPrivateKey) keyPair.getPrivate(), algorithom, en_data);
-			return new String(data, "UTF-8");
+			return new String(data, StandardCharsets.UTF_8);
 		} catch (Exception ex) {
 			ex.printStackTrace();
 			LOGGER.error(String.format("\"%s\" Decryption failed. Cause: %s", encrypttext, ex.getMessage()));
@@ -238,7 +224,7 @@ public final class RSAUtils {
 	 * 若{@code encrypttext} 为 {@code null}或空字符串则返回 {@code null}。 私钥不匹配时，返回
 	 * {@code null}。
 	 * 
-	 * @param encrypttext
+	 * @param en_data
 	 *            密文。
 	 * @return 原文字符串。
 	 */
@@ -278,7 +264,7 @@ public final class RSAUtils {
 	 *            要加密的数据。
 	 * @return 加密后的数据。
 	 */
-	public static byte[] encrypt(PublicKey publicKey, byte[] data) throws Exception {
+	private static byte[] encrypt(PublicKey publicKey, byte[] data) throws Exception {
 		Cipher ci = Cipher.getInstance(ALGORITHOM, DEFAULT_PROVIDER);
 		ci.init(Cipher.ENCRYPT_MODE, publicKey);
 		return ci.doFinal(data);
@@ -361,7 +347,7 @@ public final class RSAUtils {
 	 *            专用指数。
 	 * @return RSA专用私钥对象。
 	 */
-	public static RSAPrivateKey generateRSAPrivateKey(byte[] modulus, byte[] privateExponent) {
+	private static RSAPrivateKey generateRSAPrivateKey(byte[] modulus, byte[] privateExponent) {
 		RSAPrivateKeySpec privateKeySpec = new RSAPrivateKeySpec(new BigInteger(modulus),
 				new BigInteger(privateExponent));
 		try {
@@ -383,7 +369,7 @@ public final class RSAUtils {
 	 *            专用指数。
 	 * @return RSA专用公钥对象。
 	 */
-	public static RSAPublicKey generateRSAPublicKey(byte[] modulus, byte[] publicExponent) {
+	private static RSAPublicKey generateRSAPublicKey(byte[] modulus, byte[] publicExponent) {
 		RSAPublicKeySpec publicKeySpec = new RSAPublicKeySpec(new BigInteger(modulus), new BigInteger(publicExponent));
 		try {
 			return (RSAPublicKey) keyFactory.generatePublic(publicKeySpec);
@@ -416,7 +402,7 @@ public final class RSAUtils {
 	/**
 	 * 返回RSA密钥对。
 	 */
-	public static KeyPair getKeyPair() {
+	private static KeyPair getKeyPair() {
 		if (oneKeyPair != null) {
 			return oneKeyPair;
 		}
@@ -433,11 +419,7 @@ public final class RSAUtils {
 
 	/**
 	 * 根据给定的16进制系数和专用指数字符串构造一个RSA专用的私钥对象。
-	 * 
-	 * @param modulus
-	 *            系数。
-	 * @param privateExponent
-	 *            专用指数。
+	 *
 	 * @return RSA专用私钥对象。
 	 */
 	public static RSAPrivateKey getRSAPrivateKey(String hexModulus, String hexPrivateExponent) {
@@ -464,11 +446,7 @@ public final class RSAUtils {
 
 	/**
 	 * 根据给定的16进制系数和专用指数字符串构造一个RSA专用的公钥对象。
-	 * 
-	 * @param modulus
-	 *            系数。
-	 * @param publicExponent
-	 *            专用指数。
+	 *
 	 * @return RSA专用公钥对象。
 	 */
 	public static RSAPublicKey getRSAPublidKey(String hexModulus, String hexPublicExponent) {
@@ -554,7 +532,7 @@ public final class RSAUtils {
 	 *            要保存的密钥对。
 	 */
 	private static void saveKeyPair(KeyPair keyPair) {
-		byte[] bytes = null;
+		byte[] bytes;
 		ByteArrayOutputStream baos = null;
 		ObjectOutputStream oos = null;
 		try {

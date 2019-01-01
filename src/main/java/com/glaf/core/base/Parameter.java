@@ -20,7 +20,7 @@ package com.glaf.core.base;
 
 import java.util.Date;
 
-public interface Parameter {
+interface Parameter {
 
 	Date getDateVal();
 

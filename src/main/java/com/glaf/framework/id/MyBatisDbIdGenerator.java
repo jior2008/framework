@@ -13,31 +13,26 @@
 
 package com.glaf.framework.id;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicLong;
-
+import com.glaf.core.dao.EntityDAO;
+import com.glaf.core.id.IdBlock;
+import com.glaf.core.id.IdGenerator;
+import com.glaf.core.util.DateUtils;
+import com.glaf.core.util.StringTools;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.glaf.core.dao.EntityDAO;
-import com.glaf.core.id.IdBlock;
-import com.glaf.core.id.IdGenerator;
-import com.glaf.core.util.DateUtils;
-import com.glaf.core.util.StringTools;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.*;
+import java.util.concurrent.atomic.AtomicLong;
 
 @Service("idGenerator")
 @Transactional
 public class MyBatisDbIdGenerator implements IdGenerator {
-	public class RefreshTask implements Runnable {
+	class RefreshTask implements Runnable {
 
 		public void run() {
 			try {
@@ -50,25 +45,25 @@ public class MyBatisDbIdGenerator implements IdGenerator {
 
 	}
 
-	protected final static Log logger = LogFactory.getLog(MyBatisDbIdGenerator.class);
+	private final static Log logger = LogFactory.getLog(MyBatisDbIdGenerator.class);
 
-	protected static ConcurrentMap<String, AtomicLong> lastIdMap = new ConcurrentHashMap<>();
+	private static final ConcurrentMap<String, AtomicLong> lastIdMap = new ConcurrentHashMap<>();
 
-	protected static ConcurrentMap<String, AtomicLong> nextIdMap = new ConcurrentHashMap<>();
+	private static final ConcurrentMap<String, AtomicLong> nextIdMap = new ConcurrentHashMap<>();
 
-	protected static ThreadLocal<Map<String, Integer>> threadLocalVaribles = new ThreadLocal<Map<String, Integer>>();
+	private static final ThreadLocal<Map<String, Integer>> threadLocalVaribles = new ThreadLocal<Map<String, Integer>>();
 
-	protected static ScheduledExecutorService scheduledThreadPool = Executors.newSingleThreadScheduledExecutor();
+	private static final ScheduledExecutorService scheduledThreadPool = Executors.newSingleThreadScheduledExecutor();
 
 	public static void clear() {
 		threadLocalVaribles.remove();
 	}
 
-	protected volatile EntityDAO entityDAO;
+	private volatile EntityDAO entityDAO;
 
-	protected volatile long lastId = -1;
+	private volatile long lastId = -1;
 
-	protected volatile long nextId = 0;
+	private volatile long nextId = 0;
 
 	public MyBatisDbIdGenerator() {
 		logger.info("----------------MyBatis3DbIdGenerator--------------");
@@ -81,7 +76,7 @@ public class MyBatisDbIdGenerator implements IdGenerator {
 	}
 
 	@Transactional(propagation = Propagation.REQUIRED)
-	protected synchronized void getNewBlock() {
+	public synchronized void getNewBlock() {
 		IdBlock idBlock = entityDAO.nextDbidBlock();
 		this.nextId = idBlock.getNextId();
 		this.lastId = idBlock.getLastId();
@@ -93,7 +88,7 @@ public class MyBatisDbIdGenerator implements IdGenerator {
 	}
 
 	@Transactional(propagation = Propagation.REQUIRED)
-	protected synchronized void getNewBlock(String name) {
+	public synchronized void getNewBlock(String name) {
 		IdBlock idBlock = entityDAO.nextDbidBlock(name);
 		Long nextId2 = idBlock.getNextId();
 		Long lastId2 = idBlock.getLastId();
@@ -125,14 +120,13 @@ public class MyBatisDbIdGenerator implements IdGenerator {
 	@Transactional(propagation = Propagation.REQUIRED)
 	public synchronized String getNextId(String tablename, String idColumn, String createBy) {
 		int day = DateUtils.getNowYearMonthDay();
-		String idLike = String.valueOf(day) + "/" + createBy + "-";
+		String idLike = day + "/" + createBy + "-";
 		String cacheKey = tablename + "_" + idColumn + "_" + createBy + "_" + day;
 		if (threadLocalVaribles.get() != null && threadLocalVaribles.get().get(cacheKey) != null) {
 			int maxId = threadLocalVaribles.get().get(cacheKey);
 			maxId = maxId + 1;
 			threadLocalVaribles.get().put(cacheKey, maxId);
-			String newId = idLike + StringTools.getDigit7Id(maxId);
-			return newId;
+            return idLike + StringTools.getDigit7Id(maxId);
 		}
 		int maxId = entityDAO.getTableUserMaxId(tablename, idColumn, createBy);
 		if (threadLocalVaribles.get() == null) {
@@ -142,8 +136,7 @@ public class MyBatisDbIdGenerator implements IdGenerator {
 		} else {
 			threadLocalVaribles.get().put(cacheKey, maxId);
 		}
-		String newId = idLike + StringTools.getDigit7Id(maxId);
-		return newId;
+        return idLike + StringTools.getDigit7Id(maxId);
 	}
 
 	@Transactional(propagation = Propagation.REQUIRED)
@@ -169,8 +162,7 @@ public class MyBatisDbIdGenerator implements IdGenerator {
 		if (lastId2.get() < nextId2.get()) {
 			this.getNewBlock(name);
 		}
-		Long value = nextId2.incrementAndGet();
-		return value;
+        return nextId2.incrementAndGet();
 	}
 
 	@Transactional(propagation = Propagation.REQUIRED)

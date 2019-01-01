@@ -18,37 +18,36 @@
 
 package com.glaf.core.identity.impl;
 
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
-
 import com.alibaba.fastjson.JSONObject;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.glaf.core.identity.Role;
 import com.glaf.core.identity.util.RoleJsonFactory;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
 public class RoleImpl implements Role {
 
 	private static final long serialVersionUID = 1L;
 
-	protected String id;
+	private String id;
 
-	protected String code;
+	private String code;
 
-	protected String name;
+	private String name;
 
-	protected String type;
+	private String type;
 
-	protected int sort;
+	private int sort;
 
-	protected int locked;
+	private int locked;
 
-	protected int accessLevel;
+	private int accessLevel;
 
-	protected int roleuse;
+	private int roleuse;
 
-	protected int listno;
+	private int listno;
 
-	protected String remark;
+	private String remark;
 
 	public RoleImpl() {
 
@@ -64,12 +63,9 @@ public class RoleImpl implements Role {
 			return false;
 		RoleImpl other = (RoleImpl) obj;
 		if (id == null) {
-			if (other.id != null)
-				return false;
-		} else if (!id.equals(other.id))
-			return false;
-		return true;
-	}
+            return other.id == null;
+		} else return id.equals(other.id);
+    }
 
 	public int getAccessLevel() {
 		return accessLevel;

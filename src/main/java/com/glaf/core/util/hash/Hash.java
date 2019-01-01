@@ -22,11 +22,11 @@ import com.glaf.core.config.Configuration;
 
 public abstract class Hash {
 	/** Constant to denote invalid hash type. */
-	public static final int INVALID_HASH = -1;
+	private static final int INVALID_HASH = -1;
 	/** Constant to denote {@link JenkinsHash}. */
-	public static final int JENKINS_HASH = 0;
+	private static final int JENKINS_HASH = 0;
 	/** Constant to denote {@link MurmurHash}. */
-	public static final int MURMUR_HASH = 1;
+	private static final int MURMUR_HASH = 1;
 
 	/**
 	 * This utility method converts String representation of hash function name to a
@@ -37,7 +37,7 @@ public abstract class Hash {
 	 *            hash function name
 	 * @return one of the predefined constants
 	 */
-	public static int parseHashType(String name) {
+	private static int parseHashType(String name) {
 		if ("jenkins".equalsIgnoreCase(name)) {
 			return JENKINS_HASH;
 		} else if ("murmur".equalsIgnoreCase(name)) {
@@ -55,7 +55,7 @@ public abstract class Hash {
 	 *            configuration
 	 * @return one of the predefined constants
 	 */
-	public static int getHashType(Configuration conf) {
+	private static int getHashType(Configuration conf) {
 		String name = conf.get("hadoop.util.hash.type", "murmur");
 		return parseHashType(name);
 	}
@@ -67,7 +67,7 @@ public abstract class Hash {
 	 *            predefined hash type
 	 * @return hash function instance, or null if type is invalid
 	 */
-	public static Hash getInstance(int type) {
+	private static Hash getInstance(int type) {
 		switch (type) {
 		case JENKINS_HASH:
 			return JenkinsHash.getInstance();
@@ -128,5 +128,5 @@ public abstract class Hash {
 	 *            seed value
 	 * @return hash value
 	 */
-	public abstract int hash(byte[] bytes, int length, int initval);
+	protected abstract int hash(byte[] bytes, int length, int initval);
 }

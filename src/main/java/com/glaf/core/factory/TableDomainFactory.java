@@ -18,24 +18,25 @@
 
 package com.glaf.core.factory;
 
-import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
-
 import com.glaf.core.model.ColumnDefinition;
 import com.glaf.core.model.TableDefinition;
 import com.glaf.core.util.DBUtils;
+
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 /**
  * 
  * 数据表实体工厂类
  *
  */
-public class TableDomainFactory {
+class TableDomainFactory {
 
-	public static final ConcurrentMap<String, String> columnMap = new ConcurrentHashMap<String, String>();
+	private static final ConcurrentMap<String, String> columnMap = new ConcurrentHashMap<String, String>();
 
-	public static final ConcurrentMap<String, String> javaTypeMap = new ConcurrentHashMap<String, String>();
+	private static final ConcurrentMap<String, String> javaTypeMap = new ConcurrentHashMap<String, String>();
 
 	static {
 		columnMap.put("id", "ID_");
@@ -111,7 +112,7 @@ public class TableDomainFactory {
 		return javaTypeMap;
 	}
 
-	public static TableDefinition getTableDefinition(String tableName) {
+	private static TableDefinition getTableDefinition(String tableName) {
 		tableName = tableName.toUpperCase();
 		TableDefinition tableDefinition = new TableDefinition();
 		tableDefinition.setTableName(tableName);
@@ -326,7 +327,7 @@ public class TableDomainFactory {
 		if (extendColumns != null && !extendColumns.isEmpty()) {
 			tableDefinition.getColumns().addAll(extendColumns);
 		}
-		if (!DBUtils.tableExists(tableName)) {
+		if (DBUtils.tableExists(tableName)) {
 			DBUtils.createTable(tableDefinition);
 		} else {
 			DBUtils.alterTable(tableDefinition);

@@ -18,14 +18,6 @@
 
 package com.glaf.core.util.security;
 
-import java.io.IOException;
-import java.security.Key;
-import java.security.NoSuchAlgorithmException;
-import java.security.Provider;
-import java.security.SecureRandom;
-import java.security.spec.AlgorithmParameterSpec;
-import java.util.Arrays;
-
 import javax.crypto.Cipher;
 import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
@@ -34,20 +26,26 @@ import javax.crypto.spec.DESKeySpec;
 import javax.crypto.spec.DESedeKeySpec;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
+import java.nio.charset.StandardCharsets;
+import java.security.Key;
+import java.security.NoSuchAlgorithmException;
+import java.security.Provider;
+import java.security.SecureRandom;
+import java.util.Arrays;
 
-public class DESUtils {
+class DESUtils {
 
-	public static final String KEY_ALGORITHM = "DES";
+	private static final String KEY_ALGORITHM = "DES";
 
-	public static final String ECB_CIPHER_ALGORITHM = "DES/ECB/PKCS7Padding";
+	private static final String ECB_CIPHER_ALGORITHM = "DES/ECB/PKCS7Padding";
 
-	public static final String CBC_CIPHER_ALGORITHM = "DES/CBC/PKCS7Padding";
+	private static final String CBC_CIPHER_ALGORITHM = "DES/CBC/PKCS7Padding";
 
 	static {
 		try {
 			String provider = "org.bouncycastle.jce.provider.BouncyCastleProvider";
 			java.security.Security.addProvider((Provider) Class.forName(provider).newInstance());
-		} catch (Exception ex) {
+		} catch (Exception ignored) {
 
 		}
 	}
@@ -58,7 +56,7 @@ public class DESUtils {
 	 * @param b
 	 * @return
 	 */
-	public static String byte2hex(byte[] b) {
+	private static String byte2hex(byte[] b) {
 		StringBuilder hs = new StringBuilder();
 		String stmp;
 		for (int n = 0; b != null && n < b.length; n++) {
@@ -80,7 +78,7 @@ public class DESUtils {
 	 *            待解密数据
 	 * @return 解密后的数据
 	 */
-	public static byte[] decode(byte[] key, byte[] data) {
+	private static byte[] decode(byte[] key, byte[] data) {
 		if (key == null || data == null) {
 			return null;
 		}
@@ -90,9 +88,7 @@ public class DESUtils {
 			// key的长度不能够小于8位字节
 			Key secretKey = keyFactory.generateSecret(dks);
 			Cipher cipher = Cipher.getInstance(CBC_CIPHER_ALGORITHM);
-			IvParameterSpec iv = new IvParameterSpec("12345678".getBytes());
-			AlgorithmParameterSpec paramSpec = iv;
-			cipher.init(Cipher.DECRYPT_MODE, secretKey, paramSpec);
+            cipher.init(Cipher.DECRYPT_MODE, secretKey, new IvParameterSpec("12345678".getBytes()));
 			return cipher.doFinal(data);
 		} catch (Exception ex) {
 			throw new RuntimeException(ex);
@@ -110,7 +106,7 @@ public class DESUtils {
 	 *            待解密字节流
 	 * @return 解密后的数据
 	 */
-	public static byte[] decode(byte[] key, byte[] secretIv, byte[] data) {
+	private static byte[] decode(byte[] key, byte[] secretIv, byte[] data) {
 		if (data == null || key == null || secretIv == null) {
 			return null;
 		}
@@ -120,9 +116,7 @@ public class DESUtils {
 			// key的长度不能够小于8位字节
 			Key secretKey = keyFactory.generateSecret(dks);
 			Cipher cipher = Cipher.getInstance(CBC_CIPHER_ALGORITHM, "BC");
-			IvParameterSpec iv = new IvParameterSpec(secretIv);
-			AlgorithmParameterSpec paramSpec = iv;
-			cipher.init(Cipher.DECRYPT_MODE, secretKey, paramSpec);
+            cipher.init(Cipher.DECRYPT_MODE, secretKey, new IvParameterSpec(secretIv));
 			return cipher.doFinal(data);
 		} catch (Exception ex) {
 			throw new RuntimeException(ex);
@@ -182,9 +176,7 @@ public class DESUtils {
 			// key的长度不能够小于8位字节
 			Key secretKey = keyFactory.generateSecret(dks);
 			Cipher cipher = Cipher.getInstance(CBC_CIPHER_ALGORITHM, "BC");
-			IvParameterSpec iv = new IvParameterSpec(getKeyIvBytes(secretIv));
-			AlgorithmParameterSpec paramSpec = iv;
-			cipher.init(Cipher.DECRYPT_MODE, secretKey, paramSpec);
+            cipher.init(Cipher.DECRYPT_MODE, secretKey, new IvParameterSpec(getKeyIvBytes(secretIv)));
 			return cipher.doFinal(data);
 		} catch (Exception ex) {
 			throw new RuntimeException(ex);
@@ -235,11 +227,11 @@ public class DESUtils {
 	 *            向量
 	 * @return
 	 */
-	public static byte[] decrypt3DES(byte[] input, byte[] secretKey, byte[] secretIv) {
+	private static byte[] decrypt3DES(byte[] input, byte[] secretKey, byte[] secretIv) {
 		if (input == null || secretKey == null || secretIv == null) {
 			return null;
 		}
-		byte[] res = null;
+		byte[] res;
 		try {
 			DESedeKeySpec spec = new DESedeKeySpec(secretKey);
 			SecretKeyFactory keyfactory = SecretKeyFactory.getInstance("desede");
@@ -272,7 +264,7 @@ public class DESUtils {
 		if (secretKey.length() == 24 && secretIv.length() == 8) {
 			return decrypt3DES(input, secretKey.getBytes(), secretIv.getBytes());
 		}
-		byte[] res = null;
+		byte[] res;
 		try {
 			DESedeKeySpec spec = new DESedeKeySpec(getKeyBytes(secretKey));
 			SecretKeyFactory keyfactory = SecretKeyFactory.getInstance("desede");
@@ -302,7 +294,7 @@ public class DESUtils {
 		if (input == null || secretKey == null || secretIv == null) {
 			return null;
 		}
-		byte[] res = null;
+		byte[] res;
 		try {
 			// 根据给定的字节数组和算法构造一个密钥
 			SecretKey deskey = new SecretKeySpec(secretKey, "desede");
@@ -337,9 +329,7 @@ public class DESUtils {
 			// key的长度不能够小于8位字节
 			Key secretKey = keyFactory.generateSecret(dks);
 			Cipher cipher = Cipher.getInstance(CBC_CIPHER_ALGORITHM);
-			IvParameterSpec iv = new IvParameterSpec("12345678".getBytes());
-			AlgorithmParameterSpec paramSpec = iv;
-			cipher.init(Cipher.ENCRYPT_MODE, secretKey, paramSpec);
+            cipher.init(Cipher.ENCRYPT_MODE, secretKey, new IvParameterSpec("12345678".getBytes()));
 			byte[] bytes = cipher.doFinal(data);
 			return byte2hex(bytes);
 		} catch (Exception ex) {
@@ -368,9 +358,7 @@ public class DESUtils {
 			// key的长度不能够小于8位字节
 			Key secretKey = keyFactory.generateSecret(dks);
 			Cipher cipher = Cipher.getInstance(CBC_CIPHER_ALGORITHM, "BC");
-			IvParameterSpec iv = new IvParameterSpec(secretIv);
-			AlgorithmParameterSpec paramSpec = iv;
-			cipher.init(Cipher.ENCRYPT_MODE, secretKey, paramSpec);
+            cipher.init(Cipher.ENCRYPT_MODE, secretKey, new IvParameterSpec(secretIv));
 			return cipher.doFinal(data);
 		} catch (Exception ex) {
 			throw new RuntimeException("加密过程出现错误！", ex);
@@ -425,9 +413,7 @@ public class DESUtils {
 			// key的长度不能够小于8位字节
 			Key secretKey = keyFactory.generateSecret(dks);
 			Cipher cipher = Cipher.getInstance(CBC_CIPHER_ALGORITHM, "BC");
-			IvParameterSpec iv = new IvParameterSpec(getKeyIvBytes(secretIv));
-			AlgorithmParameterSpec paramSpec = iv;
-			cipher.init(Cipher.ENCRYPT_MODE, secretKey, paramSpec);
+            cipher.init(Cipher.ENCRYPT_MODE, secretKey, new IvParameterSpec(getKeyIvBytes(secretIv)));
 			return cipher.doFinal(data);
 		} catch (Exception ex) {
 			throw new RuntimeException("加密过程出现错误！", ex);
@@ -511,13 +497,12 @@ public class DESUtils {
 			// 根据给定的字节数组和算法构造一个密钥
 			// SecretKey deskey = new SecretKeySpec(getKeyBytes(secretKey),
 			// "desede");
-			SecretKey deskey = getKeySpec(secretKey, "desede");
+			SecretKey deskey = getKeySpec(secretKey);
 			// 加密
 			Cipher cipher = Cipher.getInstance("desede/CBC/PKCS7Padding");
 			IvParameterSpec ips = new IvParameterSpec(getKeyIvBytes(secretIv));
 			cipher.init(Cipher.ENCRYPT_MODE, deskey, ips);
-			byte[] cryptData = cipher.doFinal(data);
-			return cryptData;
+            return cipher.doFinal(data);
 		} catch (Exception ex) {
 			throw new RuntimeException("3DES CBC加密过程出现错误！", ex);
 		}
@@ -542,8 +527,7 @@ public class DESUtils {
 			Key deskey = keyfactory.generateSecret(spec);
 			Cipher cipher = Cipher.getInstance("desede/ECB/PKCS7Padding");
 			cipher.init(Cipher.DECRYPT_MODE, deskey);
-			byte[] cryptData = cipher.doFinal(data);
-			return cryptData;
+            return cipher.doFinal(data);
 		} catch (Exception ex) {
 			throw new RuntimeException("3DES ECB加密过程出现错误！", ex);
 		}
@@ -568,8 +552,7 @@ public class DESUtils {
 			Key deskey = keyfactory.generateSecret(spec);
 			Cipher cipher = Cipher.getInstance("desede/ECB/PKCS7Padding");
 			cipher.init(Cipher.DECRYPT_MODE, deskey);
-			byte[] cryptData = cipher.doFinal(data);
-			return cryptData;
+            return cipher.doFinal(data);
 		} catch (Exception ex) {
 			throw new RuntimeException("3DES ECB加密过程出现错误！", ex);
 		}
@@ -581,11 +564,11 @@ public class DESUtils {
 	 * @param strKey
 	 * @return
 	 */
-	public static byte[] getKeyBytes(String strKey) {
+	private static byte[] getKeyBytes(String strKey) {
 		if (null == strKey || strKey.length() < 1) {
 			throw new RuntimeException("key is null or empty!");
 		}
-		java.security.MessageDigest alg = null;
+		java.security.MessageDigest alg;
 		try {
 			alg = java.security.MessageDigest.getInstance("MD5");
 			alg.update(strKey.getBytes());
@@ -610,11 +593,11 @@ public class DESUtils {
 	 * @param strKey
 	 * @return
 	 */
-	public static byte[] getKeyIvBytes(String strKey) {
+	private static byte[] getKeyIvBytes(String strKey) {
 		if (null == strKey || strKey.length() < 1) {
 			throw new RuntimeException("key is null or empty!");
 		}
-		java.security.MessageDigest alg = null;
+		java.security.MessageDigest alg;
 		try {
 			alg = java.security.MessageDigest.getInstance("MD5");
 			alg.update(strKey.getBytes());
@@ -637,10 +620,9 @@ public class DESUtils {
 	 * Generates a SecretKeySpec for given password
 	 *
 	 * @param password
-	 * @param algorithm
 	 * @return SecretKeySpec
 	 */
-	public static SecretKeySpec getKeySpec(String password, String algorithm) throws IOException {
+	private static SecretKeySpec getKeySpec(String password) {
 		// You can change it to 128 if you wish
 		int keyLength = 256;
 		byte[] keyBytes = new byte[keyLength / 8];
@@ -648,11 +630,10 @@ public class DESUtils {
 		Arrays.fill(keyBytes, (byte) 0x0);
 		// if password is shorter then key length, it will be zero-padded
 		// to key length
-		byte[] passwordBytes = password.getBytes("UTF-8");
+		byte[] passwordBytes = password.getBytes(StandardCharsets.UTF_8);
 		int length = passwordBytes.length < keyBytes.length ? passwordBytes.length : keyBytes.length;
 		System.arraycopy(passwordBytes, 0, keyBytes, 0, length);
-		SecretKeySpec key = new SecretKeySpec(keyBytes, algorithm);
-		return key;
+        return new SecretKeySpec(keyBytes, "desede");
 	}
 
 	public static byte[] hex2byte(byte[] b) {

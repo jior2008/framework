@@ -18,11 +18,11 @@
 
 package com.glaf.framework.system.service;
 
-import java.util.*;
-import org.springframework.transaction.annotation.Transactional;
- 
 import com.glaf.framework.system.domain.SysKey;
 import com.glaf.framework.system.query.SysKeyQuery;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Transactional(readOnly = true)
 public interface SysKeyService {

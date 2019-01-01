@@ -18,20 +18,8 @@
 
 package com.glaf.core.util;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.StringTokenizer;
-
+import com.glaf.core.config.BaseConfiguration;
+import com.glaf.core.config.Configuration;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.net.ftp.FTP;
 import org.apache.commons.net.ftp.FTPClient;
@@ -39,12 +27,15 @@ import org.apache.commons.net.ftp.FTPFile;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.glaf.core.config.BaseConfiguration;
-import com.glaf.core.config.Configuration;
+import java.io.*;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.StringTokenizer;
 
-public class FtpUtils {
+class FtpUtils {
 
-	protected final static Logger logger = LoggerFactory.getLogger(FtpUtils.class);
+	private final static Logger logger = LoggerFactory.getLogger(FtpUtils.class);
 
 	protected static Configuration conf = BaseConfiguration.create();
 
@@ -63,7 +54,7 @@ public class FtpUtils {
 					tmp = tmp + "/" + str;
 					ftpClient.changeWorkingDirectory(tmp);
 				}
-			} catch (IOException ex) {
+			} catch (IOException ignored) {
 
 			}
 		}
@@ -152,7 +143,7 @@ public class FtpUtils {
 			throw new RuntimeException(" path must start with '/'");
 		}
 		try {
-			if (remotePath.indexOf("/") != -1) {
+			if (remotePath.contains("/")) {
 				String tmp = "";
 				List<String> dirs = new ArrayList<String>();
 				StringTokenizer token = new StringTokenizer(remotePath, "/");
@@ -199,7 +190,7 @@ public class FtpUtils {
 			ftpClient.enterLocalPassiveMode();
 			// 设置以二进制方式传输
 			ftpClient.setFileType(FTP.BINARY_FILE_TYPE);
-			FTPFile[] files = ftpClient.listFiles(new String(remoteFile.getBytes("GBK"), "ISO-8859-1"));
+			FTPFile[] files = ftpClient.listFiles(new String(remoteFile.getBytes("GBK"), StandardCharsets.ISO_8859_1));
 			if (files.length != 1) {
 				logger.warn("remote file is not exists");
 				return;
@@ -207,7 +198,7 @@ public class FtpUtils {
 			long lRemoteSize = files[0].getSize();
 			File file = new File(localFile);
 			out = new FileOutputStream(file);
-			in = ftpClient.retrieveFileStream(new String(remoteFile.getBytes("GBK"), "ISO-8859-1"));
+			in = ftpClient.retrieveFileStream(new String(remoteFile.getBytes("GBK"), StandardCharsets.ISO_8859_1));
 			byte[] bytes = new byte[4096];
 			long step = lRemoteSize / 100;
 			if (step == 0) {
@@ -257,7 +248,7 @@ public class FtpUtils {
 			ftpClient.enterLocalPassiveMode();
 			// 设置以二进制方式传输
 			ftpClient.setFileType(FTP.BINARY_FILE_TYPE);
-			FTPFile[] files = ftpClient.listFiles(new String(remoteFile.getBytes("GBK"), "ISO-8859-1"));
+			FTPFile[] files = ftpClient.listFiles(new String(remoteFile.getBytes("GBK"), StandardCharsets.ISO_8859_1));
 			if (files.length != 1) {
 				logger.warn("remote file is not exists");
 				return null;
@@ -266,7 +257,7 @@ public class FtpUtils {
 
 			out = new ByteArrayOutputStream();
 			bos = new BufferedOutputStream(out);
-			in = ftpClient.retrieveFileStream(new String(remoteFile.getBytes("GBK"), "ISO-8859-1"));
+			in = ftpClient.retrieveFileStream(new String(remoteFile.getBytes("GBK"), StandardCharsets.ISO_8859_1));
 			byte[] buff = new byte[4096];
 			long step = lRemoteSize / 100;
 			if (step == 0) {
@@ -305,12 +296,12 @@ public class FtpUtils {
 	 * @param remotePath
 	 *            FTP路径，必须以"/"开头
 	 */
-	public static void mkdirs(FTPClient ftpClient, String remotePath) {
+	private static void mkdirs(FTPClient ftpClient, String remotePath) {
 		if (remotePath.startsWith("/")) {
 			try {
 				ftpClient.changeWorkingDirectory("/");
 
-				if (remotePath.indexOf("/") != -1) {
+				if (remotePath.contains("/")) {
 					String tmp = "";
 					StringTokenizer token = new StringTokenizer(remotePath, "/");
 					while (token.hasMoreTokens()) {
@@ -341,7 +332,7 @@ public class FtpUtils {
 
 			ftpClient.changeWorkingDirectory("/");
 
-			if (remotePath.indexOf("/") != -1) {
+			if (remotePath.contains("/")) {
 				String tmp = "";
 				List<String> dirs = new ArrayList<String>();
 				StringTokenizer token = new StringTokenizer(remotePath, "/");
@@ -367,10 +358,10 @@ public class FtpUtils {
 
 	/**
 	 * 根据文件路径上传
-	 * 
+	 * @param ftpClient
 	 * @param remoteFile
 	 *            FTP文件，必须以"/"开头
-	 * @param input
+	 * @param bytes
 	 *            本地输入流
 	 */
 	public static boolean upload(FTPClient ftpClient, String remoteFile, byte[] bytes) {

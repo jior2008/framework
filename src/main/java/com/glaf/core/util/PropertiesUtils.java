@@ -18,23 +18,17 @@
 
 package com.glaf.core.util;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.util.Iterator;
+import org.apache.commons.io.IOUtils;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.Resource;
+
+import java.io.*;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Properties;
 import java.util.Set;
-
-import org.apache.commons.io.IOUtils;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.FileSystemResource;
-import org.springframework.core.io.Resource;
 
 public class PropertiesUtils {
 
@@ -62,7 +56,7 @@ public class PropertiesUtils {
 		return null;
 	}
 
-	public static String get(Properties properties, String key) {
+	private static String get(Properties properties, String key) {
 		return properties.getProperty(key);
 	}
 
@@ -90,7 +84,7 @@ public class PropertiesUtils {
 		return val == null ? defaultValue : Enum.valueOf(type, val);
 	}
 
-	public final static InputStream getInputStream(String resourceName) {
+	public static InputStream getInputStream(String resourceName) {
 		try {
 			Resource resource = new ClassPathResource(resourceName);
 			return resource.getInputStream();
@@ -99,7 +93,7 @@ public class PropertiesUtils {
 		}
 	}
 
-	public final static byte[] getBytes(String resourceName) {
+	public static byte[] getBytes(String resourceName) {
 		InputStream inputStream = null;
 		try {
 			Resource resource = new ClassPathResource(resourceName);
@@ -111,9 +105,8 @@ public class PropertiesUtils {
 			try {
 				if (inputStream != null) {
 					inputStream.close();
-					inputStream = null;
 				}
-			} catch (IOException ex) {
+			} catch (IOException ignored) {
 			}
 		}
 	}
@@ -122,8 +115,8 @@ public class PropertiesUtils {
 		return (int) getLong(properties, key, defaultVal);
 	}
 
-	public static long getLong(Properties properties, String key,
-			long defaultVal) {
+	private static long getLong(Properties properties, String key,
+								long defaultVal) {
 		String val = get(properties, key);
 		return val == null ? defaultVal : Long.parseLong(val);
 	}
@@ -426,15 +419,12 @@ public class PropertiesUtils {
 			fout = new FileOutputStream(resource.getFile());
 			fout.write(writer.toString().getBytes());
 			fout.close();
-		} catch (IOException ex) {
-			throw ex;
 		} finally {
 			try {
 				if (fout != null) {
 					fout.close();
-					fout = null;
 				}
-			} catch (IOException ioe) {
+			} catch (IOException ignored) {
 			}
 		}
 	}
@@ -456,15 +446,12 @@ public class PropertiesUtils {
 			fout = new FileOutputStream(filename);
 			fout.write(writer.toString().getBytes());
 			fout.close();
-		} catch (IOException ex) {
-			throw ex;
 		} finally {
 			try {
 				if (fout != null) {
 					fout.close();
-					fout = null;
 				}
-			} catch (IOException ioe) {
+			} catch (IOException ignored) {
 			}
 		}
 	}
@@ -485,15 +472,12 @@ public class PropertiesUtils {
 			fout = new FileOutputStream(filename);
 			fout.write(writer.toString().getBytes());
 			fout.close();
-		} catch (IOException ex) {
-			throw ex;
 		} finally {
 			try {
 				if (fout != null) {
 					fout.close();
-					fout = null;
 				}
-			} catch (IOException ioe) {
+			} catch (IOException ignored) {
 			}
 		}
 	}
@@ -503,9 +487,7 @@ public class PropertiesUtils {
 		Resource resource = new ClassPathResource(resourceName);
 		try {
 			StringBuilder writer = new StringBuilder();
-			Iterator<Object> iterator = props.keySet().iterator();
-			while (iterator.hasNext()) {
-				Object key = iterator.next();
+			for (Object key : props.keySet()) {
 				Object value = props.get(key);
 				writer.append(key);
 				writer.append('=');
@@ -517,15 +499,12 @@ public class PropertiesUtils {
 				fout = new FileOutputStream(resource.getFile());
 				fout.write(writer.toString().getBytes());
 				fout.close();
-			} catch (IOException ex) {
-				throw ex;
 			} finally {
 				try {
 					if (fout != null) {
 						fout.close();
-						fout = null;
 					}
-				} catch (IOException ioe) {
+				} catch (IOException ignored) {
 				}
 			}
 		} catch (Exception ex) {

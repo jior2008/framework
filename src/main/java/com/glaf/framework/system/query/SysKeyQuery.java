@@ -18,17 +18,19 @@
 
 package com.glaf.framework.system.query;
 
-import java.util.*;
 import com.glaf.core.query.DataQuery;
+
+import java.util.Date;
+import java.util.List;
 
 public class SysKeyQuery extends DataQuery {
 	private static final long serialVersionUID = 1L;
 	protected List<String> ids;
-	protected String titleLike;
-	protected String name;
-	protected String type;
-	protected Date createDateGreaterThanOrEqual;
-	protected Date createDateLessThanOrEqual;
+	private String titleLike;
+	private String name;
+	private String type;
+	private Date createDateGreaterThanOrEqual;
+	private Date createDateLessThanOrEqual;
 
 	public SysKeyQuery() {
 

@@ -18,41 +18,39 @@
 
 package com.glaf.core.query;
 
-import java.util.Date;
-import java.util.List;
-
+import com.glaf.core.security.LoginContext;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import com.glaf.core.security.LoginContext;
+import java.util.Date;
+import java.util.List;
 
 public class BaseQuery extends AbstractQuery<Object> {
 	private static final long serialVersionUID = 1L;
-	protected String actorId;
-	protected String tenantId;
-	protected List<String> actorIds = new java.util.ArrayList<String>();
-	protected List<String> businessKeys = new java.util.ArrayList<String>();
+	private String actorId;
+	private String tenantId;
+	private List<String> actorIds = new java.util.ArrayList<String>();
+	private List<String> businessKeys = new java.util.ArrayList<String>();
 	protected String createBy;
-	protected Date createDate;
-	protected boolean isFilterPermission = true;
-	protected boolean isInitialized = false;
-	protected boolean isOwner = false;
+	Date createDate;
+	boolean isFilterPermission = true;
+	private boolean isInitialized = false;
+	private boolean isOwner = false;
 	protected Integer locked;
-	protected Integer deleteFlag;
-	protected LoginContext loginContext;
+	private Integer deleteFlag;
+	private LoginContext loginContext;
 	protected String orderBy;
-	protected int pageNo;
-	protected int pageSize;
-	protected Object parameter;
-	protected String serviceKey;
+	private int pageNo;
+	private Object parameter;
+	private String serviceKey;
 	protected String sortColumn;
-	protected String sortField;
+	private String sortField;
 	protected String sortOrder;
-	protected Date afterCreateDate;
-	protected Date beforeCreateDate;
+	private Date afterCreateDate;
+	private Date beforeCreateDate;
 
-	public BaseQuery() {
+	BaseQuery() {
 
 	}
 
@@ -96,13 +94,6 @@ public class BaseQuery extends AbstractQuery<Object> {
 		return this;
 	}
 
-	public BaseQuery createBy(String createBy) {
-		if (createBy == null) {
-			throw new RuntimeException("createBy is null");
-		}
-		this.createBy = createBy;
-		return this;
-	}
 
 	public BaseQuery createDate(Date createDate) {
 		if (createDate == null) {
@@ -112,12 +103,8 @@ public class BaseQuery extends AbstractQuery<Object> {
 		return this;
 	}
 
-	public BaseQuery deleteFlag(Integer deleteFlag) {
-		this.deleteFlag = deleteFlag;
-		return this;
-	}
 
-	public void ensureInitialized() {
+	void ensureInitialized() {
 		if (isInitialized) {
 			return;
 		}
@@ -143,13 +130,6 @@ public class BaseQuery extends AbstractQuery<Object> {
 				if (loginContext.getActorId() != null) {
 
 					this.actorIds.add(loginContext.getActorId());
-				}
-
-				/**
-				 * 访问部门
-				 */
-				if (loginContext.getOrganizationId() != 0) {
-
 				}
 
 			}
@@ -193,10 +173,6 @@ public class BaseQuery extends AbstractQuery<Object> {
 		return loginContext;
 	}
 
-	public boolean getOnlyDataModels() {
-		return true;
-	}
-
 	public String getOrderBy() {
 		if (orderBy != null) {
 			return orderBy;
@@ -228,11 +204,11 @@ public class BaseQuery extends AbstractQuery<Object> {
 		return sortColumn;
 	}
 
-	public String getSortField() {
+	private String getSortField() {
 		return sortField;
 	}
 
-	public String getSortOrder() {
+	private String getSortOrder() {
 		return sortOrder;
 	}
 
@@ -248,10 +224,6 @@ public class BaseQuery extends AbstractQuery<Object> {
 		return isOwner;
 	}
 
-	public BaseQuery locked(Integer locked) {
-		this.locked = locked;
-		return this;
-	}
 
 	public BaseQuery serviceKey(String serviceKey) {
 		if (serviceKey == null) {
@@ -310,7 +282,6 @@ public class BaseQuery extends AbstractQuery<Object> {
 	}
 
 	public void setPageSize(int pageSize) {
-		this.pageSize = pageSize;
 	}
 
 	public void setParameter(Object parameter) {

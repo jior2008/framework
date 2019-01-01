@@ -18,14 +18,14 @@
 
 package com.glaf.core.util;
 
+import org.apache.commons.lang3.StringUtils;
+
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
-import org.apache.commons.lang3.StringUtils;
-
 public class ClassUtils {
 
-	private static ConcurrentMap<String, Class<?>> cache = new ConcurrentHashMap<String, Class<?>>();
+	private static final ConcurrentMap<String, Class<?>> cache = new ConcurrentHashMap<String, Class<?>>();
 
 	public static void addClassInCache(String className, Class<?> cls) {
 		if (StringUtils.isNotEmpty(className) && cls != null) {
@@ -61,8 +61,7 @@ public class ClassUtils {
 		return instantiateObject(className, null);
 	}
 
-	public static Object instantiateObject(String className,
-			ClassLoader classLoader) {
+	private static Object instantiateObject(String className, ClassLoader classLoader) {
 		Class<?> cls = ClassUtils.cache.get(className);
 		if (cls == null) {
 			cls = loadClass(className, classLoader);
@@ -84,18 +83,18 @@ public class ClassUtils {
 		return loadClass(className, null);
 	}
 
-	public static Class<?> loadClass(String className, ClassLoader classLoader) {
+	private static Class<?> loadClass(String className, ClassLoader classLoader) {
 		Class<?> cls = ClassUtils.cache.get(className);
 		if (cls == null) {
 			try {
 				cls = Class.forName(className);
-			} catch (Exception e) {
+			} catch (Exception ignored) {
 			}
 
 			if (cls == null && classLoader != null) {
 				try {
 					cls = classLoader.loadClass(className);
-				} catch (Exception e) {
+				} catch (Exception ignored) {
 				}
 			}
 
@@ -103,7 +102,7 @@ public class ClassUtils {
 				try {
 					cls = ClassUtils.class.getClassLoader()
 							.loadClass(className);
-				} catch (Exception e) {
+				} catch (Exception ignored) {
 				}
 			}
 
@@ -111,7 +110,7 @@ public class ClassUtils {
 				try {
 					cls = Thread.currentThread().getContextClassLoader()
 							.loadClass(className);
-				} catch (Exception e) {
+				} catch (Exception ignored) {
 				}
 			}
 
@@ -119,12 +118,8 @@ public class ClassUtils {
 				try {
 					cls = ClassLoader.getSystemClassLoader().loadClass(
 							className);
-				} catch (Exception e) {
+				} catch (Exception ignored) {
 				}
-			}
-
-			if (cls == null) {
-
 			}
 
 			if (cls != null) {

@@ -17,36 +17,29 @@
  */
 package com.glaf.core.jdbc;
 
+import com.alibaba.druid.pool.DruidPooledConnection;
+import com.glaf.core.config.BaseConfiguration;
+import com.glaf.core.config.Configuration;
+import com.glaf.core.security.Authentication;
+import org.apache.commons.codec.digest.DigestUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
-
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
-
-import org.apache.commons.codec.digest.DigestUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
-import com.alibaba.druid.pool.DruidPooledConnection;
-
-import com.glaf.core.config.BaseConfiguration;
-import com.glaf.core.config.Configuration;
-import com.glaf.core.security.Authentication;
+import java.util.concurrent.*;
 
 public class QueryConnectionFactory {
-	public class CheckConnectionTask implements Runnable {
+	class CheckConnectionTask implements Runnable {
 		public void run() {
 			if (!connectionMap.isEmpty()) {
 				logger.debug("检测数据库查询......");
 				Collection<ConnectionInfo> connectionList = connectionMap.values();
 				Collection<ConnectionInfo> list = new ArrayList<ConnectionInfo>();
-				if (connectionList != null && !connectionList.isEmpty()) {
+				if (!connectionList.isEmpty()) {
 					for (ConnectionInfo info : connectionList) {
 						if (info.getConnection() != null) {
 							list.add(info);
@@ -72,13 +65,11 @@ public class QueryConnectionFactory {
 									conn.abandond();// 丢弃连接，标识后连接池会自动回收。
 									conn.getConnection().close();
 									conn.close();
-									conn = null;
 									info.setConnection(null);
 									connectionMap.remove(info.getId());
 									logger.warn("物理连接已经关闭。");
 								} else {
 									connection.close();
-									connection = null;
 									info.setConnection(null);
 									connectionMap.remove(info.getId());
 									logger.warn("物理连接已经关闭。");
@@ -95,22 +86,22 @@ public class QueryConnectionFactory {
 	}
 
 	private static class QueryConnectionFactoryHolder {
-		public static QueryConnectionFactory instance = new QueryConnectionFactory();
+		static final QueryConnectionFactory instance = new QueryConnectionFactory();
 	}
 
-	protected static final Log logger = LogFactory.getLog(QueryConnectionFactory.class);
+	private static final Log logger = LogFactory.getLog(QueryConnectionFactory.class);
 
-	protected static final ConcurrentMap<String, ConnectionInfo> connectionMap = new ConcurrentHashMap<String, ConnectionInfo>();
+	private static final ConcurrentMap<String, ConnectionInfo> connectionMap = new ConcurrentHashMap<String, ConnectionInfo>();
 
-	protected static volatile Configuration conf = BaseConfiguration.create();
+	private static final Configuration conf = BaseConfiguration.create();
 
 	public static QueryConnectionFactory getInstance() {
 		return QueryConnectionFactoryHolder.instance;
 	}
 
-	protected volatile boolean startScheduler = false;
+	private volatile boolean startScheduler = false;
 
-	protected ScheduledExecutorService scheduledThreadPool = Executors.newSingleThreadScheduledExecutor();
+	private final ScheduledExecutorService scheduledThreadPool = Executors.newSingleThreadScheduledExecutor();
 
 	private QueryConnectionFactory() {
 		if (!startScheduler) {
@@ -144,7 +135,7 @@ public class QueryConnectionFactory {
 		}
 	}
 
-	public void startScheduler() {
+	private void startScheduler() {
 		CheckConnectionTask command = new CheckConnectionTask();
 		scheduledThreadPool.scheduleAtFixedRate(command, 20, 5, TimeUnit.SECONDS);
 		startScheduler = true;

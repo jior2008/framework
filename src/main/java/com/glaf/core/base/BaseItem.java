@@ -21,9 +21,9 @@ package com.glaf.core.base;
 public class BaseItem implements java.io.Serializable {
 	private static final long serialVersionUID = 1L;
 
-	protected String name;
+	private String name;
 
-	protected String value;
+	private String value;
 
 	public BaseItem() {
 
@@ -39,11 +39,8 @@ public class BaseItem implements java.io.Serializable {
 			return false;
 		BaseItem other = (BaseItem) obj;
 		if (name == null) {
-			if (other.name != null)
-				return false;
-		} else if (!name.equals(other.name))
-			return false;
-		return true;
+			return other.name == null;
+		} else return name.equals(other.name);
 	}
 
 	public String getName() {

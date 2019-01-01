@@ -18,15 +18,15 @@
 
 package com.glaf.core.model;
 
-import java.util.Date;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-
 import com.alibaba.fastjson.JSONObject;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.glaf.core.factory.ColumnDefinitionJsonFactory;
 import com.glaf.core.factory.TableDefinitionJsonFactory;
+
+import java.util.Date;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
  
 
 /**
@@ -38,175 +38,175 @@ import com.glaf.core.factory.TableDefinitionJsonFactory;
 public class TableDefinition implements java.io.Serializable, java.lang.Comparable<TableDefinition> {
 	private static final long serialVersionUID = 1L;
 
-	protected String tableId;
+	private String tableId;
 
 	/**
 	 * 表名
 	 */
-	protected String tableName;
+	private String tableName;
 
-	protected int addType;
+	private int addType;
 
-	protected String dbType;
+	private String dbType;
 
 	/**
 	 * 聚合主键列集
 	 */
-	protected String aggregationKey;
+	private String aggregationKey;
 
-	protected String className;
+	private String className;
 
-	protected int columnQty;
+	private int columnQty;
 
-	protected List<ColumnDefinition> columns = new java.util.ArrayList<ColumnDefinition>();
+	private List<ColumnDefinition> columns = new java.util.ArrayList<ColumnDefinition>();
 
 	/**
 	 * 创建人
 	 */
-	protected String createBy;
+	private String createBy;
 
 	/**
 	 * 创建时间
 	 */
-	protected Date createTime;
+	private Date createTime;
 
 	/**
 	 * 级联删除
 	 */
-	protected int deleteCascade;
+	private int deleteCascade;
 
 	/**
 	 * 是否删除抓取数据
 	 */
-	protected String deleteFetch;
+	private String deleteFetch;
 
-	protected int deleteFlag;
+	private int deleteFlag;
 
 	/**
 	 * 描述
 	 */
-	protected String description;
+	private String description;
 
 	/**
 	 * 显示类型 form,grid,tree,treegrid
 	 */
-	protected String displayType;
+	private String displayType;
 
 	/**
 	 * 标题
 	 */
-	protected String englishTitle;
+	private String englishTitle;
 
-	protected String entityName;
+	private String entityName;
 
-	protected ColumnDefinition idColumn;
+	private ColumnDefinition idColumn;
 
-	protected List<ColumnDefinition> idColumns;
+	private List<ColumnDefinition> idColumns;
 
 	/**
 	 * 级联插入
 	 */
-	protected int insertCascade;
+	private int insertCascade;
 
-	protected boolean insertOnly;
+	private boolean insertOnly;
 
-	protected boolean updateAllowed = true;
+	private boolean updateAllowed = true;
 
 	/**
 	 * 是否从表(Y-从表，N-不是从表)
 	 */
-	protected String isSubTable;
+	private String isSubTable;
 
 	/**
 	 * 是否需要JBPM工作流支持
 	 */
-	protected boolean jbpmSupport;
+	private boolean jbpmSupport;
 
 	/**
 	 * 是否锁定
 	 */
-	protected int locked;
+	private int locked;
 
 	/**
 	 * 模块名称
 	 */
-	protected String moduleName;
+	private String moduleName;
 
-	protected String packageName;
+	private String packageName;
 
-	protected String primaryKey;
+	private String primaryKey;
 
 	/**
 	 * 修订版本
 	 */
-	protected int revision;
+	private int revision;
 
 	private int sortNo;
 
-	protected String sysnum;
+	private String sysnum;
 
-	protected String systemFlag;
+	private String systemFlag;
 
-	protected String name;
+	private String name;
 
 	/**
 	 * 附件标识 0-无，1-1个附件，2-多个附件
 	 */
-	protected String attachmentFlag;
+	private String attachmentFlag;
 
 	/**
 	 * 附件允许的扩展名
 	 */
-	protected String attachmentExts;
+	private String attachmentExts;
 
 	/**
 	 * 附件大小
 	 */
-	protected int attachmentSize;
+	private int attachmentSize;
 
 	/**
 	 * 审核标记
 	 */
-	protected String auditFlag;
+	private String auditFlag;
 
 	/**
 	 * 树型结构标识， Y-树型，N-非树型
 	 */
-	protected String treeFlag;
+	private String treeFlag;
 
 	/**
 	 * 权限标识
 	 */
-	protected String privilegeFlag;
+	private String privilegeFlag;
 
 	/**
 	 * 是否临时表
 	 */
-	protected String temporaryFlag;
+	private String temporaryFlag;
 
 	/**
 	 * 标题
 	 */
-	protected String title;
+	private String title;
 
-	protected String topId;
+	private String topId;
 
 	/**
 	 * 是否树型结构
 	 */
-	protected boolean treeSupport;
+	private boolean treeSupport;
 
 	/**
 	 * 表类型
 	 */
-	protected String type;
+	private String type;
 
 	/**
 	 * 级联更新
 	 */
-	protected int updateCascade;
+	private int updateCascade;
 
-	protected Long nodeId;
+	private Long nodeId;
 
 	public TableDefinition() {
 
@@ -244,9 +244,7 @@ public class TableDefinition implements java.io.Serializable, java.lang.Comparab
 			return -1;
 		}
 
-		TableDefinition field = o;
-
-		int l = this.sortNo - field.getSortNo();
+		int l = this.sortNo - o.getSortNo();
 
 		int ret = 0;
 
@@ -268,12 +266,9 @@ public class TableDefinition implements java.io.Serializable, java.lang.Comparab
 			return false;
 		TableDefinition other = (TableDefinition) obj;
 		if (tableName == null) {
-			if (other.tableName != null)
-				return false;
-		} else if (!tableName.equals(other.tableName))
-			return false;
-		return true;
-	}
+            return other.tableName == null;
+		} else return tableName.equals(other.tableName);
+    }
 
 	public int getAddType() {
 		return addType;

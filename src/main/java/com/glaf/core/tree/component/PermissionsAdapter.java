@@ -18,7 +18,7 @@
 
 package com.glaf.core.tree.component;
 
-public interface PermissionsAdapter {
+interface PermissionsAdapter {
 
 	/**
 	 * If the menu is allowed, this should return true.

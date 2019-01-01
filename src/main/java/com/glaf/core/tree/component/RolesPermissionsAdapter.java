@@ -21,7 +21,7 @@ package com.glaf.core.tree.component;
 import java.util.regex.Pattern;
 
 public class RolesPermissionsAdapter implements PermissionsAdapter {
-	private Pattern delimiters = Pattern.compile("(?<!\\\\),");
+	protected final Pattern delimiters = Pattern.compile("(?<!\\\\),");
 
 	/**
 	 * If the menu is allowed, this should return true.
@@ -31,14 +31,6 @@ public class RolesPermissionsAdapter implements PermissionsAdapter {
 	public boolean isAllowed(TreeComponent menu) {
 		if (menu.getRoles() == null) {
 			return true; // no roles define, allow everyone
-		} else {
-			// Get the list of roles this menu allows
-			String[] allowedRoles = delimiters.split(menu.getRoles());
-			for (int i = 0; i < allowedRoles.length; i++) {
-				// if (request.isUserInRole(allowedRoles[i])) {
-				// return true;
-				// }
-			}
 		}
 		return false;
 	}

@@ -18,6 +18,17 @@
 
 package com.glaf.framework.system.jdbc.datasource;
 
+import com.glaf.core.config.Environment;
+import com.glaf.framework.system.config.DBConfiguration;
+import com.glaf.framework.system.jdbc.connection.ConnectionProvider;
+import com.glaf.framework.system.jdbc.connection.ConnectionProviderFactory;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.springframework.context.ApplicationListener;
+import org.springframework.context.event.ContextRefreshedEvent;
+import org.springframework.jdbc.datasource.lookup.AbstractRoutingDataSource;
+
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Properties;
@@ -26,27 +37,15 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.context.ApplicationListener;
-import org.springframework.context.event.ContextRefreshedEvent;
-import org.springframework.jdbc.datasource.lookup.AbstractRoutingDataSource;
-
-import com.glaf.core.config.Environment;
-import com.glaf.framework.system.config.DBConfiguration;
-import com.glaf.framework.system.jdbc.connection.ConnectionProvider;
-import com.glaf.framework.system.jdbc.connection.ConnectionProviderFactory;
-
 public class MultiRoutingDataSource extends AbstractRoutingDataSource
 		implements ApplicationListener<ContextRefreshedEvent> {
-	protected final static Log logger = LogFactory.getLog(MultiRoutingDataSource.class);
+	private final static Log logger = LogFactory.getLog(MultiRoutingDataSource.class);
 
-	private static volatile ConcurrentMap<Object, Object> targetDataSources = new ConcurrentHashMap<Object, Object>();
+	private static final ConcurrentMap<Object, Object> targetDataSources = new ConcurrentHashMap<Object, Object>();
 
-	private static volatile AtomicBoolean loading = new AtomicBoolean(false);
+	private static final AtomicBoolean loading = new AtomicBoolean(false);
 
-	private static volatile AtomicBoolean reload = new AtomicBoolean(false);
+	private static final AtomicBoolean reload = new AtomicBoolean(false);
 
 	private static volatile Object defaultTargetDataSource;
 
@@ -110,7 +109,7 @@ public class MultiRoutingDataSource extends AbstractRoutingDataSource
 		}
 	}
 
-	public MultiRoutingDataSource() {
+	private MultiRoutingDataSource() {
 
 	}
 

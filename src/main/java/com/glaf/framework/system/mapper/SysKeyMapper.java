@@ -18,12 +18,11 @@
 
 package com.glaf.framework.system.mapper;
 
-import java.util.List;
-import org.springframework.stereotype.Component;
-
- 
 import com.glaf.framework.system.domain.SysKey;
 import com.glaf.framework.system.query.SysKeyQuery;
+import org.springframework.stereotype.Component;
+
+import java.util.List;
 
 /**
  * 

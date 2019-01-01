@@ -18,32 +18,30 @@
 
 package com.glaf.core.cache.guava;
 
-import java.util.Iterator;
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
-import com.google.common.cache.Cache;
-import com.google.common.cache.CacheBuilder;
-
 public class GuavaCache implements com.glaf.core.cache.Cache {
 	protected static final Log logger = LogFactory.getLog(GuavaCache.class);
 
-	protected static ConcurrentMap<String, Cache<Object, Object>> cacheConcurrentMap = new ConcurrentHashMap<String, Cache<Object, Object>>();
+	private static final ConcurrentMap<String, Cache<Object, Object>> cacheConcurrentMap = new ConcurrentHashMap<String, Cache<Object, Object>>();
 
-	protected static AtomicBoolean running = new AtomicBoolean(false);
+	private static final AtomicBoolean running = new AtomicBoolean(false);
 
-	protected Cache<Object, Object> cache;
+	private Cache<Object, Object> cache;
 
-	protected int cacheSize = 50000;
+	private int cacheSize = 50000;
 
-	protected int expireMinutes = 10;
+	private int expireMinutes = 10;
 
-	public GuavaCache() {
+	private GuavaCache() {
 
 	}
 
@@ -51,12 +49,10 @@ public class GuavaCache implements com.glaf.core.cache.Cache {
 		getCache().invalidateAll();
 		getCache().cleanUp();
 
-		Iterator<String> iterator = cacheConcurrentMap.keySet().iterator();
-		while (iterator.hasNext()) {
-			String region = iterator.next();
-			getCache(region).invalidateAll();
-			getCache(region).cleanUp();
-		}
+        for (String region : cacheConcurrentMap.keySet()) {
+            getCache(region).invalidateAll();
+            getCache(region).cleanUp();
+        }
 		cacheConcurrentMap.clear();
 	}
 
@@ -68,9 +64,6 @@ public class GuavaCache implements com.glaf.core.cache.Cache {
 
 	public Object get(String key) {
 		Object value = getCache().getIfPresent(key);
-		if (value != null) {
-
-		}
 		return value;
 	}
 
@@ -85,7 +78,7 @@ public class GuavaCache implements com.glaf.core.cache.Cache {
 		return null;
 	}
 
-	public Cache<Object, Object> getCache() {
+	private Cache<Object, Object> getCache() {
 		if (cache == null) {
 			if (!running.get()) {
 				try {
@@ -102,17 +95,15 @@ public class GuavaCache implements com.glaf.core.cache.Cache {
 		return cache;
 	}
 
-	public Cache<Object, Object> getCache(String region) {
+	private Cache<Object, Object> getCache(String region) {
 		Cache<Object, Object> regionCache = cacheConcurrentMap.get(region);
 		if (regionCache == null) {
 			if (!running.get()) {
 				try {
 					running.set(true);
-					if (regionCache == null) {
-						regionCache = CacheBuilder.newBuilder().maximumSize(getCacheSize())
-								.expireAfterWrite(getExpireMinutes(), TimeUnit.MINUTES).build();
-						cacheConcurrentMap.put(region, regionCache);
-					}
+					regionCache = CacheBuilder.newBuilder().maximumSize(getCacheSize())
+							.expireAfterWrite(getExpireMinutes(), TimeUnit.MINUTES).build();
+					cacheConcurrentMap.put(region, regionCache);
 				} finally {
 					running.set(false);
 				}
@@ -121,11 +112,11 @@ public class GuavaCache implements com.glaf.core.cache.Cache {
 		return regionCache;
 	}
 
-	public int getCacheSize() {
+	private int getCacheSize() {
 		return cacheSize;
 	}
 
-	public int getExpireMinutes() {
+	private int getExpireMinutes() {
 		return expireMinutes;
 	}
 
@@ -174,12 +165,10 @@ public class GuavaCache implements com.glaf.core.cache.Cache {
 	public void shutdown() {
 		getCache().invalidateAll();
 		getCache().cleanUp();
-		Iterator<String> iterator = cacheConcurrentMap.keySet().iterator();
-		while (iterator.hasNext()) {
-			String region = iterator.next();
-			getCache(region).invalidateAll();
-			getCache(region).cleanUp();
-		}
+        for (String region : cacheConcurrentMap.keySet()) {
+            getCache(region).invalidateAll();
+            getCache(region).cleanUp();
+        }
 		cacheConcurrentMap.clear();
 	}
 }

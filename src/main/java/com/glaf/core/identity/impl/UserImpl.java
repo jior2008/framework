@@ -18,16 +18,15 @@
 
 package com.glaf.core.identity.impl;
 
-import java.util.Collection;
-import java.util.Date;
-import java.util.HashSet;
-
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
-
 import com.alibaba.fastjson.JSONObject;
 import com.glaf.core.identity.User;
 import com.glaf.core.identity.util.UserJsonFactory;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+
+import java.util.Collection;
+import java.util.Date;
+import java.util.HashSet;
 
 public class UserImpl implements User {
 
@@ -93,7 +92,7 @@ public class UserImpl implements User {
 
 	protected String token;
 
-	private Collection<String> rowKeys = new HashSet<String>();
+	protected Collection<String> rowKeys = new HashSet<String>();
 
 	public UserImpl() {
 
@@ -116,12 +115,9 @@ public class UserImpl implements User {
 			return false;
 		UserImpl other = (UserImpl) obj;
 		if (actorId == null) {
-			if (other.actorId != null)
-				return false;
-		} else if (!actorId.equals(other.actorId))
-			return false;
-		return true;
-	}
+            return other.actorId == null;
+		} else return actorId.equals(other.actorId);
+    }
 
 	public int getAccountType() {
 		return accountType;
@@ -256,11 +252,8 @@ public class UserImpl implements User {
 	}
 
 	public boolean isSystemAdministrator() {
-		if ("admin".equals(actorId)) {
-			return true;
-		}
-		return false;
-	}
+        return "admin".equals(actorId);
+    }
 
 	public User jsonToObject(JSONObject json) {
 		return UserJsonFactory.jsonToObject(json);

@@ -18,13 +18,14 @@
 
 package com.glaf.framework.dao;
 
-import java.math.BigDecimal;
-import java.math.BigInteger;
-import java.sql.Connection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
+import com.glaf.core.config.BaseConfiguration;
+import com.glaf.core.config.Configuration;
+import com.glaf.core.dao.EntityDAO;
+import com.glaf.core.id.Dbid;
+import com.glaf.core.id.IdBlock;
+import com.glaf.core.util.ClassUtils;
+import com.glaf.core.util.DateUtils;
+import com.glaf.core.util.Tools;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -34,22 +35,20 @@ import org.apache.ibatis.session.SqlSession;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Component;
 
-import com.glaf.core.config.BaseConfiguration;
-import com.glaf.core.config.Configuration;
-import com.glaf.core.dao.EntityDAO;
-import com.glaf.core.id.Dbid;
-import com.glaf.core.id.IdBlock;
-import com.glaf.core.util.ClassUtils;
-import com.glaf.core.util.DateUtils;
-import com.glaf.core.util.Tools;
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.sql.Connection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Component("entityDAO")
 public class MyBatisEntityDAOImpl implements EntityDAO {
 	protected final static Log logger = LogFactory.getLog(MyBatisEntityDAOImpl.class);
 
-	protected static Configuration conf = BaseConfiguration.create();
+	private static final Configuration conf = BaseConfiguration.create();
 
-	protected SqlSessionTemplate sqlSessionTemplate;
+	private SqlSessionTemplate sqlSessionTemplate;
 
 	@SuppressWarnings("unchecked")
 	public void delete(String statementId, Object parameterObject) {
@@ -83,10 +82,10 @@ public class MyBatisEntityDAOImpl implements EntityDAO {
 	}
 
 	public int getCount(String statementId, Object parameterObject) {
-		int totalCount = 0;
+		int totalCount;
 		SqlSession session = getSqlSession();
 
-		Object object = null;
+		Object object;
 		if (parameterObject != null) {
 			object = session.selectOne(statementId, parameterObject);
 		} else {
@@ -94,8 +93,8 @@ public class MyBatisEntityDAOImpl implements EntityDAO {
 		}
 
 		if (object instanceof Integer) {
-			Integer iCount = (Integer) object;
-			totalCount = iCount.intValue();
+			int iCount = (int) object;
+			totalCount = iCount;
 		} else if (object instanceof Long) {
 			Long iCount = (Long) object;
 			totalCount = iCount.intValue();
@@ -138,7 +137,7 @@ public class MyBatisEntityDAOImpl implements EntityDAO {
 		return getSqlSession().selectOne(statementId, parameterObject);
 	}
 
-	public SqlSessionTemplate getSqlSession() {
+	private SqlSessionTemplate getSqlSession() {
 		return sqlSessionTemplate;
 	}
 
@@ -149,7 +148,7 @@ public class MyBatisEntityDAOImpl implements EntityDAO {
 	 */
 	public synchronized int getTableUserMaxId(String tablename, String idColumn, String createBy) {
 		int day = DateUtils.getNowYearMonthDay();
-		String idLike = String.valueOf(day) + "/" + createBy + "-%";
+		String idLike = day + "/" + createBy + "-%";
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("tablename", tablename);
 		params.put("idColumn", idColumn);

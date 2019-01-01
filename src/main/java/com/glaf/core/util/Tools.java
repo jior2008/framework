@@ -18,22 +18,20 @@
 
 package com.glaf.core.util;
 
-import java.awt.Color;
-import java.beans.PropertyDescriptor;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
-import java.util.TreeMap;
-
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.BeanUtils;
 
+import java.awt.*;
+import java.beans.PropertyDescriptor;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
+import java.util.TreeMap;
+
 public class Tools {
-	protected final static Log logger = LogFactory.getLog(Tools.class);
+	private final static Log logger = LogFactory.getLog(Tools.class);
 
 	@SuppressWarnings("unchecked")
 	public static Map<String, Object> getDataMap(Object target) {
@@ -51,8 +49,7 @@ public class Tools {
 		} else {
 			PropertyDescriptor[] propertyDescriptor = BeanUtils
 					.getPropertyDescriptors(target.getClass());
-			for (int i = 0; i < propertyDescriptor.length; i++) {
-				PropertyDescriptor descriptor = propertyDescriptor[i];
+			for (PropertyDescriptor descriptor : propertyDescriptor) {
 				String propertyName = descriptor.getName();
 				if (propertyName.equalsIgnoreCase("class")) {
 					continue;
@@ -61,7 +58,7 @@ public class Tools {
 					Object value = PropertyUtils.getProperty(target,
 							propertyName);
 					dataMap.put(propertyName, value);
-				} catch (Exception ex) {
+				} catch (Exception ignored) {
 
 				}
 			}
@@ -69,12 +66,11 @@ public class Tools {
 		return dataMap;
 	}
 
-	public static Map<String, Class<?>> getPropertyMap(Class<?> clazz) {
+	private static Map<String, Class<?>> getPropertyMap(Class<?> clazz) {
 		Map<String, Class<?>> dataMap = new java.util.HashMap<String, Class<?>>();
 		PropertyDescriptor[] propertyDescriptor = BeanUtils
 				.getPropertyDescriptors(clazz);
-		for (int i = 0; i < propertyDescriptor.length; i++) {
-			PropertyDescriptor descriptor = propertyDescriptor[i];
+		for (PropertyDescriptor descriptor : propertyDescriptor) {
 			String propertyName = descriptor.getName();
 			if (propertyName.equalsIgnoreCase("class")) {
 				continue;
@@ -88,7 +84,7 @@ public class Tools {
 		return getPropertyMap(model.getClass());
 	}
 
-	public static Object getValue(Class<?> type, String propertyValue) {
+	private static Object getValue(Class<?> type, String propertyValue) {
 		if (type == null || propertyValue == null
 				|| propertyValue.trim().length() == 0) {
 			return null;
@@ -120,7 +116,7 @@ public class Tools {
 			} else if ((type == Boolean.class) || (type == boolean.class)) {
 				value = Boolean.valueOf(propertyValue);
 			} else if ((type == Character.class) || (type == char.class)) {
-				value = Character.valueOf(propertyValue.charAt(0));
+				value = propertyValue.charAt(0);
 			} else if ((type == Short.class) || (type == short.class)) {
 				if (propertyValue.indexOf(',') != -1) {
 					propertyValue = propertyValue.replaceAll(",", "");
@@ -134,10 +130,6 @@ public class Tools {
 				value = DateUtils.toDate(propertyValue);
 			} else if (type == java.sql.Timestamp.class) {
 				value = DateUtils.toDate(propertyValue);
-			} else if (type.isAssignableFrom(List.class)) {
-			} else if (type.isAssignableFrom(Set.class)) {
-			} else if (type.isAssignableFrom(Collection.class)) {
-			} else if (type.isAssignableFrom(Map.class)) {
 			} else {
 				value = propertyValue;
 			}
@@ -153,18 +145,16 @@ public class Tools {
 			return false;
 		}
 		char[] sourceChrs = sourceString.toCharArray();
-		Character chr = Character.valueOf(sourceChrs[0]);
-		if (!((chr.charValue() == 95)
-				|| (65 <= chr.charValue() && chr.charValue() <= 90) || (97 <= chr
-				.charValue() && chr.charValue() <= 122))) {
+		Character chr = sourceChrs[0];
+		if (!((chr == 95)
+				|| (65 <= chr && chr <= 90) || (97 <= chr && chr <= 122))) {
 			return false;
 		}
 		for (int i = 1; i < sourceChrs.length; i++) {
-			chr = Character.valueOf(sourceChrs[i]);
-			if (!((chr.charValue() == 95)
-					|| (47 <= chr.charValue() && chr.charValue() <= 57)
-					|| (65 <= chr.charValue() && chr.charValue() <= 90) || (97 <= chr
-					.charValue() && chr.charValue() <= 122))) {
+			chr = sourceChrs[i];
+			if (!((chr == 95)
+					|| (47 <= chr && chr <= 57)
+					|| (65 <= chr && chr <= 90) || (97 <= chr && chr <= 122))) {
 				return false;
 			}
 		}
@@ -197,14 +187,13 @@ public class Tools {
 		} else {
 			PropertyDescriptor[] propertyDescriptor = BeanUtils
 					.getPropertyDescriptors(model.getClass());
-			for (int i = 0; i < propertyDescriptor.length; i++) {
-				PropertyDescriptor descriptor = propertyDescriptor[i];
+			for (PropertyDescriptor descriptor : propertyDescriptor) {
 				String propertyName = descriptor.getName();
 				if (propertyName.equalsIgnoreCase("class")) {
 					continue;
 				}
 				String value = null;
-				Object x = null;
+				Object val;
 				Object object = dataMap.get(propertyName);
 				if (object != null && object instanceof String) {
 					value = (String) object;
@@ -212,13 +201,13 @@ public class Tools {
 				try {
 					Class<?> clazz = descriptor.getPropertyType();
 					if (value != null) {
-						x = getValue(clazz, value);
+						val = getValue(clazz, value);
 					} else {
-						x = object;
+						val = object;
 					}
-					if (x != null) {
+					if (val != null) {
 						// PropertyUtils.setProperty(model, propertyName, x);
-						ReflectUtils.setFieldValue(model, propertyName, x);
+						ReflectUtils.setFieldValue(model, propertyName, val);
 					}
 				} catch (Exception ex) {
 					logger.debug(ex);

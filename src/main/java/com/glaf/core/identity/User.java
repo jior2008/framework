@@ -18,9 +18,9 @@
 
 package com.glaf.core.identity;
 
-import java.util.Date;
-
 import com.alibaba.fastjson.JSONObject;
+
+import java.util.Date;
 
 public interface User extends java.io.Serializable {
 

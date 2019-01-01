@@ -25,21 +25,21 @@ public class TenantImpl implements Tenant {
 
 	private static final long serialVersionUID = 1L;
 
-	protected long id;
+	private long id;
 
-	protected long databaseId;
+	private long databaseId;
 
-	protected int limit;
+	private int limit;
 
-	protected int locked;
+	private int locked;
 
-	protected String name;
+	private String name;
 
-	protected String tenantId;
+	private String tenantId;
 
-	protected int tenantType;
+	private int tenantType;
 
-	protected boolean isSystemAdministrator;
+	private boolean isSystemAdministrator;
 
 	public TenantImpl() {
 

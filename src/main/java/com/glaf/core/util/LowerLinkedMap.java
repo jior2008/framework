@@ -18,7 +18,6 @@
 
 package com.glaf.core.util;
 
-import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -37,12 +36,12 @@ public class LowerLinkedMap extends LinkedHashMap<String, Object> {
 		this(initialCapacity, null);
 	}
 
-	public LowerLinkedMap(int initialCapacity, Locale locale) {
+	private LowerLinkedMap(int initialCapacity, Locale locale) {
 		super(initialCapacity);
 		this.locale = locale == null ? Locale.getDefault() : locale;
 	}
 
-	public LowerLinkedMap(Locale locale) {
+	private LowerLinkedMap(Locale locale) {
 		this.locale = locale == null ? Locale.getDefault() : locale;
 	}
 
@@ -54,7 +53,7 @@ public class LowerLinkedMap extends LinkedHashMap<String, Object> {
 		return (key instanceof String) && super.containsKey(convertKey((String) key));
 	}
 
-	protected String convertKey(String key) {
+	private String convertKey(String key) {
 		if (key != null) {
 			return key.toLowerCase(locale);
 		}
@@ -77,10 +76,9 @@ public class LowerLinkedMap extends LinkedHashMap<String, Object> {
 		if (map.isEmpty()) {
 			return;
 		}
-		Map.Entry entry = null;
-		Iterator iterator = map.entrySet().iterator();
-		while (iterator.hasNext()) {
-			entry = (Map.Entry) iterator.next();
+		Map.Entry entry;
+		for (Object o : map.entrySet()) {
+			entry = (Map.Entry) o;
 			put(convertKey((String) entry.getKey()), entry.getValue());
 		}
 	}

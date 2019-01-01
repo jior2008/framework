@@ -18,12 +18,11 @@
 
 package com.glaf.framework.system.service;
 
-import java.util.List;
-import java.util.Map;
-
+import com.glaf.framework.system.domain.SystemProperty;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.glaf.framework.system.domain.SystemProperty;
+import java.util.List;
+import java.util.Map;
 
 @Transactional(readOnly = true)
 public interface ISystemPropertyService {

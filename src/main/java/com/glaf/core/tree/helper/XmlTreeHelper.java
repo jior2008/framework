@@ -18,20 +18,19 @@
 
 package com.glaf.core.tree.helper;
 
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.Map.Entry;
-
-import org.apache.commons.lang3.StringUtils;
-import org.dom4j.Element;
-
 import com.glaf.core.tree.component.TreeComponent;
 import com.glaf.core.tree.component.TreeRepository;
 import com.glaf.core.util.DateUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.dom4j.Element;
 
-public class XmlTreeHelper {
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
+
+class XmlTreeHelper {
 
 	/**
 	 * 附加XML数据节点
@@ -52,19 +51,18 @@ public class XmlTreeHelper {
 			TreeRepository menuRepository = builder.buildTree(treeModels);
 			List<TreeComponent> topTrees = menuRepository.getTopTrees();
 			if (topTrees != null && topTrees.size() > 0) {
-				for (int i = 0, len = topTrees.size(); i < len; i++) {
-					TreeComponent component = (TreeComponent) topTrees.get(i);
-					Element elem = this.appendData(component, element, xmlTag, elemMap);
-					this.processTreeNode(elem, component, xmlTag, elemMap);
-				}
+                for (TreeComponent component : topTrees) {
+                    Element elem = this.appendData(component, element, xmlTag, elemMap);
+                    this.processTreeNode(elem, component, xmlTag, elemMap);
+                }
 			}
 		}
 	}
 
-	protected Element appendData(TreeComponent component, Element element, String xmlTag, Map<String, String> elemMap) {
+	private Element appendData(TreeComponent component, Element element, String xmlTag, Map<String, String> elemMap) {
 		Element elem = element.addElement(xmlTag);
 		if (component.getDataMap() != null) {
-			String text = null;
+			String text;
 			Map<String, Object> dataMap = component.getDataMap();
 			Set<Entry<String, String>> entrySet = elemMap.entrySet();
 			for (Entry<String, String> entry : entrySet) {
@@ -89,8 +87,8 @@ public class XmlTreeHelper {
 		return elem;
 	}
 
-	protected void processTreeNode(Element element, TreeComponent component, String xmlTag,
-			Map<String, String> elemMap) {
+	private void processTreeNode(Element element, TreeComponent component, String xmlTag,
+                                 Map<String, String> elemMap) {
 		if (component.getComponents() != null && component.getComponents().size() > 0) {
 			for (TreeComponent child : component.getComponents()) {
 				Element elem = this.appendData(child, element, xmlTag, elemMap);

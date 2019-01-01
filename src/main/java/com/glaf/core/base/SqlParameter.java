@@ -18,31 +18,30 @@
 
 package com.glaf.core.base;
 
-import java.util.Date;
-
+import com.glaf.core.util.DateUtils;
 import org.apache.commons.lang3.StringUtils;
 
-import com.glaf.core.util.DateUtils;
+import java.util.Date;
 
 public class SqlParameter implements java.io.Serializable, Parameter {
 
 	private static final long serialVersionUID = -5679409772240725858L;
 
-	protected String id;
+	private String id;
 
-	protected String name;
+	private String name;
 
-	protected boolean autoTypeConvert;
+	private boolean autoTypeConvert;
 
-	protected Date dateVal;
+	private Date dateVal;
 
-	protected Double doubleVal;
+	private Double doubleVal;
 
-	protected Integer intVal;
+	private Integer intVal;
 
-	protected Long longVal;
+	private Long longVal;
 
-	protected String stringVal;
+	private String stringVal;
 
 	public SqlParameter() {
 

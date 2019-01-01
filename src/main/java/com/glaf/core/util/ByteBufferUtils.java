@@ -18,6 +18,8 @@
 
 package com.glaf.core.util;
 
+import org.apache.commons.lang3.ArrayUtils;
+
 import java.io.DataOutput;
 import java.io.IOException;
 import java.io.InputStream;
@@ -25,8 +27,6 @@ import java.nio.ByteBuffer;
 import java.nio.charset.CharacterCodingException;
 import java.nio.charset.Charset;
 import java.util.Arrays;
-
-import org.apache.commons.lang3.ArrayUtils;
 
 /**
  * Utility methods to make ByteBuffers less painful The following should
@@ -63,8 +63,8 @@ import org.apache.commons.lang3.ArrayUtils;
  * }
  * 
  */
-public class ByteBufferUtils {
-	public static final ByteBuffer EMPTY_BYTE_BUFFER = ByteBuffer
+class ByteBufferUtils {
+	private static final ByteBuffer EMPTY_BYTE_BUFFER = ByteBuffer
 			.wrap(ArrayUtils.EMPTY_BYTE_ARRAY);
 
 	/**
@@ -97,7 +97,7 @@ public class ByteBufferUtils {
 	 *            the String encoding charset
 	 * @return the decoded string
 	 */
-	public static String string(ByteBuffer buffer, Charset charset)
+	private static String string(ByteBuffer buffer, Charset charset)
 			throws CharacterCodingException {
 		return charset.newDecoder().decode(buffer.duplicate()).toString();
 	}
@@ -241,7 +241,7 @@ public class ByteBufferUtils {
 		write(bytes, out); // writing data bytes to output source
 	}
 
-	public static void write(ByteBuffer buffer, DataOutput out)
+	private static void write(ByteBuffer buffer, DataOutput out)
 			throws IOException {
 		if (buffer.hasArray()) {
 			out.write(buffer.array(), buffer.arrayOffset() + buffer.position(),
@@ -297,7 +297,7 @@ public class ByteBufferUtils {
 		final ByteBuffer copy = bytes.duplicate();
 
 		return new InputStream() {
-			public int read() throws IOException {
+			public int read() {
 				if (!copy.hasRemaining())
 					return -1;
 
@@ -305,7 +305,7 @@ public class ByteBufferUtils {
 			}
 
 			@Override
-			public int read(byte[] bytes, int off, int len) throws IOException {
+			public int read(byte[] bytes, int off, int len) {
 				if (!copy.hasRemaining())
 					return -1;
 
@@ -315,7 +315,7 @@ public class ByteBufferUtils {
 			}
 
 			@Override
-			public int available() throws IOException {
+			public int available() {
 				return copy.remaining();
 			}
 		};
@@ -381,11 +381,10 @@ public class ByteBufferUtils {
 	/**
 	 * 分配flush模式的ByteBuffer，limit和position都为0,在写入数据时，必须先翻为fill模式
 	 * 
-	 * @param capacity
 	 * @return
 	 */
-	public static ByteBuffer allocate(int capacity) {
-		ByteBuffer buff = ByteBuffer.allocate(capacity);
+	private static ByteBuffer allocate() {
+		ByteBuffer buff = ByteBuffer.allocate(8192);
 		buff.limit(0);
 		return buff;
 	}
@@ -426,7 +425,7 @@ public class ByteBufferUtils {
 	 * @param buffer
 	 * @return
 	 */
-	public static int flipToFill(ByteBuffer buffer) {
+	private static int flipToFill(ByteBuffer buffer) {
 		int position = buffer.position();
 		int limit = buffer.limit();
 		// 说明正好flush完，可以完全转换未fill模式
@@ -454,7 +453,7 @@ public class ByteBufferUtils {
 	 * @param buffer
 	 * @param position
 	 */
-	public static void flipToFlush(ByteBuffer buffer, int position) {
+	private static void flipToFlush(ByteBuffer buffer, int position) {
 		buffer.limit(buffer.position());
 		buffer.position(position);
 	}
@@ -581,7 +580,7 @@ public class ByteBufferUtils {
 
 	public static void readFrom(InputStream is, int needed, ByteBuffer buffer)
 			throws IOException {
-		ByteBuffer tmp = allocate(8192);
+		ByteBuffer tmp = allocate();
 		while (needed > 0 && buffer.hasRemaining()) {
 			int l = is.read(tmp.array(), 0, 8192);
 			if (l < 0) {

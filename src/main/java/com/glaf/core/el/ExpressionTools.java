@@ -18,11 +18,10 @@
 
 package com.glaf.core.el;
 
-import java.util.Map;
-
+import com.glaf.core.util.StringTools;
 import org.apache.commons.lang3.StringUtils;
 
-import com.glaf.core.util.StringTools;
+import java.util.Map;
 
 public class ExpressionTools {
 

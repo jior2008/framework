@@ -18,9 +18,8 @@
 
 package com.glaf.framework.service;
 
-import org.springframework.transaction.annotation.Transactional;
-
 import com.glaf.core.base.TableModel;
+import org.springframework.transaction.annotation.Transactional;
 
 @Transactional(readOnly = true)
 public interface ITableDataService {

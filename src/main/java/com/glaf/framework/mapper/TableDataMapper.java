@@ -18,9 +18,8 @@
 
 package com.glaf.framework.mapper;
 
-import org.springframework.stereotype.Component;
-
 import com.glaf.core.base.TableModel;
+import org.springframework.stereotype.Component;
 
 @Component
 public interface TableDataMapper {

@@ -18,20 +18,16 @@
 
 package com.glaf.core.util;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
+import org.apache.commons.io.IOUtils;
+
+import java.io.*;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
-
-import org.apache.commons.io.IOUtils;
 
 /**
  * A collection of utility methods for working on GZIPed data.
  */
-public class GZIPUtils {
+class GZIPUtils {
 
 	private static final int EXPECTED_COMPRESSION_RATIO = 5;
 	private static final int BUF_SIZE = 65536;
@@ -42,7 +38,7 @@ public class GZIPUtils {
 	 * @throws IOException
 	 *             if the input cannot be properly decompressed
 	 */
-	public static final byte[] unzip(byte[] bytes) {
+	public static byte[] unzip(byte[] bytes) {
 		// decompress using GZIPInputStream
 		ByteArrayOutputStream outStream = null;
 		GZIPInputStream zis = null;
@@ -81,7 +77,7 @@ public class GZIPUtils {
 	 * much as possible. If no data can be extracted <code>null</code> is
 	 * returned.
 	 */
-	public static final byte[] unzipBestEffort(byte[] in) {
+	public static byte[] unzipBestEffort(byte[] in) {
 		return unzipBestEffort(in, Integer.MAX_VALUE);
 	}
 
@@ -91,7 +87,7 @@ public class GZIPUtils {
 	 * truncated or corrupted, a best-effort attempt is made to unzip as much as
 	 * possible. If no data can be extracted <code>null</code> is returned.
 	 */
-	public static final byte[] unzipBestEffort(byte[] in, int sizeLimit) {
+	private static byte[] unzipBestEffort(byte[] in, int sizeLimit) {
 		try {
 			// decompress using GZIPInputStream
 			ByteArrayOutputStream outStream = new ByteArrayOutputStream(
@@ -119,7 +115,7 @@ public class GZIPUtils {
 			}
 			try {
 				outStream.close();
-			} catch (IOException e) {
+			} catch (IOException ignored) {
 			}
 
 			return outStream.toByteArray();
@@ -132,7 +128,7 @@ public class GZIPUtils {
 	/**
 	 * Returns an gzipped copy of the input array.
 	 */
-	public static final byte[] zip(byte[] bytes) {
+	public static byte[] zip(byte[] bytes) {
 		ByteArrayOutputStream baos = null;
 		BufferedOutputStream bos = null;
 		GZIPOutputStream outStream = null;

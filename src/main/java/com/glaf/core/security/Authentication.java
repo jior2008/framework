@@ -17,9 +17,9 @@ import io.netty.util.concurrent.FastThreadLocal;
 
 public class Authentication {
 
-	static FastThreadLocal<String> authenticatedActorThreadLocal = new FastThreadLocal<String>();
+	private static final FastThreadLocal<String> authenticatedActorThreadLocal = new FastThreadLocal<String>();
 
-	static FastThreadLocal<LoginContext> loginContextThreadLocal = new FastThreadLocal<LoginContext>();
+	private static final FastThreadLocal<LoginContext> loginContextThreadLocal = new FastThreadLocal<LoginContext>();
 
 	private Authentication() {
 

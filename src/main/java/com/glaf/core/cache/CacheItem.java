@@ -2,12 +2,12 @@ package com.glaf.core.cache;
 
 public class CacheItem implements java.io.Serializable {
 	private static final long serialVersionUID = 1L;
-	protected String region;
-	protected String name;
-	protected String key;
-	protected long lastModified;
-	protected long timeToLiveInSeconds;
-	protected int size;
+	private String region;
+	private String name;
+	private String key;
+	private long lastModified;
+	private long timeToLiveInSeconds;
+	private int size;
 
 	public CacheItem() {
 
@@ -28,12 +28,9 @@ public class CacheItem implements java.io.Serializable {
 			return false;
 		CacheItem other = (CacheItem) obj;
 		if (key == null) {
-			if (other.key != null)
-				return false;
-		} else if (!key.equals(other.key))
-			return false;
-		return true;
-	}
+            return other.key == null;
+		} else return key.equals(other.key);
+    }
 
 	public String getKey() {
 		return key;

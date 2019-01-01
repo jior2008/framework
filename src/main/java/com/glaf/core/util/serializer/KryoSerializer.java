@@ -24,7 +24,6 @@ import com.esotericsoftware.kryo.io.Output;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 
 /**
  * 使用 Kryo 实现序列化
@@ -34,7 +33,7 @@ public class KryoSerializer implements Serializer {
 	private final static Kryo kryo = new Kryo();
 
 	@Override
-	public Object deserialize(byte[] bits) throws IOException {
+	public Object deserialize(byte[] bits) {
 		if (bits == null || bits.length == 0)
 			return null;
 		Input ois = null;
@@ -54,7 +53,7 @@ public class KryoSerializer implements Serializer {
 	}
 
 	@Override
-	public byte[] serialize(Object obj) throws IOException {
+	public byte[] serialize(Object obj) {
 		Output output = null;
 		try {
 			ByteArrayOutputStream baos = new ByteArrayOutputStream();

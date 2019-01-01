@@ -26,7 +26,7 @@ import java.io.IOException;
 /**
  * 对象序列化工具包
  */
-public class SerializationUtils {
+class SerializationUtils {
 
 	private final static Logger log = LoggerFactory.getLogger(SerializationUtils.class);
 	private static Serializer g_ser;

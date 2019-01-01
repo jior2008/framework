@@ -25,32 +25,32 @@ import java.util.List;
 @SuppressWarnings("rawtypes")
 public class DataQuery extends BaseQuery {
 	private static final long serialVersionUID = 1L;
-	protected String businessKey;
-	protected String objectId;
-	protected String objectValue;
-	protected Long parentId;
-	protected List<Long> parentIds = new ArrayList<Long>();
-	protected Object processInstanceId;
-	protected List processInstanceIds = new ArrayList();
-	protected boolean processInstanceIsNotNull;
-	protected boolean processInstanceIsNull;
-	protected String processName;
-	protected String processNameLike;
-	protected List<String> processNames;
-	protected Integer status;
-	protected Integer statusGreaterThanOrEqual;
-	protected Integer statusLessThanOrEqual;
-	protected Integer statusNotEqual;
-	protected List taskInstanceIds = new ArrayList();
-	protected String treeId;
-	protected String treeIdLike;
-	protected Integer wfStatus;
-	protected Integer wfStatusGreaterThanOrEqual;
-	protected Integer wfStatusLessThanOrEqual;
-	protected Integer wfStatusNotEqual;
-	protected String workedProcessFlag;
+	private String businessKey;
+	private String objectId;
+	private String objectValue;
+	private Long parentId;
+	private List<Long> parentIds = new ArrayList<Long>();
+	private Object processInstanceId;
+	private List processInstanceIds = new ArrayList();
+	private boolean processInstanceIsNotNull;
+	private boolean processInstanceIsNull;
+	private String processName;
+	private String processNameLike;
+	private List<String> processNames;
+	private Integer status;
+	private Integer statusGreaterThanOrEqual;
+	private Integer statusLessThanOrEqual;
+	private Integer statusNotEqual;
+	private List taskInstanceIds = new ArrayList();
+	private String treeId;
+	private String treeIdLike;
+	private Integer wfStatus;
+	private Integer wfStatusGreaterThanOrEqual;
+	private Integer wfStatusLessThanOrEqual;
+	private Integer wfStatusNotEqual;
+	private String workedProcessFlag;
 
-	public DataQuery() {
+	protected DataQuery() {
 
 	}
 

@@ -18,10 +18,6 @@
 
 package com.glaf.core.security;
 
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.glaf.core.cache.CacheFactory;
@@ -30,13 +26,16 @@ import com.glaf.core.identity.User;
 import com.glaf.core.identity.util.UserJsonFactory;
 import com.glaf.core.service.EntityService;
 import com.glaf.core.util.Constants;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 public class IdentityFactory {
 	protected final static Log logger = LogFactory.getLog(IdentityFactory.class);
 
-	protected static EntityService entityService;
+	private static EntityService entityService;
 
-	public static EntityService getEntityService() {
+	private static EntityService getEntityService() {
 		if (entityService == null) {
 			entityService = ContextFactory.getBean("entityService");
 		}
@@ -56,7 +55,7 @@ public class IdentityFactory {
 			try {
 				JSONObject jsonObject = JSON.parseObject(text);
 				return LoginContextUtils.jsonToObject(jsonObject);
-			} catch (Exception ex) {
+			} catch (Exception ignored) {
 			}
 		}
 
@@ -77,14 +76,14 @@ public class IdentityFactory {
 	 * @param userId
 	 * @return
 	 */
-	public static User getUser(String userId) {
+	private static User getUser(String userId) {
 		String cacheKey = Constants.CACHE_USER_KEY + userId;
 		String text = CacheFactory.getString(Constants.CACHE_USER_REGION, cacheKey);
 		if (text != null) {
 			try {
 				JSONObject jsonObject = JSON.parseObject(text);
 				return UserJsonFactory.jsonToObject(jsonObject);
-			} catch (Exception ex) {
+			} catch (Exception ignored) {
 			}
 		}
 		User user = (User) getEntityService().getById("getUserById", userId);

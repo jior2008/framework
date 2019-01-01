@@ -18,35 +18,33 @@
 
 package com.glaf.framework.system.service.impl;
 
-import java.util.*;
-
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.apache.ibatis.session.RowBounds;
-import org.mybatis.spring.SqlSessionTemplate;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.glaf.core.config.Environment;
 import com.glaf.core.util.UUID32;
-
 import com.glaf.framework.system.domain.SysKey;
 import com.glaf.framework.system.mapper.SysKeyMapper;
 import com.glaf.framework.system.query.SysKeyQuery;
 import com.glaf.framework.system.service.SysKeyService;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.ibatis.session.RowBounds;
+import org.mybatis.spring.SqlSessionTemplate;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Date;
+import java.util.List;
 
 @Service("sysKeyService")
 @Transactional(readOnly = true)
 public class SysKeyServiceImpl implements SysKeyService {
 	protected final Logger logger = LoggerFactory.getLogger(getClass());
 
-	protected JdbcTemplate jdbcTemplate;
 
-	protected SqlSessionTemplate sqlSessionTemplate;
 
-	protected SysKeyMapper sysKeyMapper;
+	private SqlSessionTemplate sqlSessionTemplate;
+
+	private SysKeyMapper sysKeyMapper;
 
 	public SysKeyServiceImpl() {
 
@@ -77,11 +75,9 @@ public class SysKeyServiceImpl implements SysKeyService {
 			return null;
 		}
 		if (StringUtils.equals(Environment.POSTGRESQL, Environment.getDatabaseType())) {
-			SysKey sysKey = sysKeyMapper.getSysKeyById_postgres(id);
-			return sysKey;
+            return sysKeyMapper.getSysKeyById_postgres(id);
 		}
-		SysKey sysKey = sysKeyMapper.getSysKeyById(id);
-		return sysKey;
+        return sysKeyMapper.getSysKeyById(id);
 	}
 
 	/**
@@ -100,13 +96,11 @@ public class SysKeyServiceImpl implements SysKeyService {
 	 */
 	public List<SysKey> getSysKeysByQueryCriteria(int start, int pageSize, SysKeyQuery query) {
 		RowBounds rowBounds = new RowBounds(start, pageSize);
-		List<SysKey> rows = sqlSessionTemplate.selectList("getSysKeys", query, rowBounds);
-		return rows;
+        return sqlSessionTemplate.selectList("getSysKeys", query, rowBounds);
 	}
 
 	public List<SysKey> list(SysKeyQuery query) {
-		List<SysKey> list = sysKeyMapper.getSysKeys(query);
-		return list;
+        return sysKeyMapper.getSysKeys(query);
 	}
 
 	@Transactional
@@ -132,11 +126,6 @@ public class SysKeyServiceImpl implements SysKeyService {
 				}
 			}
 		}
-	}
-
-	@javax.annotation.Resource
-	public void setJdbcTemplate(JdbcTemplate jdbcTemplate) {
-		this.jdbcTemplate = jdbcTemplate;
 	}
 
 	@javax.annotation.Resource

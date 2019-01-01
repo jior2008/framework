@@ -18,16 +18,15 @@
 
 package com.glaf.core.model;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
-import org.apache.commons.lang3.StringUtils;
-
 import com.alibaba.fastjson.JSONObject;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.glaf.core.base.BaseItem;
 import com.glaf.core.factory.ColumnDefinitionJsonFactory;
+import org.apache.commons.lang3.StringUtils;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -41,239 +40,239 @@ public class ColumnDefinition implements java.lang.Comparable<ColumnDefinition>,
 	/**
 	 * 主键
 	 */
-	protected String id;
+	private String id;
 
 	/**
 	 * 数据库中表的别名
 	 */
-	protected String alias;
+	private String alias;
 
-	protected String align;
+	private String align;
 
 	/**
 	 * 数据库字段标签
 	 */
-	protected String columnLabel;
+	private String columnLabel;
 
 	/**
 	 * 数据库字段名称
 	 */
-	protected String columnName;
+	private String columnName;
 
-	protected String dataCode;
+	private String dataCode;
 
-	protected int index;
+	private int index;
 
 	/**
 	 * 数据库类型
 	 */
-	protected int dataType;
+	private int dataType;
 
 	/**
 	 * 默认值
 	 */
-	protected String defaultValue;
+	private String defaultValue;
 
 	/**
 	 * 鉴别类型,C-数据库字段，P-查询参数
 	 */
-	protected String discriminator;
+	private String discriminator;
 
 	/**
 	 * 显示类型 0-不显示，1-表单，2-表单及列表
 	 */
-	protected int displayType;
+	private int displayType;
 
-	protected String editableField;
+	private String editableField;
 
 	/**
 	 * ENGLISH标题
 	 */
-	protected String englishTitle;
+	private String englishTitle;
 
 	/**
 	 * 显示格式
 	 */
-	protected String formatter;
+	private String formatter;
 
 	/**
 	 * 公式
 	 */
-	protected String formula;
+	private String formula;
 
 	/**
 	 * 是否冻结列
 	 */
-	protected String frozenField;
+	private String frozenField;
 
-	protected String height;
+	private String height;
 
 	/**
 	 * 是否隐藏列
 	 */
-	protected String hiddenField;
+	private String hiddenField;
 
 	/**
 	 * 输入类型（文本框、数值输入、日期输入、下拉列表、复选框）
 	 */
-	protected String inputType;
+	private String inputType;
 
 	/**
 	 * 参数是否为集合类型
 	 */
-	protected String isCollectionField;
+	private String isCollectionField;
 
 	/**
 	 * Java类型
 	 */
-	protected String javaType;
+	private String javaType;
 
 	/**
 	 * 字段长度
 	 */
-	protected int length;
+	private int length;
 
-	protected String link;
+	private String link;
 
-	protected String mask;
+	private String mask;
 
 	/**
 	 * 属性名称
 	 */
-	protected String name;
+	private String name;
 
 	/**
 	 * 是否为空
 	 */
-	protected String nullableField = "1";
+	private String nullableField = "1";
 
 	/**
 	 * 字段顺序号
 	 */
-	protected int ordinal;
+	private int ordinal;
 
 	/**
 	 * 字段精度
 	 */
-	protected int precision;
+	private int precision;
 
 	/**
 	 * 是否主键
 	 */
-	protected String primaryKeyField;
+	private String primaryKeyField;
 
 	/**
 	 * 查询编号
 	 */
-	protected String queryId;
+	private String queryId;
 
 	/**
 	 * 正则表达式
 	 */
-	protected String regex;
+	private String regex;
 
-	protected String renderer;
+	private String renderer;
 
-	protected String renderType;
+	private String renderType;
 
 	/**
 	 * 是否必填
 	 */
-	protected String requiredField = "0";
+	private String requiredField = "0";
 
 	/**
 	 * 是否可调整列宽
 	 */
-	protected String resizableField;
+	private String resizableField;
 
 	/**
 	 * 小数位数
 	 */
-	protected int scale;
+	private int scale;
 
-	protected String searchableField;
+	private String searchableField;
 
 	/**
 	 * 是否可排序
 	 */
-	protected String sortableField;
+	private String sortableField;
 
 	/**
 	 * 排序类型 int-整形、number-数值、date-日期时间
 	 */
-	protected String sortType;
+	private String sortType;
 
 	/**
 	 * 汇总表达式
 	 */
-	protected String summaryExpr;
+	private String summaryExpr;
 
 	/**
 	 * 汇总类型，sum-求和、count-算个数
 	 */
-	protected String summaryType;
+	private String summaryType;
 
-	protected String systemFlag;
+	private String systemFlag;
 
-	protected String tableId;
+	private String tableId;
 
 	/**
 	 * 表名
 	 */
-	protected String tableName;
+	private String tableName;
 
 	/**
 	 * 目标ID
 	 */
-	protected String targetId;
+	private String targetId;
 
 	/**
 	 * 下拉列表的文本字段
 	 */
-	protected String textField;
+	private String textField;
 
 	/**
 	 * 标题
 	 */
-	protected String title;
+	private String title;
 
 	/**
 	 * 在列头部显示的提示文字
 	 */
-	protected String tooltip;
+	private String tooltip;
 
-	protected String uniqueField;
+	private String uniqueField;
 
-	protected String updatableField;
+	private String updatableField;
 
 	/**
 	 * 下拉列表的取数URL
 	 */
-	protected String url;
+	private String url;
 
 	/**
 	 * 验证类型
 	 */
-	protected String validType;
+	private String validType;
 
-	protected Object value;
+	private Object value;
 
-	protected String placeholder;
+	private String placeholder;
 
-	protected String valueExpression;
+	private String valueExpression;
 
 	/**
 	 * 下拉列表的值字段
 	 */
-	protected String valueField;
+	private String valueField;
 
-	protected String width;
+	private String width;
 
-	protected Integer position;
+	private Integer position;
 
-	protected List<BaseItem> items = null;
+	private List<BaseItem> items = null;
 
-	protected Map<String, String> properties = new java.util.HashMap<String, String>();
+	private Map<String, String> properties = new java.util.HashMap<String, String>();
 
 	public ColumnDefinition() {
 
@@ -298,9 +297,7 @@ public class ColumnDefinition implements java.lang.Comparable<ColumnDefinition>,
 			return -1;
 		}
 
-		ColumnDefinition field = o;
-
-		int l = this.ordinal - field.getSortNo();
+		int l = this.ordinal - o.getSortNo();
 
 		int ret = 0;
 
@@ -322,12 +319,9 @@ public class ColumnDefinition implements java.lang.Comparable<ColumnDefinition>,
 			return false;
 		ColumnDefinition other = (ColumnDefinition) obj;
 		if (columnName == null) {
-			if (other.columnName != null)
-				return false;
-		} else if (!getColumnName().equals(other.getColumnName()))
-			return false;
-		return true;
-	}
+            return other.columnName == null;
+		} else return getColumnName().equals(other.getColumnName());
+    }
 
 	public String getAlias() {
 		return alias;
@@ -459,10 +453,6 @@ public class ColumnDefinition implements java.lang.Comparable<ColumnDefinition>,
 		return length;
 	}
 
-	public int getMinLength() {
-		return 0;
-	}
-
 	public String getName() {
 		return name;
 	}
@@ -531,7 +521,7 @@ public class ColumnDefinition implements java.lang.Comparable<ColumnDefinition>,
 		return sortableField;
 	}
 
-	public int getSortNo() {
+	private int getSortNo() {
 		return this.ordinal;
 	}
 
@@ -620,100 +610,64 @@ public class ColumnDefinition implements java.lang.Comparable<ColumnDefinition>,
 	}
 
 	public boolean isCollection() {
-		if (StringUtils.equalsIgnoreCase(isCollectionField, "1") || StringUtils.equalsIgnoreCase(isCollectionField, "Y")
-				|| StringUtils.equalsIgnoreCase(isCollectionField, "true")) {
-			return true;
-		}
-		return false;
-	}
+        return StringUtils.equalsIgnoreCase(isCollectionField, "1") || StringUtils.equalsIgnoreCase(isCollectionField, "Y")
+                || StringUtils.equalsIgnoreCase(isCollectionField, "true");
+    }
 
 	public boolean isEditable() {
-		if (StringUtils.equalsIgnoreCase(editableField, "1") || StringUtils.equalsIgnoreCase(editableField, "Y")
-				|| StringUtils.equalsIgnoreCase(editableField, "true")) {
-			return true;
-		}
-		return false;
-	}
+        return StringUtils.equalsIgnoreCase(editableField, "1") || StringUtils.equalsIgnoreCase(editableField, "Y")
+                || StringUtils.equalsIgnoreCase(editableField, "true");
+    }
 
 	public boolean isFrozen() {
-		if (StringUtils.equalsIgnoreCase(frozenField, "1") || StringUtils.equalsIgnoreCase(frozenField, "Y")
-				|| StringUtils.equalsIgnoreCase(frozenField, "true")) {
-			return true;
-		}
-		return false;
-	}
+        return StringUtils.equalsIgnoreCase(frozenField, "1") || StringUtils.equalsIgnoreCase(frozenField, "Y")
+                || StringUtils.equalsIgnoreCase(frozenField, "true");
+    }
 
 	public boolean isHidden() {
-		if (StringUtils.equalsIgnoreCase(hiddenField, "1") || StringUtils.equalsIgnoreCase(hiddenField, "Y")
-				|| StringUtils.equalsIgnoreCase(hiddenField, "true")) {
-			return true;
-		}
-		return false;
-	}
+        return StringUtils.equalsIgnoreCase(hiddenField, "1") || StringUtils.equalsIgnoreCase(hiddenField, "Y")
+                || StringUtils.equalsIgnoreCase(hiddenField, "true");
+    }
 
 	public boolean isNullable() {
-		if (StringUtils.equalsIgnoreCase(nullableField, "1") || StringUtils.equalsIgnoreCase(nullableField, "Y")
-				|| StringUtils.equalsIgnoreCase(nullableField, "true")) {
-			return true;
-		}
-		return false;
-	}
+        return StringUtils.equalsIgnoreCase(nullableField, "1") || StringUtils.equalsIgnoreCase(nullableField, "Y")
+                || StringUtils.equalsIgnoreCase(nullableField, "true");
+    }
 
 	public boolean isPrimaryKey() {
-		if (StringUtils.equalsIgnoreCase(primaryKeyField, "1") || StringUtils.equalsIgnoreCase(primaryKeyField, "Y")
-				|| StringUtils.equalsIgnoreCase(primaryKeyField, "true")) {
-			return true;
-		}
-		return false;
-	}
+        return StringUtils.equalsIgnoreCase(primaryKeyField, "1") || StringUtils.equalsIgnoreCase(primaryKeyField, "Y")
+                || StringUtils.equalsIgnoreCase(primaryKeyField, "true");
+    }
 
 	public boolean isRequired() {
-		if (StringUtils.equalsIgnoreCase(requiredField, "1") || StringUtils.equalsIgnoreCase(requiredField, "Y")
-				|| StringUtils.equalsIgnoreCase(requiredField, "true")) {
-			return true;
-		}
-		return false;
-	}
+        return StringUtils.equalsIgnoreCase(requiredField, "1") || StringUtils.equalsIgnoreCase(requiredField, "Y")
+                || StringUtils.equalsIgnoreCase(requiredField, "true");
+    }
 
 	public boolean isResizable() {
-		if (StringUtils.equalsIgnoreCase(resizableField, "1") || StringUtils.equalsIgnoreCase(resizableField, "Y")
-				|| StringUtils.equalsIgnoreCase(resizableField, "true")) {
-			return true;
-		}
-		return false;
-	}
+        return StringUtils.equalsIgnoreCase(resizableField, "1") || StringUtils.equalsIgnoreCase(resizableField, "Y")
+                || StringUtils.equalsIgnoreCase(resizableField, "true");
+    }
 
 	public boolean isSearchable() {
-		if (StringUtils.equalsIgnoreCase(searchableField, "1") || StringUtils.equalsIgnoreCase(searchableField, "Y")
-				|| StringUtils.equalsIgnoreCase(searchableField, "true")) {
-			return true;
-		}
-		return false;
-	}
+        return StringUtils.equalsIgnoreCase(searchableField, "1") || StringUtils.equalsIgnoreCase(searchableField, "Y")
+                || StringUtils.equalsIgnoreCase(searchableField, "true");
+    }
 
 	public boolean isSortable() {
-		if (StringUtils.equalsIgnoreCase(sortableField, "1") || StringUtils.equalsIgnoreCase(sortableField, "Y")
-				|| StringUtils.equalsIgnoreCase(sortableField, "true")) {
-			return true;
-		}
-		return false;
-	}
+        return StringUtils.equalsIgnoreCase(sortableField, "1") || StringUtils.equalsIgnoreCase(sortableField, "Y")
+                || StringUtils.equalsIgnoreCase(sortableField, "true");
+    }
 
 	public boolean isUnique() {
-		if (StringUtils.equalsIgnoreCase(uniqueField, "1") || StringUtils.equalsIgnoreCase(uniqueField, "Y")
-				|| StringUtils.equalsIgnoreCase(uniqueField, "true")) {
-			return true;
-		}
-		return false;
-	}
+        return StringUtils.equalsIgnoreCase(uniqueField, "1") || StringUtils.equalsIgnoreCase(uniqueField, "Y")
+                || StringUtils.equalsIgnoreCase(uniqueField, "true");
+    }
 
 	public boolean isUpdatable() {
-		if (StringUtils.equalsIgnoreCase(updatableField, "1") || StringUtils.equalsIgnoreCase(updatableField, "Y")
-				|| StringUtils.equalsIgnoreCase(updatableField, "true")) {
-			return true;
-		}
-		return false;
-	}
+        return StringUtils.equalsIgnoreCase(updatableField, "1") || StringUtils.equalsIgnoreCase(updatableField, "Y")
+                || StringUtils.equalsIgnoreCase(updatableField, "true");
+    }
 
 	public ColumnDefinition jsonToObject(JSONObject jsonObject) {
 		return ColumnDefinitionJsonFactory.jsonToObject(jsonObject);
@@ -853,10 +807,6 @@ public class ColumnDefinition implements java.lang.Comparable<ColumnDefinition>,
 
 	public void setMaxLength(int maxLength) {
 		this.length = maxLength;
-	}
-
-	public void setMinLength(int minLength) {
-
 	}
 
 	public void setName(String name) {

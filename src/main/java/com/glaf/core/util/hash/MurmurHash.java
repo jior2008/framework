@@ -29,7 +29,7 @@ package com.glaf.core.util.hash;
  */
 
 public class MurmurHash extends Hash {
-	private static MurmurHash _instance = new MurmurHash();
+	private static final MurmurHash _instance = new MurmurHash();
 
 	public static Hash getInstance() {
 		return _instance;

@@ -18,16 +18,16 @@
 
 package com.glaf.core.jdbc;
 
+import io.netty.util.concurrent.FastThreadLocal;
+
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import io.netty.util.concurrent.FastThreadLocal;
-
 public class ConnectionThreadHolder {
 
-	private static FastThreadLocal<List<Connection>> connectionThreadLocalHolder = new FastThreadLocal<List<Connection>>();
+	private static final FastThreadLocal<List<Connection>> connectionThreadLocalHolder = new FastThreadLocal<List<Connection>>();
 
 	public static void addConnection(Connection connection) {
 		List<Connection> connections = connectionThreadLocalHolder.get();
@@ -48,7 +48,7 @@ public class ConnectionThreadHolder {
 							if (!connection.isClosed()) {
 								connection.close();
 							}
-						} catch (SQLException ex) {
+						} catch (SQLException ignored) {
 							
 						}
 					}

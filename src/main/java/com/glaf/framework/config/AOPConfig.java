@@ -35,14 +35,9 @@ public class AOPConfig {
 
 	@Around("@within(org.springframework.stereotype.Controller) ")
 	public Object functionAccessCheck(final ProceedingJoinPoint pjp) throws Throwable {
-		try {
-			// Object[] args = pjp.getArgs();
-			// logger.debug("args: " + Arrays.asList(args));
-			Object object = pjp.proceed();
-			// logger.debug("return: " + object);
-			return object;
-		} catch (Throwable e) {
-			throw e;
-		}
+		// Object[] args = pjp.getArgs();
+		// logger.debug("args: " + Arrays.asList(args));
+		// logger.debug("return: " + object);
+		return pjp.proceed();
 	}
 }

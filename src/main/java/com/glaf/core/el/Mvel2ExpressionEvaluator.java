@@ -18,16 +18,15 @@
 
 package com.glaf.core.el;
 
-import java.util.Map;
-
+import com.glaf.core.util.StringTools;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.mvel2.MVEL;
 
-import com.glaf.core.util.StringTools;
+import java.util.Map;
 
-public class Mvel2ExpressionEvaluator {
-	protected final static Log logger = LogFactory.getLog(Mvel2ExpressionEvaluator.class);
+class Mvel2ExpressionEvaluator {
+	private final static Log logger = LogFactory.getLog(Mvel2ExpressionEvaluator.class);
 
 	public static Object evaluate(String expression, Map<String, Object> context) {
 		Object result = null;

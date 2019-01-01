@@ -18,6 +18,7 @@
 
 package com.glaf.framework.config;
 
+import com.glaf.core.context.ContextFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,19 +26,14 @@ import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Configuration;
 
-import com.glaf.core.context.ContextFactory;
-
 @Configuration
 @AutoConfigureAfter(MyBatisConfig.class)
 public class BeanConfig {
 
-	protected final Logger logger = LoggerFactory.getLogger(getClass());
-
-	protected ApplicationContext applicationContext;
+	private final Logger logger = LoggerFactory.getLogger(getClass());
 
 	@Autowired
 	public void setApplicationContext(ApplicationContext applicationContext) {
-		this.applicationContext = applicationContext;
 		ContextFactory.setContext(applicationContext);
 		logger.info("applicationContext已经注入.");
 	}

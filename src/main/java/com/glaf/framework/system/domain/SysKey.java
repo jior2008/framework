@@ -18,27 +18,17 @@
 
 package com.glaf.framework.system.domain;
 
-import java.io.*;
-import java.util.*;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Lob;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-
-import com.alibaba.fastjson.*;
+import com.alibaba.fastjson.JSONObject;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-
+import com.glaf.core.base.JSONable;
+import com.glaf.core.util.DateUtils;
+import com.glaf.framework.system.factory.SysKeyJsonFactory;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import com.glaf.core.base.*;
-
-import com.glaf.core.util.*;
-import com.glaf.framework.system.factory.SysKeyJsonFactory;
+import javax.persistence.*;
+import java.io.Serializable;
+import java.util.Date;
 
 /**
  * 
@@ -53,30 +43,30 @@ public class SysKey implements Serializable, JSONable {
 
 	@Id
 	@Column(name = "ID_", length = 100, nullable = false)
-	protected String id;
+    private String id;
 
 	@Column(name = "TITLE_", length = 200)
-	protected String title;
+    private String title;
 
 	@Column(name = "NAME_", length = 50)
-	protected String name;
+    private String name;
 
 	@Column(name = "TYPE_", length = 50)
-	protected String type;
+    private String type;
 
 	@Column(name = "PATH_", length = 200)
-	protected String path;
+    private String path;
 
 	@Lob
 	@Column(name = "DATA_")
-	protected byte[] data;
+    private byte[] data;
 
 	@Column(name = "CREATEBY_", length = 50)
-	protected String createBy;
+    private String createBy;
 
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "CREATEDATE_")
-	protected Date createDate;
+    private Date createDate;
 
 	public SysKey() {
 
@@ -163,12 +153,9 @@ public class SysKey implements Serializable, JSONable {
 			return false;
 		SysKey other = (SysKey) obj;
 		if (id == null) {
-			if (other.id != null)
-				return false;
-		} else if (!id.equals(other.id))
-			return false;
-		return true;
-	}
+            return other.id == null;
+		} else return id.equals(other.id);
+    }
 
 	@Override
 	public int hashCode() {

@@ -20,8 +20,8 @@ package com.glaf.core.id;
 
 public class IdBlock {
 
-	long nextId;
-	long lastId;
+	private final long nextId;
+	private final long lastId;
 
 	public IdBlock(long nextId, long lastId) {
 		this.nextId = nextId;

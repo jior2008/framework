@@ -18,23 +18,22 @@
 
 package com.glaf.framework.config;
 
+import com.glaf.framework.system.factory.DatabaseFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.context.annotation.Configuration;
 
-import com.glaf.framework.system.factory.DatabaseFactory;
-
 @Configuration
 @AutoConfigureAfter(DruidConfig.class)
 public class MultiDBConfig {
-	protected final Logger logger = LoggerFactory.getLogger(getClass());
+	private final Logger logger = LoggerFactory.getLogger(getClass());
 
 	public MultiDBConfig() {
 		reload();
 	}
 
-	public void reload() {
+	private void reload() {
 		try {
 			DatabaseFactory.getInstance().reload();
 			logger.info("多数据库配置装载完成。");

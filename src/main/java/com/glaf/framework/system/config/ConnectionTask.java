@@ -18,20 +18,19 @@
 
 package com.glaf.framework.system.config;
 
-import java.util.concurrent.RecursiveTask;
-
+import com.glaf.framework.system.domain.Database;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.glaf.framework.system.domain.Database;
+import java.util.concurrent.RecursiveTask;
 
 public class ConnectionTask extends RecursiveTask<Database> {
 
-	protected final Logger logger = LoggerFactory.getLogger(getClass());
+	private final Logger logger = LoggerFactory.getLogger(getClass());
 
 	private static final long serialVersionUID = 1L;
 
-	protected Database database;
+	private final Database database;
 
 	public ConnectionTask(Database database) {
 		this.database = database;

@@ -18,40 +18,38 @@
 
 package com.glaf.core.config;
 
+import com.glaf.core.security.LoginContext;
+import io.netty.util.concurrent.FastThreadLocal;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import java.util.Enumeration;
 import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.apache.commons.lang3.StringUtils;
-
-import com.glaf.core.security.LoginContext;
-
-import io.netty.util.concurrent.FastThreadLocal;
-
 public class Environment {
-	protected static final Log logger = LogFactory.getLog(Environment.class);
+	private static final Log logger = LogFactory.getLog(Environment.class);
 
-	public static final String CURRENT_SYSTEM_NAME = "CURRENT_SYSTEM_NAME";
+	private static final String CURRENT_SYSTEM_NAME = "CURRENT_SYSTEM_NAME";
 
-	public static final String CURRENT_USER = "CURRENT_USER";
+	private static final String CURRENT_USER = "CURRENT_USER";
 
 	public static final String DEFAULT_SYSTEM_NAME = "default";
 
 	public static final String POSTGRESQL = "postgresql";
 
-	protected static String databaseType;
+	private static String databaseType;
 
-	protected static ConcurrentMap<String, Properties> systemProperties = new ConcurrentHashMap<String, Properties>();
+	private static final ConcurrentMap<String, Properties> systemProperties = new ConcurrentHashMap<String, Properties>();
 
-	protected static FastThreadLocal<LoginContext> threadLocalContexts = new FastThreadLocal<LoginContext>();
+	private static final FastThreadLocal<LoginContext> threadLocalContexts = new FastThreadLocal<LoginContext>();
 
-	protected static FastThreadLocal<Map<String, String>> threadLocalVaribles = new FastThreadLocal<Map<String, String>>();
+	private static final FastThreadLocal<Map<String, String>> threadLocalVaribles = new FastThreadLocal<Map<String, String>>();
 
-	protected static FastThreadLocal<String> systemNameThreadLocal = new FastThreadLocal<String>();
+	private static final FastThreadLocal<String> systemNameThreadLocal = new FastThreadLocal<String>();
 
 	public static void clear() {
 		threadLocalContexts.remove();

@@ -17,14 +17,7 @@
  */
 package com.glaf.framework.config;
 
-import java.security.KeyManagementException;
-import java.security.KeyStoreException;
-import java.security.NoSuchAlgorithmException;
-import java.security.cert.X509Certificate;
-import java.util.concurrent.TimeUnit;
-
-import javax.annotation.Resource;
-
+import com.glaf.framework.properties.HttpClientProperties;
 import org.apache.http.HeaderElement;
 import org.apache.http.HeaderElementIterator;
 import org.apache.http.HttpResponse;
@@ -53,7 +46,12 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 
-import com.glaf.framework.properties.HttpClientProperties;
+import javax.annotation.Resource;
+import java.security.KeyManagementException;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+import java.security.cert.X509Certificate;
+import java.util.concurrent.TimeUnit;
 
 /**
  * - Supports both HTTP and HTTPS - Uses a connection pool to re-use connections
@@ -92,7 +90,7 @@ public class HttpClientConfig {
 		}
 
 		Registry<ConnectionSocketFactory> socketFactoryRegistry = RegistryBuilder.<ConnectionSocketFactory>create()
-				.register("https", sslsf).register("http", new PlainConnectionSocketFactory()).build();
+				.register("https", sslsf != null ? sslsf : null).register("http", new PlainConnectionSocketFactory()).build();
 
 		PoolingHttpClientConnectionManager poolingConnectionManager = new PoolingHttpClientConnectionManager(
 				socketFactoryRegistry);

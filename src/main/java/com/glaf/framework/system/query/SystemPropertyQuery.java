@@ -18,20 +18,20 @@
 
 package com.glaf.framework.system.query;
 
-import java.util.List;
-
 import com.glaf.core.query.DataQuery;
+
+import java.util.List;
 
 public class SystemPropertyQuery extends DataQuery {
 	private static final long serialVersionUID = 1L;
-	protected String category;
-	protected String descriptionLike;
-	protected String name;
-	protected String nameLike;
-	protected List<String> names;
-	protected String titleLike;
-	protected String type;
-	protected String valueLike;
+	private String category;
+	private String descriptionLike;
+	private String name;
+	private String nameLike;
+	private List<String> names;
+	private String titleLike;
+	private String type;
+	private String valueLike;
 
 	public SystemPropertyQuery() {
 

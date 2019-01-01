@@ -18,22 +18,21 @@
 
 package com.glaf.framework.service.impl;
 
-import java.util.List;
-
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.glaf.core.dao.EntityDAO;
 import com.glaf.core.id.IdGenerator;
 import com.glaf.core.service.EntityService;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service("entityService")
 @Transactional
 public class MyBatisEntityServiceImpl implements EntityService {
 
-	protected EntityDAO entityDAO;
+	private EntityDAO entityDAO;
 
-	protected IdGenerator idGenerator;
+	private IdGenerator idGenerator;
 
 	public MyBatisEntityServiceImpl() {
 
@@ -71,8 +70,8 @@ public class MyBatisEntityServiceImpl implements EntityService {
 	/**
 	 * 查询
 	 * 
-	 * @param queryId
-	 * @param params
+	 * @param statementId
+	 * @param parameter
 	 * @return
 	 */
 	@Transactional(readOnly = true)
@@ -87,8 +86,7 @@ public class MyBatisEntityServiceImpl implements EntityService {
 		// int maxId = entityDAO.getTableUserMaxId(tablename, idColumn,
 		// createBy);
 		// String newId = idLike + StringTools.getDigit7Id(maxId);
-		String newId = idGenerator.getNextId(tablename, idColumn, createBy);
-		return newId;
+        return idGenerator.getNextId(tablename, idColumn, createBy);
 	}
 
 	@Transactional(readOnly = true)

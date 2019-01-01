@@ -18,36 +18,32 @@
 
 package com.glaf.framework.system.service.impl;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
-
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.apache.ibatis.session.SqlSession;
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.Cacheable;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.glaf.core.util.UUID32;
 import com.glaf.framework.system.config.SystemConfig;
 import com.glaf.framework.system.domain.SystemProperty;
 import com.glaf.framework.system.mapper.SystemPropertyMapper;
 import com.glaf.framework.system.query.SystemPropertyQuery;
 import com.glaf.framework.system.service.ISystemPropertyService;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 @Service("systemPropertyService")
 @Transactional(readOnly = true)
 public class SystemPropertyServiceImpl implements ISystemPropertyService {
 	protected final static Log logger = LogFactory.getLog(SystemPropertyServiceImpl.class);
 
-	protected SqlSession sqlSession;
 
-	protected SystemPropertyMapper systemPropertyMapper;
+	private SystemPropertyMapper systemPropertyMapper;
 
 	public SystemPropertyServiceImpl() {
 
@@ -84,9 +80,7 @@ public class SystemPropertyServiceImpl implements ISystemPropertyService {
 	public Map<String, SystemProperty> getProperyMap() {
 		List<SystemProperty> list = this.getAllSystemProperties();
 		Map<String, SystemProperty> dataMap = new java.util.HashMap<String, SystemProperty>();
-		Iterator<SystemProperty> iterator = list.iterator();
-		while (iterator.hasNext()) {
-			SystemProperty p = iterator.next();
+		for (SystemProperty p : list) {
 			dataMap.put(p.getName(), p);
 		}
 		return dataMap;
@@ -116,16 +110,14 @@ public class SystemPropertyServiceImpl implements ISystemPropertyService {
 		query.name(name);
 		List<SystemProperty> list = this.list(query);
 		if (list != null && !list.isEmpty()) {
-			SystemProperty property = list.get(0);
-			return property;
+            return list.get(0);
 		}
 		return null;
 	}
 
 	@Cacheable(cacheNames = "propertiy")
 	public SystemProperty getSystemPropertyById(String id) {
-		SystemProperty property = systemPropertyMapper.getSystemPropertyById(id);
-		return property;
+        return systemPropertyMapper.getSystemPropertyById(id);
 	}
 
 	@Cacheable(cacheNames = "properties")
@@ -193,9 +185,7 @@ public class SystemPropertyServiceImpl implements ISystemPropertyService {
 		Map<String, SystemProperty> propertyMap = this.getProperyMap();
 		if (props != null && props.size() > 0) {
 			Map<String, String> dataMap = new TreeMap<String, String>();
-			Iterator<SystemProperty> iterator = props.iterator();
-			while (iterator.hasNext()) {
-				SystemProperty p = iterator.next();
+			for (SystemProperty p : props) {
 				dataMap.put(p.getName(), p.getValue());
 
 				if (propertyMap.get(p.getName()) != null) {
@@ -213,10 +203,6 @@ public class SystemPropertyServiceImpl implements ISystemPropertyService {
 		}
 	}
 
-	@javax.annotation.Resource
-	public void setSqlSession(SqlSession sqlSession) {
-		this.sqlSession = sqlSession;
-	}
 
 	@javax.annotation.Resource
 	public void setSystemPropertyMapper(SystemPropertyMapper systemPropertyMapper) {

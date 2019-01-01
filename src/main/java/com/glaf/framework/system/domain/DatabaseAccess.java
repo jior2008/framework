@@ -17,21 +17,18 @@
  */
 package com.glaf.framework.system.domain;
 
-import java.io.Serializable;
+import com.alibaba.fastjson.JSONObject;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.glaf.core.base.JSONable;
+import com.glaf.framework.system.factory.DatabaseAccessJsonFactory;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
-
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
-
-import com.alibaba.fastjson.JSONObject;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-
-import com.glaf.core.base.JSONable;
-import com.glaf.framework.system.factory.DatabaseAccessJsonFactory;
+import java.io.Serializable;
 
 /**
  * 
@@ -46,13 +43,13 @@ public class DatabaseAccess implements Serializable, JSONable {
 
 	@Id
 	@Column(name = "ID_", nullable = false)
-	protected Long id;
+    private Long id;
 
 	@Column(name = "DATABASEID_", nullable = false)
-	protected Long databaseId;
+    private Long databaseId;
 
 	@Column(name = "ACTORID_", length = 50, nullable = false)
-	protected String actorId;
+    private String actorId;
 
 	public DatabaseAccess() {
 
@@ -68,12 +65,9 @@ public class DatabaseAccess implements Serializable, JSONable {
 			return false;
 		DatabaseAccess other = (DatabaseAccess) obj;
 		if (id == null) {
-			if (other.id != null)
-				return false;
-		} else if (!id.equals(other.id))
-			return false;
-		return true;
-	}
+            return other.id == null;
+		} else return id.equals(other.id);
+    }
 
 	public String getActorId() {
 		return this.actorId;

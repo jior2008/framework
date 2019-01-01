@@ -28,9 +28,9 @@ public class ListModel implements java.io.Serializable {
 	/**
 	 * 表后缀
 	 */
-	protected String tableSuffix;
+    private String tableSuffix;
 
-	protected List<?> list = new ArrayList<>(200);
+	private List<?> list = new ArrayList<>(200);
 
 	public ListModel() {
 

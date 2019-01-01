@@ -18,13 +18,12 @@
 
 package com.glaf.framework.system.service;
 
-import java.util.List;
-
-import org.springframework.transaction.annotation.Transactional;
-
 import com.glaf.core.util.PageResult;
 import com.glaf.framework.system.domain.Dictory;
 import com.glaf.framework.system.query.DictoryQuery;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Transactional(readOnly = true)
 public interface DictoryService {

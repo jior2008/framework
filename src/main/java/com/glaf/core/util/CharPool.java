@@ -18,7 +18,7 @@
 
 package com.glaf.core.util;
 
-public class CharPool {
+class CharPool {
 
 	public static final char AMPERSAND = '&';
 
@@ -50,7 +50,7 @@ public class CharPool {
 
 	public static final char FIGURE_SPACE = '\u2007';
 
-	public static final char FORWARD_SLASH = '/';
+	private static final char FORWARD_SLASH = '/';
 
 	public static final char GREATER_THAN = '>';
 

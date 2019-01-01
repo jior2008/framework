@@ -18,21 +18,6 @@
 
 package com.glaf.framework.system.config;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
-
-import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.alibaba.druid.pool.DruidDataSource;
 import com.glaf.core.base.ConnectionDefinition;
 import com.glaf.core.config.Environment;
@@ -49,12 +34,21 @@ import com.glaf.framework.system.query.DatabaseQuery;
 import com.glaf.framework.system.service.IDatabaseService;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.Statement;
+import java.util.*;
 
 public class DatabaseConnectionConfig implements ConnectionConfig {
 
-	protected final Logger logger = LoggerFactory.getLogger(getClass());
+	private final Logger logger = LoggerFactory.getLogger(getClass());
 
-	protected IDatabaseService databaseService;
+	private IDatabaseService databaseService;
 
 	public DatabaseConnectionConfig() {
 
@@ -84,9 +78,7 @@ public class DatabaseConnectionConfig implements ConnectionConfig {
 				databaseIds.add(rs.getLong(1));
 			}
 			pstmt = conn.prepareStatement(" update SYS_DATABASE set TOKEN_ = ? where ID_ = ? and TOKEN_ is null  ");
-			Iterator<Long> iterator = databaseIds.iterator();
-			while (iterator.hasNext()) {
-				Long databaseId = iterator.next();
+			for (Long databaseId : databaseIds) {
 				pstmt.setString(1, UUID32.getUUID() + UUID32.getUUID());
 				pstmt.setLong(2, databaseId);
 				pstmt.addBatch();
@@ -178,9 +170,7 @@ public class DatabaseConnectionConfig implements ConnectionConfig {
 					} else {
 						ds = new HikariDataSource(config);
 					}
-					if (ds != null) {
-						connection = ds.getConnection();
-					}
+					connection = ds.getConnection();
 				} else {
 					bds = new DruidDataSource();
 					bds.setInitialSize(1);
@@ -203,14 +193,12 @@ public class DatabaseConnectionConfig implements ConnectionConfig {
 			JdbcUtils.close(connection);
 			if (ds != null) {
 				ds.close();
-				ds = null;
 			}
 			if (bds != null) {
 				try {
 					bds.close();
-				} catch (Exception e) {
+				} catch (Exception ignored) {
 				}
-				bds = null;
 			}
 		}
 		return false;
@@ -266,9 +254,7 @@ public class DatabaseConnectionConfig implements ConnectionConfig {
 					} else {
 						ds = new HikariDataSource(config);
 					}
-					if (ds != null) {
-						connection = ds.getConnection();
-					}
+					connection = ds.getConnection();
 				} else {
 					bds = new DruidDataSource();
 					bds.setInitialSize(1);
@@ -291,14 +277,12 @@ public class DatabaseConnectionConfig implements ConnectionConfig {
 			JdbcUtils.close(connection);
 			if (ds != null) {
 				ds.close();
-				ds = null;
 			}
 			if (bds != null) {
 				try {
 					bds.close();
-				} catch (Exception e) {
+				} catch (Exception ignored) {
 				}
-				bds = null;
 			}
 		}
 		return false;
@@ -311,7 +295,7 @@ public class DatabaseConnectionConfig implements ConnectionConfig {
 		String currentSystemName = Environment.getCurrentSystemName();
 		try {
 			Environment.setCurrentSystemName(Environment.DEFAULT_SYSTEM_NAME);
-			List<Database> databases = null;
+			List<Database> databases;
 			if (loginContext.isSystemAdministrator()) {
 				databases = getDatabaseService().list(query);
 			} else {
@@ -337,8 +321,8 @@ public class DatabaseConnectionConfig implements ConnectionConfig {
 		String databaseName = database.getDbname();
 		String user = database.getUser();
 		Connection connection = null;
-		HikariDataSource ds = null;
-		DruidDataSource bds = null;
+		HikariDataSource ds;
+		DruidDataSource bds;
 		try {
 			String password = SecurityUtils.decode(database.getKey(), database.getPassword());
 			Properties props = DBConfiguration.getTemplateProperties(dbType);
@@ -380,9 +364,7 @@ public class DatabaseConnectionConfig implements ConnectionConfig {
 					} else {
 						ds = new HikariDataSource(config);
 					}
-					if (ds != null) {
-						connection = ds.getConnection();
-					}
+					connection = ds.getConnection();
 				} else {
 					bds = new DruidDataSource();
 					bds.setInitialSize(1);
@@ -474,11 +456,9 @@ public class DatabaseConnectionConfig implements ConnectionConfig {
 				}
 
 				if (!activeDatabases.isEmpty()) {
-					if (databaseId > 0) {
-						currentDB = getDatabaseService().getDatabaseById(databaseId);
-						if (!activeDatabases.contains(currentDB)) {
-							currentDB = null;
-						}
+					currentDB = getDatabaseService().getDatabaseById(databaseId);
+					if (!activeDatabases.contains(currentDB)) {
+						currentDB = null;
 					}
 				}
 
@@ -533,7 +513,7 @@ public class DatabaseConnectionConfig implements ConnectionConfig {
 		String currentSystemName = Environment.getCurrentSystemName();
 		try {
 			Environment.setCurrentSystemName(Environment.DEFAULT_SYSTEM_NAME);
-			List<Database> databases = null;
+			List<Database> databases;
 			if (loginContext.isSystemAdministrator()) {
 				databases = getDatabaseService().list(query);
 			} else {
@@ -575,7 +555,7 @@ public class DatabaseConnectionConfig implements ConnectionConfig {
 		return activeDatabases;
 	}
 
-	public IDatabaseService getDatabaseService() {
+	private IDatabaseService getDatabaseService() {
 		if (databaseService == null) {
 			databaseService = ContextFactory.getBean("databaseService");
 		}

@@ -22,7 +22,6 @@ import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
 
-import java.io.IOException;
 import java.util.Deque;
 import java.util.concurrent.ConcurrentLinkedDeque;
 
@@ -33,9 +32,9 @@ public class KryoPoolSerializer implements Serializer {
 	 */
 	private static class KryoHolder {
 		static final int BUFFER_SIZE = 1024;
-		private Kryo kryo;
-		private Output output = new Output(BUFFER_SIZE, -1); // reuse
-		private Input input = new Input();
+		private final Kryo kryo;
+		private final Output output = new Output(BUFFER_SIZE, -1); // reuse
+		private final Input input = new Input();
 
 		KryoHolder(Kryo kryo) {
 			this.kryo = kryo;
@@ -79,7 +78,7 @@ public class KryoPoolSerializer implements Serializer {
 		/**
 		 * @return KryoPool instance
 		 */
-		public static KryoPool getInstance() {
+		static KryoPool getInstance() {
 			return Singleton.pool;
 		}
 
@@ -97,7 +96,7 @@ public class KryoPoolSerializer implements Serializer {
 		 * 
 		 * @return KryoHolder instance
 		 */
-		public KryoHolder creatInstnce() {
+		KryoHolder creatInstnce() {
 			Kryo kryo = new Kryo();
 			kryo.setReferences(false);//
 			return new KryoHolder(kryo);
@@ -135,7 +134,7 @@ public class KryoPoolSerializer implements Serializer {
 	 * @return object
 	 */
 	@Override
-	public Object deserialize(byte[] bytes) throws IOException {
+	public Object deserialize(byte[] bytes) {
 		KryoHolder kryoHolder = null;
 		if (bytes == null)
 			throw new RuntimeException("bytes can not be null");
@@ -147,7 +146,6 @@ public class KryoPoolSerializer implements Serializer {
 			throw new RuntimeException("Deserialize bytes exception");
 		} finally {
 			KryoPoolImpl.getInstance().offer(kryoHolder);
-			bytes = null; // for gc
 		}
 	}
 
@@ -164,7 +162,7 @@ public class KryoPoolSerializer implements Serializer {
 	 * @return return serialize data
 	 */
 	@Override
-	public byte[] serialize(Object obj) throws IOException {
+	public byte[] serialize(Object obj) {
 		KryoHolder kryoHolder = null;
 		if (obj == null)
 			throw new RuntimeException("obj can not be null");
@@ -177,7 +175,6 @@ public class KryoPoolSerializer implements Serializer {
 			throw new RuntimeException("Serialize obj exception");
 		} finally {
 			KryoPoolImpl.getInstance().offer(kryoHolder);
-			obj = null; // GC
 		}
 	}
 }

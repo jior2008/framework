@@ -18,26 +18,25 @@
 
 package com.glaf.core.util;
 
-import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
-import java.util.concurrent.atomic.AtomicInteger;
-
+import com.glaf.core.config.Environment;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import com.glaf.core.config.Environment;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.atomic.AtomicInteger;
 
-public class ContextUtils {
+class ContextUtils {
 	protected static final Log logger = LogFactory.getLog(ContextUtils.class);
 
-	protected static ConcurrentMap<String, AtomicInteger> accessCounter = new ConcurrentHashMap<String, AtomicInteger>();
+	private static final ConcurrentMap<String, AtomicInteger> accessCounter = new ConcurrentHashMap<String, AtomicInteger>();
 
-	protected static ConcurrentMap<String, Long> accessDenyMap = new ConcurrentHashMap<String, Long>();
+	private static final ConcurrentMap<String, Long> accessDenyMap = new ConcurrentHashMap<String, Long>();
 
-	protected static ConcurrentMap<Object, Object> dataMap = new ConcurrentHashMap<Object, Object>();
+	private static final ConcurrentMap<Object, Object> dataMap = new ConcurrentHashMap<Object, Object>();
 
 	public static void addDenyAccess(String userId) {
 		if (!accessDenyMap.containsKey(userId)) {
@@ -57,11 +56,8 @@ public class ContextUtils {
 				return true;
 			}
 		}
-		if (dataMap.get(key) != null) {
-			return true;
-		}
-		return false;
-	}
+        return dataMap.get(key) != null;
+    }
 
 	public static boolean denyAccess(String userId) {
 		boolean accessDeny = false;
@@ -74,7 +70,7 @@ public class ContextUtils {
 		return accessDeny;
 	}
 
-	public static Object get(Object key) {
+	private static Object get(Object key) {
 		String sys_name = Environment.getCurrentSystemName();
 		if (sys_name != null) {
 			String cacheKey = sys_name + "_" + key;
@@ -113,7 +109,7 @@ public class ContextUtils {
 		}
 	}
 
-	public static void put(Object key, Object value) {
+	private static void put(Object key, Object value) {
 		String sys_name = Environment.getCurrentSystemName();
 		if (key != null && value != null) {
 			String cacheKey = sys_name + "_" + key;

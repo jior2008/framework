@@ -18,12 +18,13 @@
 
 package com.glaf.framework.system.service;
 
-import java.util.*;
-
+import com.glaf.framework.system.domain.Database;
+import com.glaf.framework.system.domain.DatabaseAccess;
+import com.glaf.framework.system.query.DatabaseQuery;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.glaf.framework.system.domain.*;
-import com.glaf.framework.system.query.*;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * 多数据库相关操作
@@ -183,15 +184,15 @@ public interface IDatabaseService {
 	void saveAccessors(String accessor, Collection<Long> databaseIds);
 
 	/**
-	 * 
-	 * @param 修改一条数据库信息
+	 * 修改一条数据库信息
+	 * @param database
 	 */
 	@Transactional
 	void update(Database database);
 
 	/**
-	 * 
-	 * @param 验证一条数据库信息
+	 *  验证一条数据库信息
+	 * @param database
 	 */
 	@Transactional
 	void verify(Database database);

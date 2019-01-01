@@ -18,35 +18,32 @@
 
 package com.glaf.framework.system.jdbc.connection;
 
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.util.Iterator;
-import java.util.Properties;
-import java.util.Random;
-import java.util.concurrent.TimeUnit;
-
-import javax.sql.DataSource;
-
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.zaxxer.hikari.HikariConfig;
-import com.zaxxer.hikari.HikariDataSource;
 import com.glaf.core.config.BaseConfiguration;
 import com.glaf.core.config.Configuration;
 import com.glaf.core.util.ClassUtils;
 import com.glaf.core.util.JdbcUtils;
 import com.glaf.core.util.PropertiesHelper;
 import com.glaf.framework.system.config.DBConfiguration;
+import com.zaxxer.hikari.HikariConfig;
+import com.zaxxer.hikari.HikariDataSource;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.sql.DataSource;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.util.Properties;
+import java.util.Random;
+import java.util.concurrent.TimeUnit;
 
 public class HikariCPConnectionProvider implements ConnectionProvider {
 
 	private static final Logger log = LoggerFactory.getLogger(HikariCPConnectionProvider.class);
 
-	protected final static Configuration conf = BaseConfiguration.create();
+	private final static Configuration conf = BaseConfiguration.create();
 
-	protected static int MAX_RETRIES = conf.getInt("jdbc.connection.retryCount", 10);
+	private static final int MAX_RETRIES = conf.getInt("jdbc.connection.retryCount", 10);
 
 	private volatile HikariDataSource ds;
 
@@ -54,7 +51,7 @@ public class HikariCPConnectionProvider implements ConnectionProvider {
 
 	private volatile boolean autocommit;
 
-	public HikariCPConnectionProvider() {
+	private HikariCPConnectionProvider() {
 		log.info("----------------------------HikariCPConnectionProvider-----------------");
 	}
 
@@ -71,9 +68,9 @@ public class HikariCPConnectionProvider implements ConnectionProvider {
 	public void configure(Properties props) throws RuntimeException {
 		Properties properties = new Properties();
 		properties.putAll(props);
-		
-		for (Iterator<?> ii = props.keySet().iterator(); ii.hasNext();) {
-			String key = (String) ii.next();
+
+		for (Object o : props.keySet()) {
+			String key = (String) o;
 			properties.put(key, props.get(key));
 			if (key.startsWith("hikari.")) {
 				String newKey = key.substring(7);
@@ -148,7 +145,7 @@ public class HikariCPConnectionProvider implements ConnectionProvider {
 				isolation = null;
 			} else {
 				isolation = new Integer(isolationLevel);
-				log.info("JDBC isolation level: " + DBConfiguration.isolationLevelToString(isolation.intValue()));
+				log.info("JDBC isolation level: " + DBConfiguration.isolationLevelToString(isolation));
 			}
 
 			if (StringUtils.isNotEmpty(isolationLevel)) {
@@ -184,7 +181,7 @@ public class HikariCPConnectionProvider implements ConnectionProvider {
 				connection = ds.getConnection();
 				if (connection != null) {
 					if (isolation != null) {
-						connection.setTransactionIsolation(isolation.intValue());
+						connection.setTransactionIsolation(isolation);
 					}
 					if (connection.getAutoCommit() != autocommit) {
 						connection.setAutoCommit(autocommit);
@@ -194,7 +191,7 @@ public class HikariCPConnectionProvider implements ConnectionProvider {
 					retries++;
 					try {
 						TimeUnit.MILLISECONDS.sleep(200 + new Random().nextInt(1000));// 活锁，随机等待
-					} catch (InterruptedException e) {
+					} catch (InterruptedException ignored) {
 					}
 				}
 			} catch (SQLException ex) {
@@ -203,7 +200,7 @@ public class HikariCPConnectionProvider implements ConnectionProvider {
 				}
 				try {
 					TimeUnit.MILLISECONDS.sleep(200 + new Random().nextInt(1000));// 活锁，随机等待
-				} catch (InterruptedException e) {
+				} catch (InterruptedException ignored) {
 				}
 			}
 		}
@@ -212,10 +209,6 @@ public class HikariCPConnectionProvider implements ConnectionProvider {
 
 	public DataSource getDataSource() {
 		return ds;
-	}
-
-	public boolean supportsAggressiveRelease() {
-		return false;
 	}
 
 }

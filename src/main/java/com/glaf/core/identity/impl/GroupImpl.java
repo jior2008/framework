@@ -25,12 +25,12 @@ import com.glaf.core.identity.util.GroupJsonFactory;
 
 public class GroupImpl implements Group {
 	private static final long serialVersionUID = 1L;
-	protected String groupId;
-	protected String name;
-	protected String code;
-	protected String type;
-	protected int sort;
-	protected String tenantId;
+	private String groupId;
+	private String name;
+	private String code;
+	private String type;
+	private int sort;
+	private String tenantId;
 
 	public GroupImpl() {
 

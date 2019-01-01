@@ -18,52 +18,48 @@
 
 package com.glaf.core.util;
 
+import org.apache.commons.lang3.StringUtils;
+
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-import java.util.Locale;
-
-import org.apache.commons.lang3.StringUtils;
+import java.util.*;
 
 public class DateUtils {
 
-	public static final long SECOND = 1000L;
+	private static final long SECOND = 1000L;
 
 	public static final long MINUTE = 60L * SECOND;
 
-	public static final long HOUR = 60L * MINUTE;
+	private static final long HOUR = 60L * MINUTE;
 
-	public static final String DATE_PATTERN = "yyyy-MM-dd";
+	private static final String DATE_PATTERN = "yyyy-MM-dd";
 
-	public static final String DATE_TIME_PATTERN = "yyyy-MM-dd HH:mm:ss";
+	private static final String DATE_TIME_PATTERN = "yyyy-MM-dd HH:mm:ss";
 
 	public static final long DAY = 24L * HOUR;
 
-	public static final String DAY_FORMAT = "yyyy-MM-dd";
+	private static final String DAY_FORMAT = "yyyy-MM-dd";
 
-	public static final String HOUR_FORMAT = "yyyy-MM-dd HH";
+	private static final String HOUR_FORMAT = "yyyy-MM-dd HH";
 
-	public static final String MINUTE_FORMAT = "yyyy-MM-dd HH:mm";
+	private static final String MINUTE_FORMAT = "yyyy-MM-dd HH:mm";
 
-	public static final String MONTH_FORMAT = "yyyy-MM";
+	private static final String MONTH_FORMAT = "yyyy-MM";
 
-	public static final String SECOND_FORMAT = "yyyy-MM-dd HH:mm:ss";
+	private static final String SECOND_FORMAT = "yyyy-MM-dd HH:mm:ss";
 
-	public static final String MILSECOND_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";
+	private static final String MILSECOND_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";
 
 	public static final long WEEK = 7L * DAY;
 
-	public static final String YEAR_FORMAT = "yyyy";
+	private static final String YEAR_FORMAT = "yyyy";
 
-	public static final String YEAR_MONTH_DAY_FORMAT = "yyyyMMdd";
+	private static final String YEAR_MONTH_DAY_FORMAT = "yyyyMMdd";
 
-	public static final String FULL_DATE_FORMAT = "yyyyMMddHHmmss";
+	private static final String FULL_DATE_FORMAT = "yyyyMMddHHmmss";
 
 	/**
 	 * 判断某个时间time2是否在另一个时间time1之后
@@ -110,7 +106,7 @@ public class DateUtils {
 		return dateDiff(getDateTime(DATE_PATTERN, fromDate), getDateTime(DATE_PATTERN, toDate));
 	}
 
-	public static long dateDiff(String beginDateStr, String endDateStr) {
+	private static long dateDiff(String beginDateStr, String endDateStr) {
 		long day = 0;
 		java.text.SimpleDateFormat format = new java.text.SimpleDateFormat("yyyy-MM-dd");
 		java.util.Date beginDate;
@@ -119,14 +115,14 @@ public class DateUtils {
 			beginDate = format.parse(beginDateStr);
 			endDate = format.parse(endDateStr);
 			day = (endDate.getTime() - beginDate.getTime()) / (24 * 60 * 60 * 1000);
-		} catch (java.text.ParseException ex) {
+		} catch (java.text.ParseException ignored) {
 
 		}
 		return day;
 	}
 
 	public static BigDecimal getCurrentTimeAsNumber() {
-		String returnStr = null;
+		String returnStr;
 		SimpleDateFormat f = new SimpleDateFormat("yyyyMMddHHmmss");
 		Date date = new Date();
 		returnStr = f.format(date);
@@ -188,7 +184,7 @@ public class DateUtils {
 	 * @param date
 	 * @return
 	 */
-	public static String getDateTime(String pattern, java.util.Date date) {
+	private static String getDateTime(String pattern, java.util.Date date) {
 		if (date == null) {
 			return "";
 		}
@@ -196,8 +192,7 @@ public class DateUtils {
 			pattern = DATE_TIME_PATTERN;
 		}
 		SimpleDateFormat formatter = new SimpleDateFormat(pattern, Locale.getDefault());
-		String ret = formatter.format(date);
-		return ret;
+        return formatter.format(date);
 	}
 
 	/**
@@ -207,7 +202,7 @@ public class DateUtils {
 	 * @param endDate
 	 * @return
 	 */
-	public static int getDaysBetween(Calendar startDate, Calendar endDate) {
+	private static int getDaysBetween(Calendar startDate, Calendar endDate) {
 		if (startDate.after(endDate)) {
 			java.util.Calendar swap = startDate;
 			startDate = endDate;
@@ -257,17 +252,17 @@ public class DateUtils {
 	 * @param date
 	 * @return
 	 */
-	public static Calendar getNextMonday(Calendar date) {
+	private static Calendar getNextMonday(Calendar date) {
 		Calendar result = date;
 		do {
 			result = (Calendar) result.clone();
 			result.add(Calendar.DATE, 1);
-		} while (result.get(Calendar.DAY_OF_WEEK) != 2);
+		} while (result.get(Calendar.DAY_OF_WEEK) != Calendar.MONDAY);
 		return result;
 	}
 
 	public static int getNowYear() {
-		String returnStr = null;
+		String returnStr;
 		SimpleDateFormat f = new SimpleDateFormat("yyyy");
 		Date date = new Date();
 		returnStr = f.format(date);
@@ -275,7 +270,7 @@ public class DateUtils {
 	}
 
 	public static int getNowYearMonth() {
-		String returnStr = null;
+		String returnStr;
 		SimpleDateFormat f = new SimpleDateFormat("yyyyMM");
 		Date date = new Date();
 		returnStr = f.format(date);
@@ -283,7 +278,7 @@ public class DateUtils {
 	}
 
 	public static int getNowYearMonthDay() {
-		String returnStr = null;
+		String returnStr;
 		SimpleDateFormat f = new SimpleDateFormat("yyyyMMdd");
 		Date date = new Date();
 		returnStr = f.format(date);
@@ -291,7 +286,7 @@ public class DateUtils {
 	}
 
 	public static String getNowYearMonthDayHHmm() {
-		String returnStr = null;
+		String returnStr;
 		SimpleDateFormat f = new SimpleDateFormat("yyyyMMddHHmm");
 		Date date = new Date();
 		returnStr = f.format(date);
@@ -299,7 +294,7 @@ public class DateUtils {
 	}
 
 	public static String getNowYearMonthDayHour() {
-		String returnStr = null;
+		String returnStr;
 		SimpleDateFormat f = new SimpleDateFormat("yyyyMMddHH");
 		Date date = new Date();
 		returnStr = f.format(date);
@@ -307,7 +302,7 @@ public class DateUtils {
 	}
 
 	public static String getNowYearMonthDayHHmmss() {
-		String returnStr = null;
+		String returnStr;
 		SimpleDateFormat f = new SimpleDateFormat("yyyyMMddHHmmss");
 		Date date = new Date();
 		returnStr = f.format(date);
@@ -318,7 +313,7 @@ public class DateUtils {
 		List<Integer> list = new ArrayList<Integer>();
 		StringBuilder buff = new StringBuilder();
 		for (int i = 1; i <= 12; i++) {
-			int day = 30;
+			int day;
 			switch (i) {
 			case 1:
 			case 3:
@@ -364,8 +359,8 @@ public class DateUtils {
 	 * @param endDate
 	 * @return
 	 */
-	public static int getWorkingDay(Calendar startDate, Calendar endDate) {
-		int result = -1;
+	private static int getWorkingDay(Calendar startDate, Calendar endDate) {
+		int result;
 		if (startDate.after(endDate)) {
 			java.util.Calendar swap = startDate;
 			startDate = endDate;
@@ -435,7 +430,6 @@ public class DateUtils {
 		case 8:
 		case 10:
 		case 12:
-			days = 31;
 			break;
 		case 4:
 		case 6:
@@ -508,7 +502,7 @@ public class DateUtils {
 		return new Timestamp(cal.getTimeInMillis());
 	}
 
-	public static java.util.Date toDate(long ts) {
+	private static java.util.Date toDate(long ts) {
 		Calendar calendar = Calendar.getInstance();
 		calendar.setTimeInMillis(ts);
 		return calendar.getTime();

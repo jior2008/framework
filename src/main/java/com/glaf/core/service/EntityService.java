@@ -18,9 +18,9 @@
 
 package com.glaf.core.service;
 
-import java.util.List;
-
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Transactional(readOnly = true)
 public interface EntityService {
@@ -115,7 +115,7 @@ public interface EntityService {
 	 * 插入多条记录
 	 * 
 	 * @param statementId
-	 * @param parameterObject
+	 * @param rows
 	 */
 	@Transactional
 	void insertAll(String statementId, List<Object> rows);
@@ -151,7 +151,7 @@ public interface EntityService {
 	 * 修改多条记录
 	 * 
 	 * @param statementId
-	 * @param parameterObject
+	 * @param rows
 	 */
 	@Transactional
 	void updateAll(String statementId, List<Object> rows);

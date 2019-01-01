@@ -19,11 +19,10 @@
 package com.glaf.core.util;
 
 import java.sql.Types;
-import java.util.Iterator;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
-public class FieldType {
+class FieldType {
 	private final static ConcurrentMap<String, Integer> dataMap = new ConcurrentHashMap<String, Integer>();
 
 	private final static ConcurrentMap<Integer, String> nameMap = new ConcurrentHashMap<Integer, String>();
@@ -36,7 +35,7 @@ public class FieldType {
 
 	public static final int DOUBLE_TYPE = Types.DECIMAL;
 
-	public static final int BOOLEAN_TYPE = Types.BOOLEAN;
+	private static final int BOOLEAN_TYPE = Types.BOOLEAN;
 
 	public static final int DATE_TYPE = Types.DATE;
 
@@ -47,11 +46,11 @@ public class FieldType {
 
 	public static final int LONG_TYPE = Types.BIGINT;
 
-	public static final int TIMESTAMP_TYPE = Types.TIMESTAMP;
+	private static final int TIMESTAMP_TYPE = Types.TIMESTAMP;
 
 	public static final int TEXT_TYPE = 1000;
 
-	public static final int BLOB_TYPE = Types.BLOB;
+	private static final int BLOB_TYPE = Types.BLOB;
 
 	public static final int CLOB_TYPE = Types.CLOB;
 
@@ -121,8 +120,8 @@ public class FieldType {
 		}
 		typeName = typeName.trim().toUpperCase();
 		if (dataMap.containsKey(typeName)) {
-			Integer value = dataMap.get(typeName);
-			return value.intValue();
+			int value = dataMap.get(typeName);
+			return value;
 		}
 		return 0;
 	}
@@ -149,11 +148,9 @@ public class FieldType {
 	 * @return 类型名称
 	 */
 	public static String getType(int dataType) {
-		Iterator<String> iterator = dataMap.keySet().iterator();
-		while (iterator.hasNext()) {
-			String typeName = iterator.next();
+		for (String typeName : dataMap.keySet()) {
 			Integer type = dataMap.get(typeName);
-			if (type.intValue() == dataType) {
+			if (type == dataType) {
 				return typeName;
 			}
 		}

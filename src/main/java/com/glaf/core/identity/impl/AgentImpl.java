@@ -18,16 +18,14 @@
 
 package com.glaf.core.identity.impl;
 
-import java.util.Date;
-
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
-
 import com.alibaba.fastjson.JSONObject;
-
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.glaf.core.identity.Agent;
 import com.glaf.core.identity.util.AgentJsonFactory;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+
+import java.util.Date;
 
 public class AgentImpl implements Agent {
 
@@ -36,88 +34,86 @@ public class AgentImpl implements Agent {
 	 * 主键
 	 */
 
-	protected String id;
+    private String id;
 
 	/**
 	 * 委托人 ，consigner
 	 */
 
-	protected String assignFrom;
+    private String assignFrom;
 
 	/**
 	 * 委托人名称
 	 */
 
-	protected String assignFromName;
+    private String assignFromName;
 
 	/**
 	 * 受托人，assignee
 	 */
 
-	protected String assignTo;
+    private String assignTo;
 
 	/**
 	 * 受托人名称
 	 */
 
-	protected String assignToName;
+    private String assignToName;
 
 	/**
 	 * 流程名称
 	 */
 
-	protected String processName;
+    private String processName;
 
 	/**
 	 * 任务名称
 	 */
 
-	protected String taskName;
+    private String taskName;
 
 	/**
 	 * 对象编号
 	 */
 
-	protected String objectId;
+    private String objectId;
 
 	/**
 	 * 对象值
 	 */
 
-	protected String objectValue;
+    private String objectValue;
 
 	/**
 	 * 开始生效日期
 	 */
 
-	protected Date startDate;
+    private Date startDate;
 
 	/**
 	 * 结束日期
 	 */
 
-	protected Date endDate;
+    private Date endDate;
 
 	/**
 	 * 代理类型 0-全局代理 1-代理指定流程的全部任务 2-代理指定流程的指定任务
 	 */
 
-	protected int agentType;
+    private int agentType;
 
-	protected String serviceKey;
+	private String serviceKey;
 
 	/**
 	 * 锁定标记
 	 */
 
-	protected int locked;
-
-	protected boolean valid = false;
+    private int locked;
 
 	/**
 	 * 创建日期
 	 */
-	protected Date createDate;
+    private Date createDate;
 
 	public AgentImpl() {
 	}
@@ -263,7 +259,6 @@ public class AgentImpl implements Agent {
 	}
 
 	public void setValid(boolean valid) {
-		this.valid = valid;
 	}
 
 	public JSONObject toJsonObject() {

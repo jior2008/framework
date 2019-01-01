@@ -18,76 +18,66 @@
 
 package com.glaf.core.util;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.UnsupportedEncodingException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Set;
-import java.util.TimeZone;
-import java.util.Map.Entry;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
-
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
+import com.alibaba.fastjson.JSONObject;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import com.alibaba.fastjson.JSONObject;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.nio.charset.StandardCharsets;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.*;
+import java.util.Map.Entry;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 public class ResponseUtils {
-	private static Log logger = LogFactory.getLog(ResponseUtils.class);
+	private static final Log logger = LogFactory.getLog(ResponseUtils.class);
 
-	protected static ConcurrentMap<String, String> mimeMapping = new ConcurrentHashMap<String, String>();
+	private static final ConcurrentMap<String, Integer> etagMap = new ConcurrentHashMap<String, Integer>();
 
-	protected static ConcurrentMap<String, Integer> etagMap = new ConcurrentHashMap<String, Integer>();
+	private static final ConcurrentMap<String, String> etag2Map = new ConcurrentHashMap<String, String>();
 
-	protected static ConcurrentMap<String, String> etag2Map = new ConcurrentHashMap<String, String>();
+	private static final ConcurrentMap<String, Boolean> etag3Map = new ConcurrentHashMap<String, Boolean>();
 
-	protected static ConcurrentMap<String, Boolean> etag3Map = new ConcurrentHashMap<String, Boolean>();
-
-	public static void download(HttpServletRequest request, HttpServletResponse response, byte[] bytes, String filename)
-			throws IOException, ServletException {
+	public static void download(HttpServletRequest request, HttpServletResponse response, byte[] bytes, String filename) {
 		InputStream inputStream = null;
 		try {
 			inputStream = new ByteArrayInputStream(bytes);
 			download(request, response, inputStream, filename);
-		} catch (Exception ex) {
+		} catch (Exception ignored) {
 		} finally {
 			try {
 				if (inputStream != null) {
 					inputStream.close();
 				}
-			} catch (IOException ex) {
+			} catch (IOException ignored) {
 			}
 		}
 	}
 
-	public static void download(HttpServletRequest request, HttpServletResponse response, InputStream inputStream,
-			String filename) {
+	private static void download(HttpServletRequest request, HttpServletResponse response, InputStream inputStream,
+								 String filename) {
 		output(request, response, inputStream, filename, null);
 	}
 
-	public static String getGMT(Date dateCST) {
+	private static String getGMT(Date dateCST) {
 		DateFormat df = new SimpleDateFormat("EEE, d-MMM-yyyy HH:mm:ss z", Locale.ENGLISH);
 		df.setTimeZone(TimeZone.getTimeZone("GMT")); // modify Time Zone.
 		return (df.format(dateCST));
 	}
 
-	public static boolean isGZIPSupported(HttpServletRequest req) {
+	private static boolean isGZIPSupported(HttpServletRequest req) {
 		String browserEncodings = req.getHeader("accept-encoding");
-		boolean supported = ((browserEncodings != null) && (browserEncodings.indexOf("gzip") != -1));
+		boolean supported = ((browserEncodings != null) && (browserEncodings.contains("gzip")));
 		String userAgent = req.getHeader("user-agent");
 		if ((userAgent != null) && userAgent.startsWith("httpunit")) {
 			logger.debug("httpunit detected, disabling filter...");
@@ -98,24 +88,24 @@ public class ResponseUtils {
 	}
 
 	public static void output(HttpServletRequest request, HttpServletResponse response, byte[] bytes, String filename,
-			String contentType) throws IOException, ServletException {
+			String contentType) {
 		InputStream inputStream = null;
 		try {
 			inputStream = new ByteArrayInputStream(bytes);
 			output(request, response, inputStream, filename, contentType);
-		} catch (Exception ex) {
+		} catch (Exception ignored) {
 		} finally {
 			try {
 				if (inputStream != null) {
 					inputStream.close();
 				}
-			} catch (IOException ex) {
+			} catch (IOException ignored) {
 			}
 		}
 	}
 
-	public static void output(HttpServletRequest request, HttpServletResponse response, InputStream inputStream,
-			String filename, String programContentType) {
+	private static void output(HttpServletRequest request, HttpServletResponse response, InputStream inputStream,
+							   String filename, String programContentType) {
 		String contentDisposition = null;
 		String fileOrgName = filename;
 		filename = filename.trim();
@@ -155,17 +145,11 @@ public class ResponseUtils {
 			contentType = "application/x-font-woff";
 		} else if (StringUtils.equalsIgnoreCase(ext, "swf")) {
 			contentType = "application/x-shockwave-flash";
-		} else {
-			contentType = mimeMapping.get(ext.trim().toLowerCase());
 		}
 
 		logger.debug("contentType:" + contentType);
 
-		if (requiredZip && isGZIPSupported(request)) {
-			requiredZip = true;
-		} else {
-			requiredZip = false;
-		}
+        requiredZip = requiredZip && isGZIPSupported(request);
 
 		OutputStream outputStream = null;
 
@@ -190,9 +174,9 @@ public class ResponseUtils {
 					response.setHeader("Content-Encoding", "gzip");
 				} else {
 					String encoding = request.getHeader("Accept-Encoding");
-					if (encoding != null && encoding.indexOf("gzip") != -1) {
+					if (encoding != null && encoding.contains("gzip")) {
 						response.setHeader("Content-Encoding", "gzip");
-					} else if (encoding != null && encoding.indexOf("compress") != -1) {
+					} else if (encoding != null && encoding.contains("compress")) {
 						response.setHeader("Content-Encoding", "compress");
 					}
 				}
@@ -215,11 +199,11 @@ public class ResponseUtils {
 			if (encoding != null) {
 				encoding = encoding.toLowerCase();
 			}
-			if (encoding != null && encoding.indexOf("gzip") != -1) {
+			if (encoding != null && encoding.contains("gzip")) {
 				zipFlag = true;
 				response.setHeader("Content-Encoding", "gzip");
 				outputStream = new java.util.zip.GZIPOutputStream(response.getOutputStream());
-			} else if (encoding != null && encoding.indexOf("compress") != -1) {
+			} else if (encoding != null && encoding.contains("compress")) {
 				zipFlag = true;
 				response.setHeader("Content-Encoding", "compress");
 				outputStream = new java.util.zip.ZipOutputStream(response.getOutputStream());
@@ -230,22 +214,22 @@ public class ResponseUtils {
 			String userAgent = request.getHeader("User-Agent");
 			logger.debug("User-Agent:" + userAgent);
 			if (userAgent != null) {
-				if (userAgent.indexOf("MSIE") != -1) {
+				if (userAgent.contains("MSIE")) {
 					filename = new String(filename.getBytes("GBK"), "ISO8859_1");
 				} else {
-					filename = new String(filename.getBytes("UTF-8"), "ISO8859_1");
+					filename = new String(filename.getBytes(StandardCharsets.UTF_8), "ISO8859_1");
 				}
 			} else {
 				filename = new String(filename.getBytes("GBK"), "ISO8859_1");
 			}
 
 			if (userAgent != null) {
-				if (userAgent.indexOf("MSIE 5.5") != -1) {
+				if (userAgent.contains("MSIE 5.5")) {
 					contentDisposition = "attachment;filename=\"" + filename + "\"";
-				} else if (userAgent.indexOf("MSIE 6.0b") != -1) {
+				} else if (userAgent.contains("MSIE 6.0b")) {
 					filename = new String(fileOrgName.getBytes("GBK"), "ISO8859_1");
 					contentDisposition = "attachment;filename=\"" + filename + "\"";
-				} else if (userAgent.indexOf("Gecko") != -1) {
+				} else if (userAgent.contains("Gecko")) {
 					filename = new String(fileOrgName.getBytes("GBK"), "ISO8859_1");
 					contentDisposition = "attachment;filename=\"" + filename + "\"";
 				}
@@ -304,20 +288,13 @@ public class ResponseUtils {
 			Map<String, Object> jsonMap = new java.util.HashMap<String, Object>();
 			jsonMap.put("statusCode", 200);
 			JSONObject object = new JSONObject(jsonMap);
-			try {
-				return object.toString().getBytes("UTF-8");
-			} catch (UnsupportedEncodingException e) {
-			}
-		} else {
+            return object.toString().getBytes(StandardCharsets.UTF_8);
+        } else {
 			Map<String, Object> jsonMap = new java.util.HashMap<String, Object>();
 			jsonMap.put("statusCode", 500);
 			JSONObject object = new JSONObject(jsonMap);
-			try {
-				return object.toString().getBytes("UTF-8");
-			} catch (UnsupportedEncodingException e) {
-			}
-		}
-		return null;
+            return object.toString().getBytes(StandardCharsets.UTF_8);
+        }
 	}
 
 	public static byte[] responseJsonResult(boolean success, Map<String, Object> dataMap) {
@@ -333,11 +310,8 @@ public class ResponseUtils {
 			}
 
 			JSONObject object = new JSONObject(jsonMap);
-			try {
-				return object.toString().getBytes("UTF-8");
-			} catch (UnsupportedEncodingException e) {
-			}
-		} else {
+            return object.toString().getBytes(StandardCharsets.UTF_8);
+        } else {
 			Map<String, Object> jsonMap = new java.util.HashMap<String, Object>();
 			jsonMap.put("statusCode", 500);
 
@@ -348,12 +322,8 @@ public class ResponseUtils {
 				jsonMap.put(key, value);
 			}
 			JSONObject object = new JSONObject(jsonMap);
-			try {
-				return object.toString().getBytes("UTF-8");
-			} catch (UnsupportedEncodingException e) {
-			}
-		}
-		return null;
+            return object.toString().getBytes(StandardCharsets.UTF_8);
+        }
 	}
 
 	public static byte[] responseJsonResult(boolean success, String message) {
@@ -362,21 +332,14 @@ public class ResponseUtils {
 			jsonMap.put("statusCode", 200);
 			jsonMap.put("message", message);
 			JSONObject object = new JSONObject(jsonMap);
-			try {
-				return object.toString().getBytes("UTF-8");
-			} catch (UnsupportedEncodingException e) {
-			}
-		} else {
+            return object.toString().getBytes(StandardCharsets.UTF_8);
+        } else {
 			Map<String, Object> jsonMap = new java.util.HashMap<String, Object>();
 			jsonMap.put("statusCode", 500);
 			jsonMap.put("message", message);
 			JSONObject object = new JSONObject(jsonMap);
-			try {
-				return object.toString().getBytes("UTF-8");
-			} catch (UnsupportedEncodingException e) {
-			}
-		}
-		return null;
+            return object.toString().getBytes(StandardCharsets.UTF_8);
+        }
 	}
 
 	public static byte[] responseJsonResult(int statusCode, String message) {
@@ -384,11 +347,7 @@ public class ResponseUtils {
 		jsonMap.put("statusCode", statusCode);
 		jsonMap.put("message", message);
 		JSONObject object = new JSONObject(jsonMap);
-		try {
-			return object.toString().getBytes("UTF-8");
-		} catch (UnsupportedEncodingException e) {
-		}
-		return null;
+        return object.toString().getBytes(StandardCharsets.UTF_8);
 	}
 
 	/**
@@ -416,29 +375,22 @@ public class ResponseUtils {
 		return responseJsonResult(success);
 	}
 
-	public static byte[] responseXmlResult(boolean success) {
+	private static byte[] responseXmlResult(boolean success) {
 		if (success) {
 			StringBuilder buffer = new StringBuilder(500);
 			buffer.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
 			buffer.append("<response>");
 			buffer.append("\n    <statusCode>200</statusCode>");
 			buffer.append("\n</response>");
-			try {
-				return buffer.toString().getBytes("UTF-8");
-			} catch (UnsupportedEncodingException e) {
-			}
-		} else {
+            return buffer.toString().getBytes(StandardCharsets.UTF_8);
+        } else {
 			StringBuilder buffer = new StringBuilder(500);
 			buffer.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
 			buffer.append("<response>");
 			buffer.append("\n    <statusCode>500</statusCode>");
 			buffer.append("\n</response>");
-			try {
-				return buffer.toString().getBytes("UTF-8");
-			} catch (UnsupportedEncodingException e) {
-			}
-		}
-		return null;
+            return buffer.toString().getBytes(StandardCharsets.UTF_8);
+        }
 	}
 
 	public static byte[] responseXmlResult(boolean success, Map<String, Object> dataMap) {
@@ -454,11 +406,8 @@ public class ResponseUtils {
 				buffer.append("\n    <").append(key).append(">").append(value).append("</").append(key).append(">");
 			}
 			buffer.append("\n</response>");
-			try {
-				return buffer.toString().getBytes("UTF-8");
-			} catch (UnsupportedEncodingException e) {
-			}
-		} else {
+            return buffer.toString().getBytes(StandardCharsets.UTF_8);
+        } else {
 			StringBuilder buffer = new StringBuilder(500);
 			buffer.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
 			buffer.append("<response>");
@@ -470,12 +419,8 @@ public class ResponseUtils {
 				buffer.append("\n    <").append(key).append(">").append(value).append("</").append(key).append(">");
 			}
 			buffer.append("\n</response>");
-			try {
-				return buffer.toString().getBytes("UTF-8");
-			} catch (UnsupportedEncodingException e) {
-			}
+			return buffer.toString().getBytes(StandardCharsets.UTF_8);
 		}
-		return null;
 	}
 
 	public static byte[] responseXmlResult(boolean success, String message) {
@@ -486,23 +431,16 @@ public class ResponseUtils {
 			buffer.append("\n    <statusCode>200</statusCode>");
 			buffer.append("\n    <message>").append(message).append("</message>");
 			buffer.append("\n</response>");
-			try {
-				return buffer.toString().getBytes("UTF-8");
-			} catch (UnsupportedEncodingException e) {
-			}
-		} else {
+            return buffer.toString().getBytes(StandardCharsets.UTF_8);
+        } else {
 			StringBuilder buffer = new StringBuilder(500);
 			buffer.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
 			buffer.append("<response>");
 			buffer.append("\n    <statusCode>500</statusCode>");
 			buffer.append("\n    <message>").append(message).append("</message>");
 			buffer.append("\n</response>");
-			try {
-				return buffer.toString().getBytes("UTF-8");
-			} catch (UnsupportedEncodingException e) {
-			}
-		}
-		return null;
+            return buffer.toString().getBytes(StandardCharsets.UTF_8);
+        }
 	}
 
 }

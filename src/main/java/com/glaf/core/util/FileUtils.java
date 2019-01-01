@@ -18,29 +18,18 @@
 
 package com.glaf.core.util;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.io.BufferedReader;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import org.apache.commons.io.IOUtils;
+
+import java.io.*;
 import java.nio.ByteBuffer;
 import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
 import java.nio.channels.WritableByteChannel;
 import java.nio.charset.StandardCharsets;
 
-import org.apache.commons.io.IOUtils;
-
 public class FileUtils {
 
-	public static final int BUFFER_SIZE = 65536;
+	private static final int BUFFER_SIZE = 65536;
 
 	public static final int GB_SIZE = 1073741824;
 
@@ -48,7 +37,7 @@ public class FileUtils {
 
 	public static final int KB_SIZE = 1024;
 
-	public final static String sp = System.getProperty("file.separator");
+	private final static String sp = System.getProperty("file.separator");
 
 	public final static String newline = System.getProperty("line.separator");
 
@@ -62,10 +51,10 @@ public class FileUtils {
 	 */
 	public static void copy(String src, String dest) throws IOException {
 		String path = "";
-		if (dest.indexOf(sp) != -1) {
+		if (dest.contains(sp)) {
 			path = dest.substring(0, dest.lastIndexOf(sp));
 		}
-		if (dest.indexOf("/") != -1) {
+		if (dest.contains("/")) {
 			path = dest.substring(0, dest.lastIndexOf("/"));
 		}
 		path = getJavaFileSystemPath(path);
@@ -101,10 +90,7 @@ public class FileUtils {
 		filename = getJavaFileSystemPath(filename);
 		java.io.File file = new java.io.File(filename);
 		if (file.exists() && file.isFile()) {
-			boolean isOK = file.delete();
-			if (!isOK) {
-
-			}
+			file.delete();
 		}
 	}
 
@@ -130,7 +116,7 @@ public class FileUtils {
 	 * Delete a directory and all its contents. If we return false, the directory
 	 * may be partially-deleted.
 	 */
-	public static boolean fullyDelete(File dir) throws IOException {
+	private static boolean fullyDelete(File dir) throws IOException {
 		if (!fullyDeleteContents(dir)) {
 			return false;
 		}
@@ -141,32 +127,28 @@ public class FileUtils {
 	 * Delete the contents of a directory, not the directory itself. If we return
 	 * false, the directory may be partially-deleted.
 	 */
-	public static boolean fullyDeleteContents(File dir) throws IOException {
+	private static boolean fullyDeleteContents(File dir) throws IOException {
 		boolean deletionSucceeded = true;
-		File contents[] = dir.listFiles();
+		File[] contents = dir.listFiles();
 		if (contents != null) {
-			for (int i = 0; i < contents.length; i++) {
-				if (contents[i].isFile()) {
-					if (!contents[i].delete()) {
+			for (File content : contents) {
+				if (content.isFile()) {
+					if (!content.delete()) {
 						deletionSucceeded = false;
-						continue; // continue deletion of other files/dirs under
-									// dir
 					}
 				} else {
 					// try deleting the directory
 					// this might be a symlink
-					boolean b = false;
-					b = contents[i].delete();
+					boolean b;
+					b = content.delete();
 					if (b) {
 						// this was indeed a symlink or an empty directory
 						continue;
 					}
 					// if not an empty directory or symlink let
 					// fullydelete handle it.
-					if (!fullyDelete(contents[i])) {
+					if (!fullyDelete(content)) {
 						deletionSucceeded = false;
-						continue; // continue deletion of other files/dirs under
-									// dir
 					}
 				}
 			}
@@ -177,7 +159,7 @@ public class FileUtils {
 	/**
 	 * 将文件转换为字节流
 	 * 
-	 * @param stream
+	 * @param file
 	 * @return
 	 */
 	public static byte[] getBytes(File file) {
@@ -225,44 +207,38 @@ public class FileUtils {
 			if (output != null) {
 				try {
 					output.close();
-					output = null;
-				} catch (IOException ex) {
+				} catch (IOException ignored) {
 				}
 			}
 			if (bos != null) {
 				try {
 					bos.close();
-					bos = null;
-				} catch (IOException ex) {
+				} catch (IOException ignored) {
 				}
 			}
 			if (readChannel != null) {
 				try {
 					readChannel.close();
-					readChannel = null;
-				} catch (IOException ex) {
+				} catch (IOException ignored) {
 				}
 			}
 			if (writeChannel != null) {
 				try {
 					writeChannel.close();
-					writeChannel = null;
-				} catch (IOException ex) {
+				} catch (IOException ignored) {
 				}
 			}
 			buffer.clear();
-			buffer = null;
 		}
 	}
 
 	/**
 	 * 将文件转换为字节流
 	 * 
-	 * @param stream
+	 * @param filename
 	 * @return
-	 * @throws IOException
 	 */
-	public static byte[] getBytes(String filename) {
+	private static byte[] getBytes(String filename) {
 		filename = getJavaFileSystemPath(filename);
 		File file = new File(filename);
 		return getBytes(file);
@@ -278,9 +254,7 @@ public class FileUtils {
 		try {
 			File file = new File(path);
 			if (!file.exists()) {
-				boolean result = file.mkdirs();
-				if (!result) {
-				}
+				file.mkdirs();
 			}
 
 			long totalSpace = file.getTotalSpace();
@@ -297,9 +271,9 @@ public class FileUtils {
 	}
 
 	public static String getFileExt(String fileName) {
-		String value = "";
-		int start = 0;
-		int end = 0;
+		String value;
+		int start;
+		int end;
 		if (fileName == null) {
 			return null;
 		}
@@ -315,19 +289,19 @@ public class FileUtils {
 
 	public static String getFilename(String filename) {
 		String value = "";
-		int start = 0;
-		int end = 0;
+		int start;
+		int end;
 		if (filename == null) {
 			return value;
 		}
-		if (filename.indexOf("/") != -1) {
+		if (filename.contains("/")) {
 			start = filename.lastIndexOf("/") + 1;
 			end = filename.length();
 			value = filename.substring(start, end);
 			if (filename.lastIndexOf("/") > 0) {
 				return value;
 			}
-		} else if (filename.indexOf("\\") != -1) {
+		} else if (filename.contains("\\")) {
 			start = filename.lastIndexOf("\\") + 1;
 			end = filename.length();
 			value = filename.substring(start, end);
@@ -339,7 +313,7 @@ public class FileUtils {
 	}
 
 	public static String getFileName(String filePathName) {
-		int pos = 0;
+		int pos;
 		pos = filePathName.lastIndexOf(47);
 		if (pos != -1) {
 			return filePathName.substring(pos + 1, filePathName.length());
@@ -353,17 +327,16 @@ public class FileUtils {
 	}
 
 	public static java.io.InputStream getInputStream(String filename) {
-		File file = null;
-		FileInputStream fin = null;
+		File file;
+		FileInputStream fin;
 		try {
 			file = new File(filename);
-			if (file != null && file.isFile()) {
+			if (file.isFile()) {
 				fin = new FileInputStream(file);
 				return fin;
 			}
 			return null;
 		} catch (IOException ex) {
-			fin = null;
 			throw new RuntimeException(ex);
 		}
 	}
@@ -384,7 +357,7 @@ public class FileUtils {
 		return path;
 	}
 
-	public static void mkdirs(String path) throws IOException {
+	public static void mkdirs(String path) {
 		if (path == null) {
 			return;
 		}
@@ -400,7 +373,7 @@ public class FileUtils {
 		if (dir.mkdir() || dir.exists()) {
 			return true;
 		}
-		File canonDir = null;
+		File canonDir;
 		try {
 			canonDir = dir.getCanonicalFile();
 		} catch (IOException e) {
@@ -415,7 +388,7 @@ public class FileUtils {
 		try {
 			final BufferedReader input = new BufferedReader(new FileReader(file));
 			try {
-				String line = null;
+				String line;
 				while ((line = input.readLine()) != null) {
 					contents.append(line);
 					contents.append(System.getProperty("line.separator"));
@@ -518,28 +491,28 @@ public class FileUtils {
 				if (bais != null) {
 					bais.close();
 				}
-			} catch (IOException ex) {
+			} catch (IOException ignored) {
 			}
 		}
 	}
 
-	public static void save(String filename, InputStream inputStream) {
+	private static void save(String filename, InputStream inputStream) {
 		if (filename == null || inputStream == null) {
 			return;
 		}
 		filename = StringTools.replace(filename, "\\", "/");
 		String path = "";
 		String sp = System.getProperty("file.separator");
-		if (filename.indexOf(sp) != -1) {
+		if (filename.contains(sp)) {
 			path = filename.substring(0, filename.lastIndexOf(sp));
 		}
-		if (filename.indexOf("/") != -1) {
+		if (filename.contains("/")) {
 			path = filename.substring(0, filename.lastIndexOf("/"));
 		}
 		path = getJavaFileSystemPath(path);
 		java.io.File dir = new java.io.File(path + sp);
 		mkdirsWithExistsCheck(dir);
-		File file = null;
+		File file;
 		BufferedInputStream bis = null;
 		BufferedOutputStream bos = null;
 		FileOutputStream fileOutputStream = null;
@@ -548,7 +521,7 @@ public class FileUtils {
 			fileOutputStream = new FileOutputStream(file);
 			bis = new BufferedInputStream(inputStream);
 			bos = new BufferedOutputStream(fileOutputStream);
-			int bytesRead = 0;
+			int bytesRead;
 			byte[] buffer = new byte[BUFFER_SIZE];
 			while ((bytesRead = bis.read(buffer, 0, BUFFER_SIZE)) != -1) {
 				bos.write(buffer, 0, bytesRead);
@@ -564,23 +537,20 @@ public class FileUtils {
 			try {
 				if (bis != null) {
 					bis.close();
-					bis = null;
 				}
-			} catch (IOException ioe) {
+			} catch (IOException ignored) {
 			}
 			try {
 				if (bos != null) {
 					bos.close();
-					bos = null;
 				}
-			} catch (IOException ioe) {
+			} catch (IOException ignored) {
 			}
 			try {
 				if (fileOutputStream != null) {
 					fileOutputStream.close();
-					fileOutputStream = null;
 				}
-			} catch (IOException ioe) {
+			} catch (IOException ignored) {
 			}
 		}
 	}

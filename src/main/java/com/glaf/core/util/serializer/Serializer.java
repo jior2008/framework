@@ -23,7 +23,7 @@ import java.io.IOException;
 /**
  * 对象序列化接口
  */
-public interface Serializer {
+interface Serializer {
 
 	Object deserialize(byte[] bytes) throws IOException;
 

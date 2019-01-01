@@ -18,24 +18,12 @@
 
 package com.glaf.framework.system.service.impl;
 
-import java.util.Date;
-import java.util.List;
-
-import org.apache.commons.lang.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.apache.ibatis.session.RowBounds;
-import org.mybatis.spring.SqlSessionTemplate;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.glaf.core.cache.CacheFactory;
 import com.glaf.core.id.IdGenerator;
 import com.glaf.core.util.PageResult;
-
 import com.glaf.framework.system.config.SystemConfig;
 import com.glaf.framework.system.domain.Dictory;
 import com.glaf.framework.system.domain.SysTree;
@@ -44,25 +32,35 @@ import com.glaf.framework.system.mapper.DictoryMapper;
 import com.glaf.framework.system.query.DictoryQuery;
 import com.glaf.framework.system.service.DictoryService;
 import com.glaf.framework.system.service.SysTreeService;
+import org.apache.commons.lang.StringUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.apache.ibatis.session.RowBounds;
+import org.mybatis.spring.SqlSessionTemplate;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Date;
+import java.util.List;
 
 @Service("dictoryService")
 @Transactional(readOnly = true)
 public class DictoryServiceImpl implements DictoryService {
 	protected final static Log logger = LogFactory.getLog(DictoryServiceImpl.class);
 
-	protected IdGenerator idGenerator;
+	private IdGenerator idGenerator;
 
-	protected DictoryMapper dictoryMapper;
+	private DictoryMapper dictoryMapper;
 
-	protected SqlSessionTemplate sqlSessionTemplate;
+	private SqlSessionTemplate sqlSessionTemplate;
 
-	protected SysTreeService sysTreeService;
+	private SysTreeService sysTreeService;
 
 	public DictoryServiceImpl() {
 
 	}
 
-	public int count(DictoryQuery query) {
+	private int count(DictoryQuery query) {
 		return dictoryMapper.getDictoryCount(query);
 	}
 
@@ -128,14 +126,13 @@ public class DictoryServiceImpl implements DictoryService {
 				try {
 					JSONArray array = JSON.parseArray(text);
 					return DictoryJsonFactory.arrayToList(array);
-				} catch (Exception ex) {
+				} catch (Exception ignored) {
 				}
 			}
 		}
 
 		DictoryQuery query = new DictoryQuery();
 		query.nodeId(nodeId);
-		query.locked(0);
 		query.setOrderBy(" E.SORTNO asc");
 		List<Dictory> list = this.list(query);
 		if (list != null && !list.isEmpty()) {
@@ -162,7 +159,7 @@ public class DictoryServiceImpl implements DictoryService {
 		return dictoryMapper.getDictories(query);
 	}
 
-	public Dictory getDictory(Long id) {
+	private Dictory getDictory(Long id) {
 		if (id == null) {
 			return null;
 		}
@@ -173,7 +170,7 @@ public class DictoryServiceImpl implements DictoryService {
 				try {
 					JSONObject json = JSON.parseObject(text);
 					return DictoryJsonFactory.jsonToObject(json);
-				} catch (Exception ex) {
+				} catch (Exception ignored) {
 				}
 			}
 		}
@@ -267,13 +264,11 @@ public class DictoryServiceImpl implements DictoryService {
 
 	public List<Dictory> getDictorysByQueryCriteria(int start, int pageSize, DictoryQuery query) {
 		RowBounds rowBounds = new RowBounds(start, pageSize);
-		List<Dictory> rows = sqlSessionTemplate.selectList("getDictories", query, rowBounds);
-		return rows;
+        return sqlSessionTemplate.selectList("getDictories", query, rowBounds);
 	}
 
-	public List<Dictory> list(DictoryQuery query) {
-		List<Dictory> list = dictoryMapper.getDictories(query);
-		return list;
+	private List<Dictory> list(DictoryQuery query) {
+        return dictoryMapper.getDictories(query);
 	}
 
 	@Transactional

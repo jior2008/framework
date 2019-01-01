@@ -18,33 +18,23 @@
 
 package com.glaf.framework.service.impl;
 
-import java.util.List;
-
+import com.glaf.core.base.TableModel;
+import com.glaf.framework.mapper.TableDataMapper;
+import com.glaf.framework.service.ITableDataService;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.glaf.core.base.TableModel;
-import com.glaf.core.dao.EntityDAO;
-import com.glaf.core.id.IdGenerator;
-import com.glaf.framework.mapper.TableDataMapper;
-import com.glaf.framework.service.ITableDataService;
+import java.util.List;
 
 @Service("tableDataService")
 @Transactional
 public class TableDataServiceImpl implements ITableDataService {
 	protected final static Log logger = LogFactory.getLog(TableDataServiceImpl.class);
 
-	protected EntityDAO entityDAO;
-
-	protected IdGenerator idGenerator;
-
-	protected SqlSession sqlSession;
-
-	protected TableDataMapper tableDataMapper;
+	private TableDataMapper tableDataMapper;
 
 	public TableDataServiceImpl() {
 
@@ -88,20 +78,6 @@ public class TableDataServiceImpl implements ITableDataService {
 		tableDataMapper.insertTableData(tableModel);
 	}
 
-	@javax.annotation.Resource
-	public void setEntityDAO(EntityDAO entityDAO) {
-		this.entityDAO = entityDAO;
-	}
-
-	@javax.annotation.Resource
-	public void setIdGenerator(IdGenerator idGenerator) {
-		this.idGenerator = idGenerator;
-	}
-
-	@javax.annotation.Resource
-	public void setSqlSession(SqlSession sqlSession) {
-		this.sqlSession = sqlSession;
-	}
 
 	@javax.annotation.Resource
 	public void setTableDataMapper(TableDataMapper tableDataMapper) {

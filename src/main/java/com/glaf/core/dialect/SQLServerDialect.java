@@ -20,7 +20,7 @@ package com.glaf.core.dialect;
 
 public class SQLServerDialect implements Dialect {
 
-	static int getAfterSelectInsertPoint(String sql) {
+	private static int getAfterSelectInsertPoint(String sql) {
 		int selectIndex = sql.toLowerCase().indexOf("select");
 		final int selectDistinctIndex = sql.toLowerCase().indexOf(
 				"select distinct");

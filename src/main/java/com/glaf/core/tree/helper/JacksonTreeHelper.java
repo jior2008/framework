@@ -18,19 +18,6 @@
 
 package com.glaf.core.tree.helper;
 
-import java.util.Collection;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
-
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -38,11 +25,17 @@ import com.glaf.core.base.TreeModel;
 import com.glaf.core.tree.component.TreeComponent;
 import com.glaf.core.tree.component.TreeRepository;
 import com.glaf.core.util.DateUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
-public class JacksonTreeHelper {
-	protected static final Log logger = LogFactory.getLog(JacksonTreeHelper.class);
+import java.util.*;
+import java.util.Map.Entry;
 
-	protected void addDataMap(TreeComponent component, ObjectNode row) {
+class JacksonTreeHelper {
+	private static final Log logger = LogFactory.getLog(JacksonTreeHelper.class);
+
+	private void addDataMap(TreeComponent component, ObjectNode row) {
 		if (component.getDataMap() != null) {
 			Map<String, Object> dataMap = component.getDataMap();
 			Set<Entry<String, Object>> entrySet = dataMap.entrySet();
@@ -98,12 +91,11 @@ public class JacksonTreeHelper {
 		}
 	}
 
-	public TreeRepository build(List<TreeModel> treeModels) {
+	private TreeRepository build(List<TreeModel> treeModels) {
 		Map<String, TreeModel> treeMap = new java.util.HashMap<String, TreeModel>();
 		Map<String, TreeModel> lockedMap = new java.util.HashMap<String, TreeModel>();
 
-		for (int i = 0, len = treeModels.size(); i < len; i++) {
-			TreeModel treeModel = (TreeModel) treeModels.get(i);
+		for (TreeModel treeModel : treeModels) {
 			if (treeModel != null && treeModel.getId() == treeModel.getParentId()) {
 				treeModel.setParentId(-1);
 			}
@@ -119,8 +111,7 @@ public class JacksonTreeHelper {
 		}
 
 		for (int i = 0, len = treeModels.size(); i < len / 2; i++) {
-			for (int j = 0, len2 = treeModels.size(); j < len2; j++) {
-				TreeModel tree = treeModels.get(j);
+			for (TreeModel tree : treeModels) {
 				/**
 				 * 找到某个节点的父节点，如果被禁用，那么当前节点也设置为禁用
 				 */
@@ -133,8 +124,7 @@ public class JacksonTreeHelper {
 		}
 
 		TreeRepository repository = new TreeRepository();
-		for (int i = 0, len = treeModels.size(); i < len; i++) {
-			TreeModel treeModel = treeModels.get(i);
+		for (TreeModel treeModel : treeModels) {
 			if (treeModel == null) {
 				continue;
 			}
@@ -163,8 +153,7 @@ public class JacksonTreeHelper {
 			repository.addTree(component);
 		}
 
-		for (int i = 0, len = treeModels.size(); i < len; i++) {
-			TreeModel treeModel = treeModels.get(i);
+		for (TreeModel treeModel : treeModels) {
 			if (treeModel == null) {
 				continue;
 			}
@@ -178,7 +167,7 @@ public class JacksonTreeHelper {
 			TreeComponent component = repository.getTree(String.valueOf(treeModel.getId()));
 			String parentId = String.valueOf(treeModel.getParentId());
 			if (treeMap.get(parentId) != null) {
-				TreeComponent parentTree = repository.getTree(String.valueOf(parentId));
+				TreeComponent parentTree = repository.getTree(parentId);
 				if (parentTree == null) {
 					TreeModel parent = treeMap.get(parentId);
 					parentTree = new TreeComponent();
@@ -207,25 +196,23 @@ public class JacksonTreeHelper {
 		Map<String, TreeComponent> treeMap = new java.util.HashMap<String, TreeComponent>();
 		Map<String, TreeComponent> lockedMap = new java.util.HashMap<String, TreeComponent>();
 
-		for (int i = 0, len = treeModels.size(); i < len; i++) {
-			TreeComponent treeModel = (TreeComponent) treeModels.get(i);
+		for (TreeComponent treeModel : treeModels) {
 			if (treeModel != null && StringUtils.equals(treeModel.getId(), treeModel.getParentId())) {
 				treeModel.setParentId("-1");
 			}
 			if (treeModel != null && treeModel.getId() != null) {
-				treeMap.put(String.valueOf(treeModel.getId()), treeModel);
+				treeMap.put(treeModel.getId(), treeModel);
 			}
 			if (treeModel != null && treeModel.getLocked() != 0) {
 				/**
 				 * 记录已经禁用的节点
 				 */
-				lockedMap.put(String.valueOf(treeModel.getId()), treeModel);
+				lockedMap.put(treeModel.getId(), treeModel);
 			}
 		}
 
 		for (int i = 0, len = treeModels.size(); i < len / 2; i++) {
-			for (int j = 0, len2 = treeModels.size(); j < len2; j++) {
-				TreeComponent tree = treeModels.get(j);
+			for (TreeComponent tree : treeModels) {
 				/**
 				 * 找到某个节点的父节点，如果被禁用，那么当前节点也设置为禁用
 				 */
@@ -238,8 +225,7 @@ public class JacksonTreeHelper {
 		}
 
 		TreeRepository repository = new TreeRepository();
-		for (int i = 0, len = treeModels.size(); i < len; i++) {
-			TreeComponent treeModel = treeModels.get(i);
+		for (TreeComponent treeModel : treeModels) {
 			if (treeModel == null) {
 				continue;
 			}
@@ -268,8 +254,7 @@ public class JacksonTreeHelper {
 			repository.addTree(component);
 		}
 
-		for (int i = 0, len = treeModels.size(); i < len; i++) {
-			TreeComponent treeModel = treeModels.get(i);
+		for (TreeComponent treeModel : treeModels) {
 			if (treeModel == null) {
 				continue;
 			}
@@ -308,14 +293,11 @@ public class JacksonTreeHelper {
 		return repository;
 	}
 
-	public void buildTree(ObjectNode row, TreeComponent treeComponent, Collection<String> checkedNodes,
-			Map<String, TreeModel> nodeMap) {
+	private void buildTree(ObjectNode row, TreeComponent treeComponent, Collection<String> checkedNodes,
+						   Map<String, TreeModel> nodeMap) {
 		if (treeComponent.getComponents() != null && treeComponent.getComponents().size() > 0) {
 			ArrayNode array = new ObjectMapper().createArrayNode();
-			Iterator<?> iterator = treeComponent.getComponents().iterator();
-			while (iterator.hasNext()) {
-				TreeComponent component = (TreeComponent) iterator.next();
-				TreeModel node = nodeMap.get(treeComponent.getId());
+			for (TreeComponent component : treeComponent.getComponents()) {
 				ObjectNode child = new ObjectMapper().createObjectNode();
 				this.addDataMap(component, child);
 				child.put("id", component.getId());
@@ -327,9 +309,6 @@ public class JacksonTreeHelper {
 				child.put("img", component.getImage());
 				child.put("image", component.getImage());
 
-				if (node != null) {
-
-				}
 				if (checkedNodes.contains(component.getId())) {
 					child.put("checked", Boolean.valueOf(true));
 				} else {
@@ -350,12 +329,10 @@ public class JacksonTreeHelper {
 
 	}
 
-	public void buildTreeModel(ObjectNode row, TreeComponent treeComponent) {
+	private void buildTreeModel(ObjectNode row, TreeComponent treeComponent) {
 		if (treeComponent.getComponents() != null && treeComponent.getComponents().size() > 0) {
 			ArrayNode array = new ObjectMapper().createArrayNode();
-			Iterator<?> iterator = treeComponent.getComponents().iterator();
-			while (iterator.hasNext()) {
-				TreeComponent component = (TreeComponent) iterator.next();
+			for (TreeComponent component : treeComponent.getComponents()) {
 				ObjectNode child = new ObjectMapper().createObjectNode();
 				this.addDataMap(component, child);
 				child.put("id", component.getId());
@@ -385,17 +362,15 @@ public class JacksonTreeHelper {
 	public ObjectNode getJsonCheckboxNode(TreeModel root, List<TreeModel> trees, List<TreeModel> selectedNodes) {
 		Collection<String> checkedNodes = new HashSet<String>();
 		if (selectedNodes != null && selectedNodes.size() > 0) {
-			for (int i = 0, len = selectedNodes.size(); i < len; i++) {
-				TreeModel treeNode = (TreeModel) selectedNodes.get(i);
-				checkedNodes.add(String.valueOf(treeNode.getId()));
+			for (TreeModel selectedNode : selectedNodes) {
+				checkedNodes.add(String.valueOf(selectedNode.getId()));
 			}
 		}
 
 		Map<String, TreeModel> nodeMap = new java.util.HashMap<String, TreeModel>();
 		if (trees != null && trees.size() > 0) {
-			for (int i = 0, len = trees.size(); i < len; i++) {
-				TreeModel treeNode = (TreeModel) trees.get(i);
-				nodeMap.put(String.valueOf(treeNode.getId()), treeNode);
+			for (TreeModel tree : trees) {
+				nodeMap.put(String.valueOf(tree.getId()), tree);
 			}
 		}
 
@@ -428,6 +403,7 @@ public class JacksonTreeHelper {
 				if (topTrees != null && topTrees.size() > 0) {
 					if (topTrees.size() == 1) {
 						TreeComponent component = (TreeComponent) topTrees.get(0);
+						assert root != null;
 						if (StringUtils.equals(component.getId(), String.valueOf(root.getId()))) {
 							this.buildTree(object, component, checkedNodes, nodeMap);
 						} else {
@@ -454,9 +430,8 @@ public class JacksonTreeHelper {
 							this.buildTree(child, component, checkedNodes, nodeMap);
 						}
 					} else {
-						for (int i = 0, len = topTrees.size(); i < len; i++) {
-							TreeComponent component = (TreeComponent) topTrees.get(i);
-							TreeModel node = (TreeModel) nodeMap.get(component.getId());
+						for (Object topTree : topTrees) {
+							TreeComponent component = (TreeComponent) topTree;
 							ObjectNode child = new ObjectMapper().createObjectNode();
 							this.addDataMap(component, child);
 							child.put("id", component.getId());
@@ -468,9 +443,6 @@ public class JacksonTreeHelper {
 							child.put("img", component.getImage());
 							child.put("image", component.getImage());
 
-							if (node != null) {
-
-							}
 							if (checkedNodes.contains(component.getId())) {
 								child.put("checked", Boolean.valueOf(true));
 							} else {
@@ -499,15 +471,15 @@ public class JacksonTreeHelper {
 		return this.getTreeArrayNode(treeModels, true);
 	}
 
-	public ArrayNode getTreeArrayNode(List<TreeModel> treeModels, boolean showParentIfNotChildren) {
+	private ArrayNode getTreeArrayNode(List<TreeModel> treeModels, boolean showParentIfNotChildren) {
 		ArrayNode result = new ObjectMapper().createArrayNode();
 		if (treeModels != null && treeModels.size() > 0) {
 			TreeRepository repository = this.build(treeModels);
 			List<?> topTrees = repository.getTopTrees();
 			logger.debug("topTrees:" + (topTrees != null ? topTrees.size() : 0));
 			if (topTrees != null && topTrees.size() > 0) {
-				for (int i = 0, len = topTrees.size(); i < len; i++) {
-					TreeComponent component = (TreeComponent) topTrees.get(i);
+				for (Object topTree : topTrees) {
+					TreeComponent component = (TreeComponent) topTree;
 					ObjectNode child = new ObjectMapper().createObjectNode();
 					this.addDataMap(component, child);
 
@@ -549,11 +521,11 @@ public class JacksonTreeHelper {
 		return this.getTreeJson(null, treeModels, showParentIfNotChildren);
 	}
 
-	public ObjectNode getTreeJson(TreeModel root, List<TreeModel> treeModels) {
+	private ObjectNode getTreeJson(TreeModel root, List<TreeModel> treeModels) {
 		return this.getTreeJson(root, treeModels, true);
 	}
 
-	public ObjectNode getTreeJson(TreeModel root, List<TreeModel> treeModels, boolean showParentIfNotChildren) {
+	private ObjectNode getTreeJson(TreeModel root, List<TreeModel> treeModels, boolean showParentIfNotChildren) {
 		ObjectNode object = new ObjectMapper().createObjectNode();
 		if (root != null) {
 			object = root.toObjectNode();
@@ -595,8 +567,8 @@ public class JacksonTreeHelper {
 							this.buildTreeModel(object, component);
 						}
 					} else {
-						for (int i = 0, len = topTrees.size(); i < len; i++) {
-							TreeComponent component = (TreeComponent) topTrees.get(i);
+						for (Object topTree : topTrees) {
+							TreeComponent component = (TreeComponent) topTree;
 							ObjectNode child = new ObjectMapper().createObjectNode();
 							this.addDataMap(component, child);
 							child.put("id", component.getId());

@@ -18,24 +18,23 @@
 
 package com.glaf.core.util;
 
-import java.util.HashMap;
-import java.util.Map;
+import io.netty.util.concurrent.FastThreadLocal;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.HashMap;
+import java.util.Map;
 
-import io.netty.util.concurrent.FastThreadLocal;
+class ThreadContextHolder {
 
-public class ThreadContextHolder {
-
-	private static FastThreadLocal<ServletContext> servletContextThreadLocalHolder = new FastThreadLocal<ServletContext>();
+	private static final FastThreadLocal<ServletContext> servletContextThreadLocalHolder = new FastThreadLocal<ServletContext>();
 	
-	private static FastThreadLocal<HttpServletRequest> HttpRequestThreadLocalHolder = new FastThreadLocal<HttpServletRequest>();
+	private static final FastThreadLocal<HttpServletRequest> HttpRequestThreadLocalHolder = new FastThreadLocal<HttpServletRequest>();
 	
-	private static FastThreadLocal<HttpServletResponse> HttpResponseThreadLocalHolder = new FastThreadLocal<HttpServletResponse>();
+	private static final FastThreadLocal<HttpServletResponse> HttpResponseThreadLocalHolder = new FastThreadLocal<HttpServletResponse>();
 	
-	private static FastThreadLocal<Map<String, Object>> dataMapHolder = new FastThreadLocal<Map<String, Object>>();
+	private static final FastThreadLocal<Map<String, Object>> dataMapHolder = new FastThreadLocal<Map<String, Object>>();
 
 	public static void addData(String key, Object value) {
 		Map<String, Object> dataMap = dataMapHolder.get();

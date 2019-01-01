@@ -18,7 +18,7 @@
 
 package com.glaf.core.cache;
 
-public class CacheConstants {
+class CacheConstants {
 
 	public final static String TREE_PREFIX = "x_treemodel_";
 

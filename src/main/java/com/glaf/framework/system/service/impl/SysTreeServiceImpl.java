@@ -18,17 +18,20 @@
 
 package com.glaf.framework.system.service.impl;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.StringTokenizer;
-
-import javax.annotation.Resource;
-
+import com.alibaba.fastjson.JSON;
+import com.glaf.core.base.ColumnModel;
+import com.glaf.core.base.TableModel;
+import com.glaf.core.cache.CacheFactory;
+import com.glaf.core.id.IdGenerator;
+import com.glaf.core.util.PageResult;
+import com.glaf.core.util.StringTools;
+import com.glaf.framework.service.ITableDataService;
+import com.glaf.framework.system.config.SystemConfig;
+import com.glaf.framework.system.domain.SysTree;
+import com.glaf.framework.system.factory.SysTreeJsonFactory;
+import com.glaf.framework.system.mapper.SysTreeMapper;
+import com.glaf.framework.system.query.SysTreeQuery;
+import com.glaf.framework.system.service.SysTreeService;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -37,42 +40,27 @@ import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.alibaba.fastjson.JSON;
-
-import com.glaf.framework.system.mapper.SysTreeMapper;
-import com.glaf.framework.service.ITableDataService;
-import com.glaf.framework.system.config.SystemConfig;
-import com.glaf.framework.system.domain.SysTree;
-import com.glaf.framework.system.query.SysTreeQuery;
-import com.glaf.framework.system.service.SysTreeService;
-import com.glaf.framework.system.factory.SysTreeJsonFactory;
-import com.glaf.core.base.ColumnModel;
-import com.glaf.core.base.TableModel;
-import com.glaf.core.cache.CacheFactory;
-
-import com.glaf.core.id.IdGenerator;
-
-import com.glaf.core.util.PageResult;
-import com.glaf.core.util.StringTools;
+import javax.annotation.Resource;
+import java.util.*;
 
 @Service("sysTreeService")
 @Transactional(readOnly = true)
 public class SysTreeServiceImpl implements SysTreeService {
-	protected final static Log logger = LogFactory.getLog(SysTreeServiceImpl.class);
+	private final static Log logger = LogFactory.getLog(SysTreeServiceImpl.class);
 
-	protected IdGenerator idGenerator;
+	private IdGenerator idGenerator;
 
-	protected SqlSessionTemplate sqlSessionTemplate;
+	private SqlSessionTemplate sqlSessionTemplate;
 
-	protected SysTreeMapper sysTreeMapper;
+	private SysTreeMapper sysTreeMapper;
 
-	protected ITableDataService tableDataService;
+	private ITableDataService tableDataService;
 
 	public SysTreeServiceImpl() {
 
 	}
 
-	public int count(SysTreeQuery query) {
+	private int count(SysTreeQuery query) {
 		return sysTreeMapper.getSysTreeCount(query);
 	}
 
@@ -203,7 +191,6 @@ public class SysTreeServiceImpl implements SysTreeService {
 					}
 					if (disableMap.get(tree.getParentId()) != null) {
 						disableMap.put(tree.getId(), tree);
-						continue;
 					}
 				}
 			}
@@ -213,7 +200,6 @@ public class SysTreeServiceImpl implements SysTreeService {
 				}
 			}
 			disableMap.clear();
-			disableMap = null;
 		}
 		return nodes;
 	}
@@ -242,11 +228,11 @@ public class SysTreeServiceImpl implements SysTreeService {
 		this.loadSysTrees(treeList, parentId, deep);
 	}
 
-	public SysTree getSysTree(Long id) {
+	private SysTree getSysTree(Long id) {
 		if (id == null) {
 			return null;
 		}
-		SysTree sysTree = null;
+		SysTree sysTree;
 		String cacheKey = "sys_tree_" + id;
 		if (SystemConfig.getBoolean("use_query_cache")) {
 			String text = CacheFactory.getString("tree", cacheKey);
@@ -257,7 +243,7 @@ public class SysTreeServiceImpl implements SysTreeService {
 					if (sysTree != null) {
 						return sysTree;
 					}
-				} catch (Exception ex) {
+				} catch (Exception ignored) {
 				}
 			}
 		}
@@ -351,7 +337,7 @@ public class SysTreeServiceImpl implements SysTreeService {
 	/**
 	 * 获取全部列表
 	 * 
-	 * @param parent
+	 * @param parentId
 	 * 
 	 * @return List
 	 */
@@ -362,16 +348,15 @@ public class SysTreeServiceImpl implements SysTreeService {
 		query.treeIdLike(parent.getTreeId() + "%");
 		query.setOrderBy("  E.SORTNO asc ");
 		List<SysTree> list = this.list(query);
-		List<SysTree> nodes = this.getAvailableSysTrees(list);
-		return nodes;
+        return this.getAvailableSysTrees(list);
 	}
 
 	/**
 	 * 获取父节点列表，如:根目录>A>A1>A11
 	 * 
-	 * @param tree
-	 * @param int
-	 *            id
+	 * @param parentList
+	 * @param id
+	 *
 	 */
 	public void getSysTreeParent(List<SysTree> parentList, long id) {
 		// 查找是否有父节点
@@ -387,7 +372,7 @@ public class SysTreeServiceImpl implements SysTreeService {
 	public List<SysTree> getSysTrees(SysTreeQuery query) {
 		List<SysTree> list = sysTreeMapper.getSysTrees(query);
 		if (list != null && !list.isEmpty()) {
-			StringTokenizer token = null;
+			StringTokenizer token;
 			for (SysTree tree : list) {
 				tree.setLevel(0);
 				if (StringUtils.isNotEmpty(tree.getTreeId())) {
@@ -410,7 +395,7 @@ public class SysTreeServiceImpl implements SysTreeService {
 		return rows;
 	}
 
-	protected String getTreeId(Map<Long, SysTree> dataMap, SysTree tree) {
+	private String getTreeId(Map<Long, SysTree> dataMap, SysTree tree) {
 		long parentId = tree.getParentId();
 		long id = tree.getId();
 		SysTree parent = dataMap.get(parentId);
@@ -426,12 +411,11 @@ public class SysTreeServiceImpl implements SysTreeService {
 		return tree.getTreeId();
 	}
 
-	public List<SysTree> list(SysTreeQuery query) {
-		List<SysTree> list = sysTreeMapper.getSysTrees(query);
-		return list;
+	private List<SysTree> list(SysTreeQuery query) {
+        return sysTreeMapper.getSysTrees(query);
 	}
 
-	public void loadChildren(List<SysTree> treeList, long parentId) {
+	private void loadChildren(List<SysTree> treeList, long parentId) {
 		logger.debug("--------------loadChildren---------");
 		SysTree root = this.findById(parentId);
 		if (root != null) {
@@ -443,9 +427,7 @@ public class SysTreeServiceImpl implements SysTreeService {
 				List<SysTree> list = this.list(query);
 				List<SysTree> nodes = this.getAvailableSysTrees(list);
 				if (nodes != null && !nodes.isEmpty()) {
-					Iterator<SysTree> iter = nodes.iterator();
-					while (iter.hasNext()) {
-						SysTree bean = iter.next();
+					for (SysTree bean : nodes) {
 						if (bean.getId() != parentId) {
 							treeList.add(bean);
 						}
@@ -458,9 +440,7 @@ public class SysTreeServiceImpl implements SysTreeService {
 				List<SysTree> list = this.list(query);
 				List<SysTree> nodes = this.getAvailableSysTrees(list);
 				if (nodes != null && !nodes.isEmpty()) {
-					Iterator<SysTree> iter = nodes.iterator();
-					while (iter.hasNext()) {
-						SysTree bean = iter.next();
+					for (SysTree bean : nodes) {
 						treeList.add(bean);// 加入到数组
 						loadChildren(treeList, bean.getId());// 递归遍历
 					}
@@ -480,9 +460,7 @@ public class SysTreeServiceImpl implements SysTreeService {
 				List<SysTree> list = this.list(query);
 				List<SysTree> nodes = this.getAvailableSysTrees(list);
 				if (nodes != null && !nodes.isEmpty()) {
-					Iterator<SysTree> iter = nodes.iterator();
-					while (iter.hasNext()) {
-						SysTree bean = iter.next();
+					for (SysTree bean : nodes) {
 						if (bean.getId() != parentId) {
 							String treeId = bean.getTreeId();
 							String tmp = treeId.substring(root.getTreeId().length(), treeId.length());
@@ -500,9 +478,7 @@ public class SysTreeServiceImpl implements SysTreeService {
 				List<SysTree> list = this.list(query);
 				List<SysTree> nodes = this.getAvailableSysTrees(list);
 				if (nodes != null && !nodes.isEmpty()) {
-					Iterator<SysTree> iter = nodes.iterator();
-					while (iter.hasNext()) {
-						SysTree bean = iter.next();
+					for (SysTree bean : nodes) {
 						bean.setLevel(deep + 1);
 						treeList.add(bean);// 加入到数组
 						loadSysTrees(treeList, bean.getId(), bean.getLevel());// 递归遍历
@@ -541,9 +517,6 @@ public class SysTreeServiceImpl implements SysTreeService {
 			}
 			sysTreeMapper.insertSysTree(bean);
 
-			if (bean.getParentId() == 4 && bean.getCode() != null) {// 基础数据
-
-			}
 		} else {
 			bean.setUpdateDate(new Date());
 
@@ -714,9 +687,7 @@ public class SysTreeServiceImpl implements SysTreeService {
 		treeColumn.setJavaType("String");
 		tableModel.addColumn(treeColumn);
 
-		Iterator<Long> iterator = treeMap.keySet().iterator();
-		while (iterator.hasNext()) {
-			Long id = iterator.next();
+		for (Long id : treeMap.keySet()) {
 			String value = treeMap.get(id);
 			if (value != null) {
 				idColumn.setValue(id);

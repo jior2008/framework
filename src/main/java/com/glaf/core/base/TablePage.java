@@ -21,21 +21,21 @@ package com.glaf.core.base;
 import java.util.List;
 import java.util.Map;
 
-public class TablePage {
+class TablePage {
 
-	protected String tableName;
+	private String tableName;
 
 	/**
 	 * The total number of rows in the table.
 	 */
-	protected long total = -1;
+    private long total = -1;
 
 	/**
 	 * Identifies the index of the first result stored in this TablePage. For
 	 * example in a paginated database table, this value identifies the record
 	 * number of the result on the first row.
 	 */
-	protected long firstResult;
+    private long firstResult;
 
 	/**
 	 * The actual content of the database table, stored as a list of mappings of
@@ -44,7 +44,7 @@ public class TablePage {
 	 * This means that every map object in the list corresponds with one row in
 	 * the database table.
 	 */
-	protected List<Map<String, Object>> rows;
+    private List<Map<String, Object>> rows;
 
 	public TablePage() {
 

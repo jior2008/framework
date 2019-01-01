@@ -18,29 +18,16 @@
 
 package com.glaf.framework.system.jdbc.connection;
 
-
-import java.beans.BeanInfo;
-import java.beans.IntrospectionException;
-import java.beans.Introspector;
-import java.beans.PropertyDescriptor;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Properties;
-import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
-
+import com.glaf.core.util.ClassUtils;
+import com.glaf.framework.system.config.DBConfiguration;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
- 
-import com.glaf.core.util.ClassUtils;
-import com.glaf.framework.system.config.DBConfiguration;
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 public final class ConnectionProviderFactory {
 
@@ -60,9 +47,8 @@ public final class ConnectionProviderFactory {
 	}
 
 	private static boolean c3p0ConfigDefined(Properties properties) {
-		Iterator<?> iter = properties.keySet().iterator();
-		while (iter.hasNext()) {
-			String property = (String) iter.next();
+		for (Object o : properties.keySet()) {
+			String property = (String) o;
 			if (property.startsWith("c3p0")) {
 				return true;
 			}
@@ -71,9 +57,8 @@ public final class ConnectionProviderFactory {
 	}
 
 	private static boolean druidConfigDefined(Properties properties) {
-		Iterator<?> iter = properties.keySet().iterator();
-		while (iter.hasNext()) {
-			String property = (String) iter.next();
+		for (Object o : properties.keySet()) {
+			String property = (String) o;
 			if (property.startsWith("druid")) {
 				return true;
 			}
@@ -85,12 +70,11 @@ public final class ConnectionProviderFactory {
 		String jdbcUrl = properties.getProperty(DBConfiguration.JDBC_URL);
 		String user = properties.getProperty(DBConfiguration.JDBC_USER);
 		String cacheKey = DigestUtils.md5Hex(jdbcUrl + user);
-		ConnectionProvider provider = null;
-		if (providerCache.get(cacheKey) != null) {
-			provider = providerCache.get(cacheKey);
+		ConnectionProvider provider = providerCache.get(cacheKey);
+		if (provider != null) {
 			provider.close();
 		}
-		provider = createProvider(properties, null);
+		provider = createProvider(properties);
 		providerCache.put(cacheKey, provider);
 	}
 
@@ -128,13 +112,12 @@ public final class ConnectionProviderFactory {
 		if (providerCache.get(cacheKey) != null) {
 			return providerCache.get(cacheKey);
 		}
-		ConnectionProvider provider = createProvider(properties, null);
+		ConnectionProvider provider = createMyProvider(properties);
 		providerCache.put(cacheKey, provider);
 		return provider;
 	}
 
-	@SuppressWarnings("rawtypes")
-	private static ConnectionProvider createProvider(Properties properties, Map connectionProviderInjectionData) {
+	private static ConnectionProvider createMyProvider(Properties properties) {
 		if (properties == null || properties.isEmpty()) {
 			return null;
 		}
@@ -144,40 +127,23 @@ public final class ConnectionProviderFactory {
 		if (providerClass != null) {
 			provider = initializeConnectionProviderFromConfig(providerClass);
 		} else if (c3p0ConfigDefined(properties) && c3p0ProviderPresent()) {
-			provider = initializeConnectionProviderFromConfig("com.glaf.framework.system.jdbc.connection.C3P0ConnectionProvider");
+			provider = initializeConnectionProviderFromConfig(
+					"com.glaf.framework.system.jdbc.connection.C3P0ConnectionProvider");
 		} else if (druidConfigDefined(properties) && druidProviderPresent()) {
-			provider = initializeConnectionProviderFromConfig("com.glaf.framework.system.jdbc.connection.DruidConnectionProvider");
+			provider = initializeConnectionProviderFromConfig(
+					"com.glaf.framework.system.jdbc.connection.DruidConnectionProvider");
 		}
 
 		if (provider == null) {
-			provider = initializeConnectionProviderFromConfig("com.glaf.framework.system.jdbc.connection.DruidConnectionProvider");
+			provider = initializeConnectionProviderFromConfig(
+					"com.glaf.framework.system.jdbc.connection.DruidConnectionProvider");
 		}
 
 		if (StringUtils.equals(properties.getProperty(DBConfiguration.JDBC_DRIVER), "org.sqlite.JDBC")) {
 			provider = initializeConnectionProviderFromConfig(
 					"com.glaf.core.jdbc.connection.HikariCPConnectionProvider");
 		}
-		
-		if (connectionProviderInjectionData != null && connectionProviderInjectionData.size() != 0) {
-			try {
-				BeanInfo info = Introspector.getBeanInfo(provider.getClass());
-				PropertyDescriptor[] descritors = info.getPropertyDescriptors();
-				int size = descritors.length;
-				for (int index = 0; index < size; index++) {
-					String propertyName = descritors[index].getName();
-					if (connectionProviderInjectionData.containsKey(propertyName)) {
-						Method method = descritors[index].getWriteMethod();
-						method.invoke(provider, new Object[] { connectionProviderInjectionData.get(propertyName) });
-					}
-				}
-			} catch (IntrospectionException e) {
-				throw new RuntimeException("Unable to inject objects into the connection provider", e);
-			} catch (IllegalAccessException e) {
-				throw new RuntimeException("Unable to inject objects into the connection provider", e);
-			} catch (InvocationTargetException e) {
-				throw new RuntimeException("Unable to inject objects into the connection provider", e);
-			}
-		}
+
 		provider.configure(properties);
 		log.debug("---------------------------ConnectionProvider end----------------");
 		return provider;
@@ -187,16 +153,14 @@ public final class ConnectionProviderFactory {
 		Properties props = DBConfiguration.getDataSourcePropertiesByName(systemName);
 		// log.debug("ConnectionProvider@name=" + systemName);
 		// log.debug("ConnectionProvider@props=" + props);
-		ConnectionProvider model = createProvider(props);
-		return model;
+		return createProvider(props);
 	}
 
 	public static ConnectionProvider createProvider(String systemName, Properties properties) {
-		ConnectionProvider model = createProvider(properties);
-		return model;
+		return createProvider(properties);
 	}
 
-	protected static Properties getConnectionProperties(Properties properties) {
+	static Properties getConnectionProperties(Properties properties) {
 		Iterator<?> iter = properties.keySet().iterator();
 		Properties result = new Properties();
 		while (iter.hasNext()) {

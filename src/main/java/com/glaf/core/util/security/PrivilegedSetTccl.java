@@ -18,7 +18,7 @@ package com.glaf.core.util.security;
 
 import java.security.PrivilegedAction;
 
-public class PrivilegedSetTccl implements PrivilegedAction<Void> {
+class PrivilegedSetTccl implements PrivilegedAction<Void> {
 
     private final ClassLoader cl;
     private final Thread t;
@@ -27,7 +27,7 @@ public class PrivilegedSetTccl implements PrivilegedAction<Void> {
         this(Thread.currentThread(), cl);
     }
 
-    public PrivilegedSetTccl(Thread t, ClassLoader cl) {
+    private PrivilegedSetTccl(Thread t, ClassLoader cl) {
         this.t = t;
         this.cl = cl;
     }

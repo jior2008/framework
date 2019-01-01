@@ -18,8 +18,6 @@
 
 package com.glaf.core.util.serializer;
 
-import java.io.IOException;
-
 import org.xerial.snappy.Snappy;
 
 /**
@@ -33,7 +31,7 @@ public class FstSnappySerializer implements Serializer {
 		this(new FSTSerializer());
 	}
 
-	public FstSnappySerializer(Serializer innerSerializer) {
+	private FstSnappySerializer(Serializer innerSerializer) {
 		this.inner = innerSerializer;
 	}
 
@@ -54,7 +52,7 @@ public class FstSnappySerializer implements Serializer {
 	}
 
 	@Override
-	public byte[] serialize(Object obj) throws IOException {
+	public byte[] serialize(Object obj) {
 		try {
 			return Snappy.compress(inner.serialize(obj));
 		} catch (Exception e) {

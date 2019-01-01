@@ -18,73 +18,57 @@
 
 package com.glaf.core.cache.j2cache;
 
-import java.io.IOException;
-import java.util.List;
-import java.util.concurrent.CopyOnWriteArrayList;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.glaf.core.cache.Cache;
-
 import net.oschina.j2cache.CacheChannel;
 import net.oschina.j2cache.CacheObject;
 import net.oschina.j2cache.J2Cache;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.nio.charset.StandardCharsets;
+import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 public class J2CacheImpl implements Cache {
-	protected final Logger logger = LoggerFactory.getLogger(getClass());
+	private final Logger logger = LoggerFactory.getLogger(getClass());
 
-	private static CacheChannel cacheChannel = J2Cache.getChannel();
+	private static final CacheChannel cacheChannel = J2Cache.getChannel();
 
-	protected static final List<String> regions = new CopyOnWriteArrayList<String>();
+	private static final List<String> regions = new CopyOnWriteArrayList<String>();
 
 	@Override
 	public void clear(String region) {
 		try {
 			cacheChannel.clear(region);
-		} catch (Exception e) {
+		} catch (Exception ignored) {
 		}
 	}
 
 	@Override
 	public String get(String region, String key) {
-		Object object = null;
+		CacheObject object = null;
 		try {
 			object = cacheChannel.get(region, key);
-		} catch (Exception e) {
+		} catch (Exception ignored) {
 		}
 		if (object != null) {
 			logger.debug("get object from j2cache.");
-			if (object instanceof net.oschina.j2cache.CacheObject) {
-				CacheObject cacheObject = (CacheObject) object;
-				Object value = cacheObject.getValue();
-				if (value != null) {
-					// logger.debug("value class:" + value.getClass().getName());
-					if (value instanceof String) {
-						String str = (String) value;
-						try {
-							return new String(com.glaf.core.util.Hex.hex2byte(str), "UTF-8");
-						} catch (IOException ex) {
-							return new String(com.glaf.core.util.Hex.hex2byte(str));
-						}
-					} else if (value instanceof byte[]) {
-						byte[] bytes = (byte[]) value;
-						try {
-							String str = new String(bytes, "UTF-8");
-							return str;
-						} catch (IOException ex) {
-							String str = new String(bytes);
-							return str;
-						}
-					} else {
-						return cacheObject.asString();
-					}
+			CacheObject cacheObject = object;
+			Object value = cacheObject.getValue();
+			if (value != null) {
+				// logger.debug("value class:" + value.getClass().getName());
+				if (value instanceof String) {
+					String str = (String) value;
+					return new String(com.glaf.core.util.Hex.hex2byte(str), StandardCharsets.UTF_8);
+				} else if (value instanceof byte[]) {
+					byte[] bytes = (byte[]) value;
+					return new String(bytes, StandardCharsets.UTF_8);
 				} else {
-					logger.debug("value is null.");
 					return cacheObject.asString();
 				}
 			} else {
-				return object.toString();
+				logger.debug("value is null.");
+				return cacheObject.asString();
 			}
 		}
 		return null;
@@ -92,7 +76,7 @@ public class J2CacheImpl implements Cache {
 
 	@Override
 	public void put(String region, String key, String value) {
-		 this.put(region, key, value,1800L);
+		this.put(region, key, value, 1800L);
 	}
 
 	@Override
@@ -102,7 +86,7 @@ public class J2CacheImpl implements Cache {
 				timeToLiveInSeconds = 1800L;
 			}
 			try {
-				cacheChannel.set(region, key, com.glaf.core.util.Hex.byte2hex(value.getBytes("UTF-8")),
+				cacheChannel.set(region, key, com.glaf.core.util.Hex.byte2hex(value.getBytes(StandardCharsets.UTF_8)),
 						timeToLiveInSeconds);
 				if (!regions.contains(region)) {
 					regions.add(region);
@@ -113,7 +97,7 @@ public class J2CacheImpl implements Cache {
 				try {
 					cacheChannel.set(region, key, com.glaf.core.util.Hex.byte2hex(value.getBytes()),
 							timeToLiveInSeconds);
-				} catch (Exception e) {
+				} catch (Exception ignored) {
 				}
 			}
 		}
@@ -123,7 +107,7 @@ public class J2CacheImpl implements Cache {
 	public void remove(String region, String key) {
 		try {
 			cacheChannel.evict(region, key);
-		} catch (Exception e) {
+		} catch (Exception ignored) {
 		}
 	}
 
@@ -132,7 +116,7 @@ public class J2CacheImpl implements Cache {
 		for (String region : regions) {
 			try {
 				cacheChannel.clear(region);
-			} catch (Exception e) {
+			} catch (Exception ignored) {
 			}
 		}
 		cacheChannel.close();

@@ -19,17 +19,9 @@
 package com.glaf.core.util;
 
 import java.text.DateFormat;
+import java.util.*;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
-import java.util.TreeSet;
-
-public class ArrayUtils {
+class ArrayUtils {
 
 	public static boolean[] append(boolean[]... arrays) {
 		int length = 0;
@@ -415,13 +407,13 @@ public class ArrayUtils {
 		System.arraycopy(array2, 0, combinedArray, array1.length, array2.length);
 	}
 
-	public static boolean contains(boolean[] array, boolean value) {
+	private static boolean contains(boolean[] array, boolean value) {
 		if (isEmpty(array)) {
 			return false;
 		}
 
-		for (int i = 0; i < array.length; i++) {
-			if (value == array[i]) {
+		for (boolean b : array) {
+			if (value == b) {
 				return true;
 			}
 		}
@@ -429,13 +421,13 @@ public class ArrayUtils {
 		return false;
 	}
 
-	public static boolean contains(byte[] array, byte value) {
+	private static boolean contains(byte[] array, byte value) {
 		if (isEmpty(array)) {
 			return false;
 		}
 
-		for (int i = 0; i < array.length; i++) {
-			if (value == array[i]) {
+		for (byte b : array) {
+			if (value == b) {
 				return true;
 			}
 		}
@@ -443,13 +435,13 @@ public class ArrayUtils {
 		return false;
 	}
 
-	public static boolean contains(char[] array, char value) {
+	private static boolean contains(char[] array, char value) {
 		if (isEmpty(array)) {
 			return false;
 		}
 
-		for (int i = 0; i < array.length; i++) {
-			if (value == array[i]) {
+		for (char c : array) {
+			if (value == c) {
 				return true;
 			}
 		}
@@ -457,13 +449,13 @@ public class ArrayUtils {
 		return false;
 	}
 
-	public static boolean contains(double[] array, double value) {
+	private static boolean contains(double[] array, double value) {
 		if (isEmpty(array)) {
 			return false;
 		}
 
-		for (int i = 0; i < array.length; i++) {
-			if (value == array[i]) {
+		for (double v : array) {
+			if (value == v) {
 				return true;
 			}
 		}
@@ -471,13 +463,13 @@ public class ArrayUtils {
 		return false;
 	}
 
-	public static boolean contains(float[] array, float value) {
+	private static boolean contains(float[] array, float value) {
 		if (isEmpty(array)) {
 			return false;
 		}
 
-		for (int i = 0; i < array.length; i++) {
-			if (value == array[i]) {
+		for (float v : array) {
+			if (value == v) {
 				return true;
 			}
 		}
@@ -485,13 +477,13 @@ public class ArrayUtils {
 		return false;
 	}
 
-	public static boolean contains(int[] array, int value) {
+	private static boolean contains(int[] array, int value) {
 		if (isEmpty(array)) {
 			return false;
 		}
 
-		for (int i = 0; i < array.length; i++) {
-			if (value == array[i]) {
+		for (int i1 : array) {
+			if (value == i1) {
 				return true;
 			}
 		}
@@ -499,13 +491,13 @@ public class ArrayUtils {
 		return false;
 	}
 
-	public static boolean contains(long[] array, long value) {
+	private static boolean contains(long[] array, long value) {
 		if (isEmpty(array)) {
 			return false;
 		}
 
-		for (int i = 0; i < array.length; i++) {
-			if (value == array[i]) {
+		for (long l : array) {
+			if (value == l) {
 				return true;
 			}
 		}
@@ -513,13 +505,13 @@ public class ArrayUtils {
 		return false;
 	}
 
-	public static boolean contains(Object[] array, Object value) {
+	private static boolean contains(Object[] array, Object value) {
 		if (isEmpty(array) || (value == null)) {
 			return false;
 		}
 
-		for (int i = 0; i < array.length; i++) {
-			if (value.equals(array[i])) {
+		for (Object o : array) {
+			if (value.equals(o)) {
 				return true;
 			}
 		}
@@ -527,13 +519,13 @@ public class ArrayUtils {
 		return false;
 	}
 
-	public static boolean contains(short[] array, short value) {
+	private static boolean contains(short[] array, short value) {
 		if (isEmpty(array)) {
 			return false;
 		}
 
-		for (int i = 0; i < array.length; i++) {
-			if (value == array[i]) {
+		for (short i1 : array) {
+			if (value == i1) {
 				return true;
 			}
 		}
@@ -546,8 +538,8 @@ public class ArrayUtils {
 			return false;
 		}
 
-		for (int i = 0; i < array2.length; i++) {
-			if (!contains(array1, array2[i])) {
+		for (boolean b : array2) {
+			if (!contains(array1, b)) {
 				return false;
 			}
 		}
@@ -560,8 +552,8 @@ public class ArrayUtils {
 			return false;
 		}
 
-		for (int i = 0; i < array2.length; i++) {
-			if (!contains(array1, array2[i])) {
+		for (byte b : array2) {
+			if (!contains(array1, b)) {
 				return false;
 			}
 		}
@@ -574,8 +566,8 @@ public class ArrayUtils {
 			return false;
 		}
 
-		for (int i = 0; i < array2.length; i++) {
-			if (!contains(array1, array2[i])) {
+		for (char c : array2) {
+			if (!contains(array1, c)) {
 				return false;
 			}
 		}
@@ -588,8 +580,8 @@ public class ArrayUtils {
 			return false;
 		}
 
-		for (int i = 0; i < array2.length; i++) {
-			if (!contains(array1, array2[i])) {
+		for (double v : array2) {
+			if (!contains(array1, v)) {
 				return false;
 			}
 		}
@@ -602,8 +594,8 @@ public class ArrayUtils {
 			return false;
 		}
 
-		for (int i = 0; i < array2.length; i++) {
-			if (!contains(array1, array2[i])) {
+		for (float v : array2) {
+			if (!contains(array1, v)) {
 				return false;
 			}
 		}
@@ -616,8 +608,8 @@ public class ArrayUtils {
 			return false;
 		}
 
-		for (int i = 0; i < array2.length; i++) {
-			if (!contains(array1, array2[i])) {
+		for (int i1 : array2) {
+			if (!contains(array1, i1)) {
 				return false;
 			}
 		}
@@ -630,8 +622,8 @@ public class ArrayUtils {
 			return false;
 		}
 
-		for (int i = 0; i < array2.length; i++) {
-			if (!contains(array1, array2[i])) {
+		for (long l : array2) {
+			if (!contains(array1, l)) {
 				return false;
 			}
 		}
@@ -644,8 +636,8 @@ public class ArrayUtils {
 			return false;
 		}
 
-		for (int i = 0; i < array2.length; i++) {
-			if (!contains(array1, array2[i])) {
+		for (Object o : array2) {
+			if (!contains(array1, o)) {
 				return false;
 			}
 		}
@@ -658,8 +650,8 @@ public class ArrayUtils {
 			return false;
 		}
 
-		for (int i = 0; i < array2.length; i++) {
-			if (!contains(array1, array2[i])) {
+		for (short i1 : array2) {
+			if (!contains(array1, i1)) {
 				return false;
 			}
 		}
@@ -671,14 +663,13 @@ public class ArrayUtils {
 		return distinct(array, null);
 	}
 
-	public static String[] distinct(String[] array,
-			Comparator<String> comparator) {
+	private static String[] distinct(String[] array, Comparator<String> comparator) {
 
 		if (isEmpty(array)) {
 			return array;
 		}
 
-		Set<String> set = null;
+		Set<String> set;
 
 		if (comparator == null) {
 			set = new TreeSet<String>();
@@ -709,76 +700,40 @@ public class ArrayUtils {
 		}
 	}
 
-	public static boolean isEmpty(boolean[] array) {
-		if ((array == null) || (array.length == 0)) {
-			return true;
-		}
-
-		return false;
+	private static boolean isEmpty(boolean[] array) {
+		return (array == null) || (array.length == 0);
 	}
 
-	public static boolean isEmpty(byte[] array) {
-		if ((array == null) || (array.length == 0)) {
-			return true;
-		}
-
-		return false;
+	private static boolean isEmpty(byte[] array) {
+		return (array == null) || (array.length == 0);
 	}
 
-	public static boolean isEmpty(char[] array) {
-		if ((array == null) || (array.length == 0)) {
-			return true;
-		}
-
-		return false;
+	private static boolean isEmpty(char[] array) {
+		return (array == null) || (array.length == 0);
 	}
 
-	public static boolean isEmpty(double[] array) {
-		if ((array == null) || (array.length == 0)) {
-			return true;
-		}
-
-		return false;
+	private static boolean isEmpty(double[] array) {
+		return (array == null) || (array.length == 0);
 	}
 
-	public static boolean isEmpty(float[] array) {
-		if ((array == null) || (array.length == 0)) {
-			return true;
-		}
-
-		return false;
+	private static boolean isEmpty(float[] array) {
+		return (array == null) || (array.length == 0);
 	}
 
-	public static boolean isEmpty(int[] array) {
-		if ((array == null) || (array.length == 0)) {
-			return true;
-		}
-
-		return false;
+	private static boolean isEmpty(int[] array) {
+		return (array == null) || (array.length == 0);
 	}
 
-	public static boolean isEmpty(long[] array) {
-		if ((array == null) || (array.length == 0)) {
-			return true;
-		}
-
-		return false;
+	private static boolean isEmpty(long[] array) {
+		return (array == null) || (array.length == 0);
 	}
 
-	public static boolean isEmpty(Object[] array) {
-		if ((array == null) || (array.length == 0)) {
-			return true;
-		}
-
-		return false;
+	private static boolean isEmpty(Object[] array) {
+		return (array == null) || (array.length == 0);
 	}
 
-	public static boolean isEmpty(short[] array) {
-		if ((array == null) || (array.length == 0)) {
-			return true;
-		}
-
-		return false;
+	private static boolean isEmpty(short[] array) {
+		return (array == null) || (array.length == 0);
 	}
 
 	public static boolean isNotEmpty(boolean[] array) {
@@ -820,9 +775,9 @@ public class ArrayUtils {
 	public static boolean[] remove(boolean[] array, boolean value) {
 		List<Boolean> list = new ArrayList<Boolean>();
 
-		for (int i = 0; i < array.length; i++) {
-			if (value != array[i]) {
-				list.add(new Boolean(array[i]));
+		for (boolean b : array) {
+			if (value != b) {
+				list.add(b);
 			}
 		}
 
@@ -832,9 +787,9 @@ public class ArrayUtils {
 	public static byte[] remove(byte[] array, byte value) {
 		List<Byte> list = new ArrayList<Byte>();
 
-		for (int i = 0; i < array.length; i++) {
-			if (value != array[i]) {
-				list.add(new Byte(array[i]));
+		for (byte b : array) {
+			if (value != b) {
+				list.add(b);
 			}
 		}
 
@@ -844,9 +799,9 @@ public class ArrayUtils {
 	public static char[] remove(char[] array, char value) {
 		List<Character> list = new ArrayList<Character>();
 
-		for (int i = 0; i < array.length; i++) {
-			if (value != array[i]) {
-				list.add(new Character(array[i]));
+		for (char c : array) {
+			if (value != c) {
+				list.add(c);
 			}
 		}
 
@@ -856,9 +811,9 @@ public class ArrayUtils {
 	public static double[] remove(double[] array, double value) {
 		List<Double> list = new ArrayList<Double>();
 
-		for (int i = 0; i < array.length; i++) {
-			if (value != array[i]) {
-				list.add(new Double(array[i]));
+		for (double v : array) {
+			if (value != v) {
+				list.add(v);
 			}
 		}
 
@@ -868,9 +823,9 @@ public class ArrayUtils {
 	public static float[] remove(float[] array, float value) {
 		List<Float> list = new ArrayList<Float>();
 
-		for (int i = 0; i < array.length; i++) {
-			if (value != array[i]) {
-				list.add(new Float(array[i]));
+		for (float v : array) {
+			if (value != v) {
+				list.add(v);
 			}
 		}
 
@@ -880,9 +835,9 @@ public class ArrayUtils {
 	public static int[] remove(int[] array, int value) {
 		List<Integer> list = new ArrayList<Integer>();
 
-		for (int i = 0; i < array.length; i++) {
-			if (value != array[i]) {
-				list.add(new Integer(array[i]));
+		for (int i1 : array) {
+			if (value != i1) {
+				list.add(i1);
 			}
 		}
 
@@ -892,9 +847,9 @@ public class ArrayUtils {
 	public static long[] remove(long[] array, long value) {
 		List<Long> list = new ArrayList<Long>();
 
-		for (int i = 0; i < array.length; i++) {
-			if (value != array[i]) {
-				list.add(new Long(array[i]));
+		for (long l : array) {
+			if (value != l) {
+				list.add(l);
 			}
 		}
 
@@ -904,9 +859,9 @@ public class ArrayUtils {
 	public static short[] remove(short[] array, short value) {
 		List<Short> list = new ArrayList<Short>();
 
-		for (int i = 0; i < array.length; i++) {
-			if (value != array[i]) {
-				list.add(new Short(array[i]));
+		for (short i1 : array) {
+			if (value != i1) {
+				list.add(i1);
 			}
 		}
 
@@ -1116,17 +1071,17 @@ public class ArrayUtils {
 		Boolean[] newArray = new Boolean[array.length];
 
 		for (int i = 0; i < array.length; i++) {
-			newArray[i] = Boolean.valueOf(array[i]);
+			newArray[i] = array[i];
 		}
 
 		return newArray;
 	}
 
-	public static boolean[] toArray(Boolean[] array) {
+	private static boolean[] toArray(Boolean[] array) {
 		boolean[] newArray = new boolean[array.length];
 
 		for (int i = 0; i < array.length; i++) {
-			newArray[i] = array[i].booleanValue();
+			newArray[i] = array[i];
 		}
 
 		return newArray;
@@ -1136,17 +1091,17 @@ public class ArrayUtils {
 		Byte[] newArray = new Byte[array.length];
 
 		for (int i = 0; i < array.length; i++) {
-			newArray[i] = Byte.valueOf(array[i]);
+			newArray[i] = array[i];
 		}
 
 		return newArray;
 	}
 
-	public static byte[] toArray(Byte[] array) {
+	private static byte[] toArray(Byte[] array) {
 		byte[] newArray = new byte[array.length];
 
 		for (int i = 0; i < array.length; i++) {
-			newArray[i] = array[i].byteValue();
+			newArray[i] = array[i];
 		}
 
 		return newArray;
@@ -1156,17 +1111,17 @@ public class ArrayUtils {
 		Character[] newArray = new Character[array.length];
 
 		for (int i = 0; i < array.length; i++) {
-			newArray[i] = Character.valueOf(array[i]);
+			newArray[i] = array[i];
 		}
 
 		return newArray;
 	}
 
-	public static char[] toArray(Character[] array) {
+	private static char[] toArray(Character[] array) {
 		char[] newArray = new char[array.length];
 
 		for (int i = 0; i < array.length; i++) {
-			newArray[i] = array[i].charValue();
+			newArray[i] = array[i];
 		}
 
 		return newArray;
@@ -1176,17 +1131,17 @@ public class ArrayUtils {
 		Double[] newArray = new Double[array.length];
 
 		for (int i = 0; i < array.length; i++) {
-			newArray[i] = new Double(array[i]);
+			newArray[i] = array[i];
 		}
 
 		return newArray;
 	}
 
-	public static double[] toArray(Double[] array) {
+	private static double[] toArray(Double[] array) {
 		double[] newArray = new double[array.length];
 
 		for (int i = 0; i < array.length; i++) {
-			newArray[i] = array[i].doubleValue();
+			newArray[i] = array[i];
 		}
 
 		return newArray;
@@ -1196,17 +1151,17 @@ public class ArrayUtils {
 		Float[] newArray = new Float[array.length];
 
 		for (int i = 0; i < array.length; i++) {
-			newArray[i] = new Float(array[i]);
+			newArray[i] = array[i];
 		}
 
 		return newArray;
 	}
 
-	public static float[] toArray(Float[] array) {
+	private static float[] toArray(Float[] array) {
 		float[] newArray = new float[array.length];
 
 		for (int i = 0; i < array.length; i++) {
-			newArray[i] = array[i].floatValue();
+			newArray[i] = array[i];
 		}
 
 		return newArray;
@@ -1216,17 +1171,17 @@ public class ArrayUtils {
 		Integer[] newArray = new Integer[array.length];
 
 		for (int i = 0; i < array.length; i++) {
-			newArray[i] = new Integer(array[i]);
+			newArray[i] = array[i];
 		}
 
 		return newArray;
 	}
 
-	public static int[] toArray(Integer[] array) {
+	private static int[] toArray(Integer[] array) {
 		int[] newArray = new int[array.length];
 
 		for (int i = 0; i < array.length; i++) {
-			newArray[i] = array[i].intValue();
+			newArray[i] = array[i];
 		}
 
 		return newArray;
@@ -1236,17 +1191,17 @@ public class ArrayUtils {
 		Long[] newArray = new Long[array.length];
 
 		for (int i = 0; i < array.length; i++) {
-			newArray[i] = new Long(array[i]);
+			newArray[i] = array[i];
 		}
 
 		return newArray;
 	}
 
-	public static long[] toArray(Long[] array) {
+	private static long[] toArray(Long[] array) {
 		long[] newArray = new long[array.length];
 
 		for (int i = 0; i < array.length; i++) {
-			newArray[i] = array[i].longValue();
+			newArray[i] = array[i];
 		}
 
 		return newArray;
@@ -1256,17 +1211,17 @@ public class ArrayUtils {
 		Short[] newArray = new Short[array.length];
 
 		for (int i = 0; i < array.length; i++) {
-			newArray[i] = new Short(array[i]);
+			newArray[i] = array[i];
 		}
 
 		return newArray;
 	}
 
-	public static short[] toArray(Short[] array) {
+	private static short[] toArray(Short[] array) {
 		short[] newArray = new short[array.length];
 
 		for (int i = 0; i < array.length; i++) {
-			newArray[i] = array[i].shortValue();
+			newArray[i] = array[i];
 		}
 
 		return newArray;
@@ -1281,17 +1236,13 @@ public class ArrayUtils {
 			for (int i = 0; i < list.size(); i++) {
 				Double value = list.get(i);
 
-				newArray[i] = value.doubleValue();
+				newArray[i] = value;
 			}
 		} else {
 			int i = 0;
 
-			Iterator<Double> iterator = collection.iterator();
-
-			while (iterator.hasNext()) {
-				Double value = iterator.next();
-
-				newArray[i++] = value.doubleValue();
+			for (Double value : collection) {
+				newArray[i++] = value;
 			}
 		}
 
@@ -1307,17 +1258,13 @@ public class ArrayUtils {
 			for (int i = 0; i < list.size(); i++) {
 				Float value = list.get(i);
 
-				newArray[i] = value.floatValue();
+				newArray[i] = value;
 			}
 		} else {
 			int i = 0;
 
-			Iterator<Float> iterator = collection.iterator();
-
-			while (iterator.hasNext()) {
-				Float value = iterator.next();
-
-				newArray[i++] = value.floatValue();
+			for (Float value : collection) {
+				newArray[i++] = value;
 			}
 		}
 
@@ -1333,17 +1280,13 @@ public class ArrayUtils {
 			for (int i = 0; i < list.size(); i++) {
 				Integer value = list.get(i);
 
-				newArray[i] = value.intValue();
+				newArray[i] = value;
 			}
 		} else {
 			int i = 0;
 
-			Iterator<Integer> iterator = collection.iterator();
-
-			while (iterator.hasNext()) {
-				Integer value = iterator.next();
-
-				newArray[i++] = value.intValue();
+			for (Integer value : collection) {
+				newArray[i++] = value;
 			}
 		}
 
@@ -1359,17 +1302,13 @@ public class ArrayUtils {
 			for (int i = 0; i < list.size(); i++) {
 				Long value = list.get(i);
 
-				newArray[i] = value.longValue();
+				newArray[i] = value;
 			}
 		} else {
 			int i = 0;
 
-			Iterator<Long> iterator = collection.iterator();
-
-			while (iterator.hasNext()) {
-				Long value = iterator.next();
-
-				newArray[i++] = value.longValue();
+			for (Long value : collection) {
+				newArray[i++] = value;
 			}
 		}
 
@@ -1415,17 +1354,13 @@ public class ArrayUtils {
 			for (int i = 0; i < list.size(); i++) {
 				Short value = list.get(i);
 
-				newArray[i] = value.shortValue();
+				newArray[i] = value;
 			}
 		} else {
 			int i = 0;
 
-			Iterator<Short> iterator = collection.iterator();
-
-			while (iterator.hasNext()) {
-				Short value = iterator.next();
-
-				newArray[i++] = value.shortValue();
+			for (Short value : collection) {
+				newArray[i++] = value;
 			}
 		}
 
@@ -1476,11 +1411,7 @@ public class ArrayUtils {
 		} else {
 			int i = 0;
 
-			Iterator<String> iterator = collection.iterator();
-
-			while (iterator.hasNext()) {
-				String value = iterator.next();
-
+			for (String value : collection) {
 				newArray[i++] = String.valueOf(value);
 			}
 		}

@@ -18,19 +18,6 @@
 
 package com.glaf.framework.system.jdbc.connection;
 
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.util.Iterator;
-import java.util.Properties;
-import java.util.Random;
-import java.util.concurrent.TimeUnit;
-
-import javax.sql.DataSource;
-
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import com.alibaba.druid.pool.DruidDataSource;
 import com.alibaba.druid.pool.DruidDataSourceFactory;
 import com.glaf.core.config.BaseConfiguration;
@@ -38,6 +25,16 @@ import com.glaf.core.config.Configuration;
 import com.glaf.core.util.PropertiesHelper;
 import com.glaf.core.util.ReflectUtils;
 import com.glaf.framework.system.config.DBConfiguration;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+import javax.sql.DataSource;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.util.Properties;
+import java.util.Random;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Druid连接池基本属性配置 druid.minPoolSize=5 druid.maxPoolSize=50
@@ -48,9 +45,9 @@ public class DruidConnectionProvider implements ConnectionProvider {
 
 	private static final Log log = LogFactory.getLog(DruidConnectionProvider.class);
 
-	protected static Configuration conf = BaseConfiguration.create();
+	private static final Configuration conf = BaseConfiguration.create();
 
-	protected static int MAX_RETRIES = conf.getInt("jdbc.connection.retryCount", 10);
+	private static final int MAX_RETRIES = conf.getInt("jdbc.connection.retryCount", 10);
 
 	private volatile DruidDataSource ds;
 
@@ -74,8 +71,8 @@ public class DruidConnectionProvider implements ConnectionProvider {
 		Properties properties = new Properties();
 		properties.putAll(props);
 
-		for (Iterator<Object> ii = props.keySet().iterator(); ii.hasNext();) {
-			String key = (String) ii.next();
+		for (Object o : props.keySet()) {
+			String key = (String) o;
 			if (key.startsWith("druid.")) {
 				String newKey = key.substring(6);
 				properties.put(newKey, props.get(key));
@@ -203,7 +200,7 @@ public class DruidConnectionProvider implements ConnectionProvider {
 				connection = ds.getConnection();
 				if (connection != null) {
 					if (isolation != null) {
-						connection.setTransactionIsolation(isolation.intValue());
+						connection.setTransactionIsolation(isolation);
 					}
 					if (connection.getAutoCommit() != autocommit) {
 						connection.setAutoCommit(autocommit);
@@ -214,7 +211,7 @@ public class DruidConnectionProvider implements ConnectionProvider {
 					retries++;
 					try {
 						TimeUnit.MILLISECONDS.sleep(200 + new Random().nextInt(1000));// 活锁，随机等待
-					} catch (InterruptedException e) {
+					} catch (InterruptedException ignored) {
 					}
 				}
 			} catch (SQLException ex) {
@@ -223,7 +220,7 @@ public class DruidConnectionProvider implements ConnectionProvider {
 				}
 				try {
 					TimeUnit.MILLISECONDS.sleep(200 + new Random().nextInt(1000));// 活锁，随机等待
-				} catch (InterruptedException e) {
+				} catch (InterruptedException ignored) {
 				}
 			}
 		}
@@ -234,8 +231,5 @@ public class DruidConnectionProvider implements ConnectionProvider {
 		return ds;
 	}
 
-	public boolean supportsAggressiveRelease() {
-		return false;
-	}
 
 }

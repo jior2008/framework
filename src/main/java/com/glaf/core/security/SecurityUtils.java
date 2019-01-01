@@ -13,44 +13,32 @@
 
 package com.glaf.core.security;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
-import java.security.Key;
-import java.security.KeyStore;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.security.PrivateKey;
-import java.security.Provider;
-import java.security.PublicKey;
-import java.security.SecureRandom;
-import java.security.Signature;
-import java.security.cert.CertificateFactory;
-import java.security.cert.X509Certificate;
-import java.security.spec.AlgorithmParameterSpec;
+import com.glaf.core.util.StringTools;
+import com.glaf.core.util.UUID32;
+import org.apache.commons.codec.binary.Base64;
 
 import javax.crypto.Cipher;
 import javax.crypto.KeyGenerator;
-import javax.crypto.SecretKey;
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.DESKeySpec;
 import javax.crypto.spec.IvParameterSpec;
-
-import org.apache.commons.codec.binary.Base64;
-
-import com.glaf.core.util.StringTools;
-import com.glaf.core.util.UUID32;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
+import java.security.*;
+import java.security.cert.CertificateFactory;
+import java.security.cert.X509Certificate;
 
 public class SecurityUtils {
 
-	public static final String ALGORITHM_DES = "DES/CBC/PKCS5Padding";
+	private static final String ALGORITHM_DES = "DES/CBC/PKCS5Padding";
 
 	static {
 		try {
 			String provider = "org.bouncycastle.jce.provider.BouncyCastleProvider";
 			java.security.Security.addProvider((Provider) Class.forName(provider).newInstance());
-		} catch (Exception ex) {
+		} catch (Exception ignored) {
 
 		}
 	}
@@ -61,7 +49,7 @@ public class SecurityUtils {
 	 * @param b
 	 * @return
 	 */
-	public static String byte2hex(byte[] b) {
+	private static String byte2hex(byte[] b) {
 		StringBuilder hs = new StringBuilder();
 		String stmp;
 		for (int n = 0; b != null && n < b.length; n++) {
@@ -93,9 +81,7 @@ public class SecurityUtils {
 			// key的长度不能够小于8位字节
 			Key secretKey = keyFactory.generateSecret(dks);
 			Cipher cipher = Cipher.getInstance(ALGORITHM_DES, "BC");
-			IvParameterSpec iv = new IvParameterSpec("12345678".getBytes());
-			AlgorithmParameterSpec paramSpec = iv;
-			cipher.init(Cipher.DECRYPT_MODE, secretKey, paramSpec);
+            cipher.init(Cipher.DECRYPT_MODE, secretKey, new IvParameterSpec("12345678".getBytes()));
 			return new String(cipher.doFinal(hex2byte(data.getBytes())));
 		} catch (Exception ex) {
 			throw new SecurityException(ex);
@@ -121,9 +107,7 @@ public class SecurityUtils {
 			// key的长度不能够小于8位字节
 			Key secretKey = keyFactory.generateSecret(dks);
 			Cipher cipher = Cipher.getInstance(ALGORITHM_DES, "BC");
-			IvParameterSpec iv = new IvParameterSpec("12345678".getBytes());
-			AlgorithmParameterSpec paramSpec = iv;
-			cipher.init(Cipher.ENCRYPT_MODE, secretKey, paramSpec);
+            cipher.init(Cipher.ENCRYPT_MODE, secretKey, new IvParameterSpec("12345678".getBytes()));
 			byte[] bytes = cipher.doFinal(data.getBytes());
 			return byte2hex(bytes);
 		} catch (Exception ex) {
@@ -143,7 +127,7 @@ public class SecurityUtils {
 	 * @return String(经base64编码)
 	 */
 	public static String generateDigitalEnvelope(SecurityContext ctx, Key symmetryKey, byte[] pubKey) {
-		String result = null;
+		String result;
 		InputStream inputStream = null;
 		try {
 			CertificateFactory cf = CertificateFactory.getInstance("X.509");
@@ -161,9 +145,8 @@ public class SecurityUtils {
 			try {
 				if (inputStream != null) {
 					inputStream.close();
-					inputStream = null;
 				}
-			} catch (IOException ex) {
+			} catch (IOException ignored) {
 			}
 		}
 	}
@@ -180,8 +163,7 @@ public class SecurityUtils {
 			KeyGenerator skg = KeyGenerator.getInstance(ctx.getSymmetryKeyAlgorithm(), ctx.getJceProvider());
 			SecureRandom secureRandom = SecureRandom.getInstance(ctx.getSecureRandomAlgorithm());
 			skg.init(ctx.getSymmetryKeySize(), secureRandom);
-			SecretKey key = skg.generateKey();
-			return key;
+            return skg.generateKey();
 		} catch (Exception ex) {
 			throw new SecurityException(ex);
 		}
@@ -210,7 +192,7 @@ public class SecurityUtils {
 	 */
 	public static X509Certificate getCertFromKeystore(InputStream keystoreInputStream, String alias, String password) {
 		try {
-			X509Certificate x509cert = null;
+			X509Certificate x509cert;
 			KeyStore ks = KeyStore.getInstance("JKS", "BC");
 			ks.load(keystoreInputStream, password.toCharArray());
 			x509cert = (X509Certificate) ks.getCertificate(alias);
@@ -230,7 +212,7 @@ public class SecurityUtils {
 		if (null == strKey || strKey.length() < 1) {
 			throw new RuntimeException("key is null or empty!");
 		}
-		java.security.MessageDigest alg = null;
+		java.security.MessageDigest alg;
 		try {
 			alg = java.security.MessageDigest.getInstance("MD5");
 			alg.update(strKey.getBytes());
@@ -259,7 +241,7 @@ public class SecurityUtils {
 		if (null == strKey || strKey.length() < 1) {
 			throw new RuntimeException("key is null or empty!");
 		}
-		java.security.MessageDigest alg = null;
+		java.security.MessageDigest alg;
 		try {
 			alg = java.security.MessageDigest.getInstance("MD5");
 			alg.update(strKey.getBytes());
@@ -287,15 +269,14 @@ public class SecurityUtils {
 		try {
 			KeyStore ks = KeyStore.getInstance("JKS", "BC");
 			ks.load(ksInputStream, password.toCharArray());
-			Key privateKey = (PrivateKey) ks.getKey(alias, password.toCharArray());
-			return privateKey;
+            return (PrivateKey) ks.getKey(alias, password.toCharArray());
 		} catch (Exception ex) {
 			throw new SecurityException(ex);
 		}
 	}
 
 	public static String hash(String plaintext) {
-		MessageDigest md = null;
+		MessageDigest md;
 
 		try {
 			md = MessageDigest.getInstance("SHA"); // SHA-1 generator instance
@@ -303,23 +284,14 @@ public class SecurityUtils {
 			throw new RuntimeException(e.getMessage());
 		}
 
-		try {
-			md.update(plaintext.getBytes("UTF-8")); // Message summary
-			// generation
-		} catch (UnsupportedEncodingException e) {
-			throw new RuntimeException(e.getMessage());
-		}
+		md.update(plaintext.getBytes(StandardCharsets.UTF_8)); // Message summary
+		// generation
 
-		byte raw[] = md.digest(); // Message summary reception
-		try {
-			String hash = new String(org.apache.commons.codec.binary.Base64.encodeBase64(raw), "UTF-8");
-			return hash;
-		} catch (UnsupportedEncodingException use) {
-			throw new RuntimeException(use);
-		}
+		byte[] raw = md.digest(); // Message summary reception
+		return new String(Base64.encodeBase64(raw), StandardCharsets.UTF_8);
 	}
 
-	public static byte[] hex2byte(byte[] b) {
+	private static byte[] hex2byte(byte[] b) {
 		if ((b.length % 2) != 0) {
 			throw new IllegalArgumentException();
 		}
@@ -350,8 +322,7 @@ public class SecurityUtils {
 			byte[] key = cipher.doFinal(Base64.decodeBase64(envelope));
 			SecretKeyFactory skf = SecretKeyFactory.getInstance(ctx.getSymmetryKeyAlgorithm(), ctx.getJceProvider());
 			DESKeySpec keySpec = new DESKeySpec(key);
-			Key symmetryKey = skf.generateSecret(keySpec);
-			return symmetryKey;
+            return skf.generateSecret(keySpec);
 		} catch (Exception ex) {
 			throw new SecurityException(ex);
 		}
@@ -374,8 +345,7 @@ public class SecurityUtils {
 			PrivateKey pk = (PrivateKey) privateKey;
 			sign.initSign(pk);
 			sign.update(content);
-			byte[] signed = sign.sign();
-			return signed;
+            return sign.sign();
 		} catch (Exception ex) {
 			throw new SecurityException(ex);
 		}
@@ -395,7 +365,7 @@ public class SecurityUtils {
 	 */
 	public static byte[] symmetryDecrypt(SecurityContext ctx, byte[] cipherContent, Key key) {
 		try {
-			byte[] tContent = null;
+			byte[] tContent;
 			Cipher cipher = Cipher.getInstance(ctx.getSymmetryAlgorithm(), ctx.getJceProvider());
 			SecureRandom secureRandom = SecureRandom.getInstance(ctx.getSecureRandomAlgorithm());
 			cipher.init(Cipher.DECRYPT_MODE, key, secureRandom);
@@ -419,7 +389,7 @@ public class SecurityUtils {
 	 */
 	public static byte[] symmetryEncrypt(SecurityContext ctx, byte[] content, Key key) {
 		try {
-			byte[] cipherContent = null;
+			byte[] cipherContent;
 			Cipher cipher = Cipher.getInstance(ctx.getSymmetryAlgorithm(), ctx.getJceProvider());
 			SecureRandom secureRandom = SecureRandom.getInstance(ctx.getSecureRandomAlgorithm());
 			cipher.init(Cipher.ENCRYPT_MODE, key, secureRandom);
@@ -439,13 +409,13 @@ public class SecurityUtils {
 	 *            原文
 	 * @param signed
 	 *            签名信息
-	 * @param pubKey
+	 * @param publicKey
 	 *            公钥
 	 * @return boolean
 	 */
 	public static boolean verify(SecurityContext ctx, byte[] source, byte[] signed, PublicKey publicKey) {
 		try {
-			boolean verify = false;
+			boolean verify;
 			Signature sign = Signature.getInstance(ctx.getSignatureAlgorithm(), ctx.getJceProvider());
 			sign.initVerify(publicKey);
 			sign.update(source);

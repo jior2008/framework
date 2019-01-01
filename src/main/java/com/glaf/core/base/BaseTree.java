@@ -18,39 +18,39 @@
 
 package com.glaf.core.base;
 
+import com.alibaba.fastjson.JSONObject;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.glaf.core.tree.util.TreeJsonFactory;
+
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-import com.alibaba.fastjson.JSONObject;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.glaf.core.tree.util.TreeJsonFactory;
-
 public class BaseTree implements Serializable, TreeModel, JSONable {
 	private static final long serialVersionUID = 2666681837822864771L;
-	protected boolean checked;
-	protected List<TreeModel> children = new java.util.ArrayList<TreeModel>();
-	protected String code;
-	protected String createBy;
-	protected Date createDate;
-	protected Map<String, Object> dataMap;
-	protected int deep;
-	protected String desc;
-	protected String discriminator;
-	protected String icon;
-	protected String iconCls;
-	protected long id;
-	protected int locked;
-	protected String name;
-	protected TreeModel parent;
-	protected long parentId;
-	protected int sort;
-	protected String treeId;
-	protected String uid;
-	protected String updateBy;
-	protected Date updateDate;
-	protected String url;
+	private boolean checked;
+	private List<TreeModel> children = new java.util.ArrayList<TreeModel>();
+	private String code;
+	private String createBy;
+	private Date createDate;
+	private Map<String, Object> dataMap;
+	private int deep;
+	private String desc;
+	private String discriminator;
+	private String icon;
+	private String iconCls;
+	private long id;
+	private int locked;
+	private String name;
+	private TreeModel parent;
+	private long parentId;
+	private int sort;
+	private String treeId;
+	private String uid;
+	private String updateBy;
+	private Date updateDate;
+	private String url;
 
 	public BaseTree() {
 
@@ -68,9 +68,7 @@ public class BaseTree implements Serializable, TreeModel, JSONable {
 			return -1;
 		}
 
-		TreeModel obj = o;
-
-		int l = this.sort - obj.getSortNo();
+		int l = this.sort - o.getSortNo();
 
 		int ret = 0;
 
@@ -91,9 +89,7 @@ public class BaseTree implements Serializable, TreeModel, JSONable {
 		if (getClass() != obj.getClass())
 			return false;
 		BaseTree other = (BaseTree) obj;
-		if (id != other.id)
-			return false;
-		return true;
+		return id == other.id;
 	}
 
 	public List<TreeModel> getChildren() {

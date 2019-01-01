@@ -17,12 +17,11 @@
  */
 package com.glaf.framework.config;
 
-import java.text.SimpleDateFormat;
-
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import java.text.SimpleDateFormat;
 
 @Configuration
 public class JacksonConfig {

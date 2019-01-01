@@ -18,151 +18,145 @@
 
 package com.glaf.core.base;
 
-import java.util.Collection;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
+import com.glaf.core.util.StringTools;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
-import com.glaf.core.util.StringTools;
+import java.util.*;
 
 public class TableModel implements java.io.Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	protected String aggregationKey;
+	private String aggregationKey;
 
-	protected Collection<String> aggregationKeys = new java.util.ArrayList<String>();
+	private Collection<String> aggregationKeys = new java.util.ArrayList<String>();
 
 	/**
 	 * 批处理的大小
 	 */
-	protected int batchSize;
+	private int batchSize;
 
-	protected List<ColumnModel> columns = new java.util.ArrayList<ColumnModel>();
+	private List<ColumnModel> columns = new java.util.ArrayList<ColumnModel>();
 
-	protected String dbType;
+	private String dbType;
 
 	/**
 	 * 英文标题
 	 */
-	protected String englishTitle;
+	private String englishTitle;
 
 	/**
 	 * 实体名称
 	 */
-	protected String entityName;
+	private String entityName;
 
 	/**
 	 * 需要排除的行列表
 	 */
-	protected List<String> excludes = new java.util.ArrayList<String>();
+	private List<String> excludes = new java.util.ArrayList<String>();
 
 	/**
 	 * 文件前缀
 	 */
-	protected String filePrefix;
+	private String filePrefix;
 
-	protected ColumnModel idColumn;
+	private ColumnModel idColumn;
 
 	/**
 	 * 是否插入
 	 */
-	protected boolean insertOnly;
+	private boolean insertOnly;
 
-	protected boolean updateAllowed = true;
+	private boolean updateAllowed = true;
 
 	/**
 	 * 合法数据的最小长度
 	 */
-	protected int minLength;
+	private int minLength;
 
 	/**
 	 * Java 包名
 	 */
-	protected String packageName;
+	private String packageName;
 
 	/**
 	 * 自行提供的解析器类名
 	 */
-	protected String parseClass;
+	private String parseClass;
 
 	/**
 	 * 解析类型,csv,text,xls
 	 */
-	protected String parseType;
+	private String parseType;
 
 	/**
 	 * 物理表的主键字段名称
 	 */
-	protected String primaryKey;
+	private String primaryKey;
 
 	/**
 	 * 分隔符
 	 */
-	protected String split;
+	private String split;
 
-	protected String sql;
+	private String sql;
 
 	/**
 	 * 解析类型 json,xls,xml
 	 */
-	protected String exportType;
+	private String exportType;
 
 	/**
 	 * 开始行数,从1开始
 	 */
-	protected int startRow;
+	private int startRow;
 
 	/**
 	 * 最后跳过行数(不需要处理的footer信息行数)
 	 */
-	protected int stopSkipRow;
+	private int stopSkipRow;
 
 	/**
 	 * 停止解析字符
 	 */
-	protected String stopWord;
+	private String stopWord;
 
 	/**
 	 * 数据库表名称
 	 */
-	protected String tableName;
+	private String tableName;
 
 	/**
 	 * 标题
 	 */
-	protected String title;
+	private String title;
 
-	protected String sortColumnName;
+	private String sortColumnName;
 
-	protected String sortOrder;
+	private String sortOrder;
 
-	protected String orderBy;
+	private String orderBy;
 
 	/**
 	 * 当前操作用户
 	 */
-	protected String actorId;
+	private String actorId;
 
 	/**
 	 * where查询列
 	 */
-	protected List<ColumnModel> whereColumns = new java.util.ArrayList<ColumnModel>();
+	private List<ColumnModel> whereColumns = new java.util.ArrayList<ColumnModel>();
 
-	protected Map<String, String> attributes = new HashMap<String, String>();
+	private Map<String, String> attributes = new HashMap<String, String>();
 
 	/**
 	 * 预处理程序
 	 */
-	protected List<String> statements = new java.util.ArrayList<String>();
+	private List<String> statements = new java.util.ArrayList<String>();
 
 	public TableModel() {
 
@@ -201,7 +195,7 @@ public class TableModel implements java.io.Serializable {
 	}
 
 	@SuppressWarnings({ "rawtypes" })
-	public void addColumn(String columnName, String javaType, Object value) {
+	private void addColumn(String columnName, String javaType, Object value) {
 		if (columns == null) {
 			columns = new java.util.ArrayList<ColumnModel>();
 		}
@@ -272,14 +266,11 @@ public class TableModel implements java.io.Serializable {
 			return false;
 		TableModel other = (TableModel) obj;
 		if (tableName == null) {
-			if (other.tableName != null)
-				return false;
-		} else if (!tableName.equals(other.tableName))
-			return false;
-		return true;
-	}
+            return other.tableName == null;
+		} else return tableName.equals(other.tableName);
+    }
 
-	public String getActorId() {
+	private String getActorId() {
 		return actorId;
 	}
 

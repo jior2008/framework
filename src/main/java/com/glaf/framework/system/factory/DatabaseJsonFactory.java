@@ -18,12 +18,14 @@
 
 package com.glaf.framework.system.factory;
 
-import com.alibaba.fastjson.*;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.glaf.core.util.DateUtils;
-import com.glaf.framework.system.domain.*;
+import com.glaf.framework.system.domain.Database;
+import com.glaf.framework.system.domain.DatabaseAccess;
 
 /**
  * 
@@ -308,13 +310,11 @@ public class DatabaseJsonFactory {
 		java.util.List<DatabaseAccess> list = model.getAccesses();
 		if (list != null && !list.isEmpty()) {
 			JSONArray array = new JSONArray();
-			if (list != null && !list.isEmpty()) {
-				for (DatabaseAccess da : list) {
-					JSONObject json = da.toJsonObject();
-					array.add(json);
-				}
-				jsonObject.put("accesses", array);
+			for (DatabaseAccess da : list) {
+				JSONObject json = da.toJsonObject();
+				array.add(json);
 			}
+			jsonObject.put("accesses", array);
 		}
 		return jsonObject;
 	}
@@ -464,13 +464,11 @@ public class DatabaseJsonFactory {
 		java.util.List<DatabaseAccess> list = model.getAccesses();
 		if (list != null && !list.isEmpty()) {
 			ArrayNode array = new ObjectMapper().createArrayNode();
-			if (list != null && !list.isEmpty()) {
 				for (DatabaseAccess da : list) {
 					ObjectNode json = da.toObjectNode();
 					array.add(json);
 				}
 				jsonObject.set("accesses", array);
-			}
 		}
 
 		return jsonObject;

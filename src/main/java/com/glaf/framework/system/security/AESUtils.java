@@ -18,20 +18,19 @@
 
 package com.glaf.framework.system.security;
 
-import java.io.IOException;
-import java.security.Provider;
-import java.security.SecureRandom;
-import java.util.Arrays;
+import com.glaf.core.context.ContextFactory;
+import com.glaf.framework.system.domain.SysKey;
+import com.glaf.framework.system.service.SysKeyService;
 
 import javax.crypto.Cipher;
 import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
-
-import com.glaf.core.context.ContextFactory;
-import com.glaf.framework.system.domain.SysKey;
-import com.glaf.framework.system.service.SysKeyService;
+import java.nio.charset.StandardCharsets;
+import java.security.Provider;
+import java.security.SecureRandom;
+import java.util.Arrays;
 
 public class AESUtils {
 
@@ -40,11 +39,11 @@ public class AESUtils {
 	 * ECB模式是分组的模式，CBC是分块加密后，每块与前一块的加密结果异或后再加密 第一块加密的明文是与IV变量进行异或
 	 */
 
-	public static final String KEY_ALGORITHM = "AES";
+	private static final String KEY_ALGORITHM = "AES";
 
-	public static final String ECB_CIPHER_ALGORITHM = "AES/ECB/PKCS7Padding";// 分组
+	private static final String ECB_CIPHER_ALGORITHM = "AES/ECB/PKCS7Padding";// 分组
 
-	public static final String CBC_CIPHER_ALGORITHM = "AES/CBC/PKCS7Padding";// 分块
+	private static final String CBC_CIPHER_ALGORITHM = "AES/CBC/PKCS7Padding";// 分块
 
 	/**
 	 * IV(Initialization Value)是一个初始值，对于CBC模式来说，它必须是随机选取并且需要保密的
@@ -53,13 +52,13 @@ public class AESUtils {
 	 */
 	public static final byte[] IVPARAMETERS = new byte[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16 };
 
-	public static volatile byte[] DEFAULT_AES_KEY = null;
+	private static volatile byte[] DEFAULT_AES_KEY = null;
 
 	static {
 		try {
 			String provider = "org.bouncycastle.jce.provider.BouncyCastleProvider";
 			java.security.Security.addProvider((Provider) Class.forName(provider).newInstance());
-		} catch (Exception ex) {
+		} catch (Exception ignored) {
 
 		}
 	}
@@ -86,9 +85,8 @@ public class AESUtils {
 			// SecretKeySpec key = getKeySpec(password);
 			Cipher cipher = Cipher.getInstance(KEY_ALGORITHM, "BC");// 创建密码器
 			cipher.init(Cipher.DECRYPT_MODE, key);// 初始化
-			byte[] result = cipher.doFinal(encryptData);// 解密
-			return result;
-		} catch (Exception ex) {
+            return cipher.doFinal(encryptData);
+		} catch (Exception ignored) {
 
 		}
 		return null;
@@ -108,8 +106,7 @@ public class AESUtils {
 			SecretKeySpec key = getKeySpec(ikey);
 			Cipher cipher = Cipher.getInstance(KEY_ALGORITHM, "BC");// 创建密码器
 			cipher.init(Cipher.DECRYPT_MODE, key);// 初始化
-			byte[] result = cipher.doFinal(data);// 解密
-			return result;
+            return cipher.doFinal(data);
 		} catch (Exception ex) {
 			throw new RuntimeException(ex);
 		}
@@ -171,9 +168,8 @@ public class AESUtils {
 			// SecretKeySpec key = getKeySpec(password);
 			Cipher cipher = Cipher.getInstance(KEY_ALGORITHM, "BC");// 创建密码器
 			cipher.init(Cipher.ENCRYPT_MODE, key);// 初始化
-			byte[] result = cipher.doFinal(data);// 加密
-			return result;
-		} catch (Exception ex) {
+            return cipher.doFinal(data);
+		} catch (Exception ignored) {
 
 		}
 		return null;
@@ -193,8 +189,7 @@ public class AESUtils {
 			SecretKeySpec key = getKeySpec(ikey);
 			Cipher cipher = Cipher.getInstance(KEY_ALGORITHM, "BC");// 创建密码器
 			cipher.init(Cipher.ENCRYPT_MODE, key);// 初始化
-			byte[] result = cipher.doFinal(data);// 加密
-			return result;
+            return cipher.doFinal(data);
 		} catch (Exception ex) {
 			throw new RuntimeException(ex);
 		}
@@ -238,7 +233,7 @@ public class AESUtils {
 	 * @param password
 	 * @return SecretKeySpec
 	 */
-	public static SecretKeySpec getKeySpec(String password) throws IOException {
+	private static SecretKeySpec getKeySpec(String password) {
 		// You can change it to 128 if you wish
 		int keyLength = 256;
 		byte[] keyBytes = new byte[keyLength / 8];
@@ -246,11 +241,10 @@ public class AESUtils {
 		Arrays.fill(keyBytes, (byte) 0x0);
 		// if password is shorter then key length, it will be zero-padded
 		// to key length
-		byte[] passwordBytes = password.getBytes("UTF-8");
+		byte[] passwordBytes = password.getBytes(StandardCharsets.UTF_8);
 		int length = passwordBytes.length < keyBytes.length ? passwordBytes.length : keyBytes.length;
 		System.arraycopy(passwordBytes, 0, keyBytes, 0, length);
-		SecretKeySpec key = new SecretKeySpec(keyBytes, KEY_ALGORITHM);
-		return key;
+        return new SecretKeySpec(keyBytes, KEY_ALGORITHM);
 	}
 
 	protected static SecretKeySpec getKeySpec2(String strKey) {
@@ -259,8 +253,7 @@ public class AESUtils {
 		for (int i = 0; i < arrayTmp.length && i < array.length; i++) {
 			array[i] = arrayTmp[i];
 		}
-		SecretKeySpec skeySpec = new SecretKeySpec(array, KEY_ALGORITHM);
-		return skeySpec;
+        return new SecretKeySpec(array, KEY_ALGORITHM);
 	}
 
 	public static byte[] initkey() throws Exception {

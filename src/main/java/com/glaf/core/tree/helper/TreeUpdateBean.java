@@ -18,21 +18,22 @@
 
 package com.glaf.core.tree.helper;
 
-import java.sql.*;
-import java.util.*;
-
+import com.glaf.core.base.BaseTree;
+import com.glaf.core.base.TreeModel;
+import com.glaf.core.util.JdbcUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import com.glaf.core.base.BaseTree;
-import com.glaf.core.base.TreeModel;
-import com.glaf.core.util.JdbcUtils;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.util.*;
 
-public class TreeUpdateBean {
-	protected static final Log logger = LogFactory.getLog(TreeUpdateBean.class);
+class TreeUpdateBean {
+	private static final Log logger = LogFactory.getLog(TreeUpdateBean.class);
 
-	public String getTreeId(Map<Long, TreeModel> dataMap, TreeModel tree) {
+	private String getTreeId(Map<Long, TreeModel> dataMap, TreeModel tree) {
 		long parentId = tree.getParentId();
 		TreeModel parent = dataMap.get(parentId);
 		if (parent != null && parent.getId() > 0) {
@@ -148,7 +149,7 @@ public class TreeUpdateBean {
 						sqlBuffer.append(idColumn).append(" = ? ");
 					}
 					int index = 0;
-					StringTokenizer token = null;
+					StringTokenizer token;
 					pstmt2 = conn.prepareStatement(sqlBuffer.toString());
 					for (BaseTree tree : updateList) {
 						index++;

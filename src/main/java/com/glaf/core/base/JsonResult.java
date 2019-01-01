@@ -2,9 +2,9 @@ package com.glaf.core.base;
 
 public class JsonResult {
 
-	protected String status = null;
+	private String status = null;
 
-	protected Object result = null;
+	private Object result = null;
 
 	public JsonResult() {
 

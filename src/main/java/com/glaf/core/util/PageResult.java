@@ -73,7 +73,7 @@ public class PageResult implements Serializable {
 	 * 
 	 * @return 总的页数
 	 */
-	public int getTotalPageCount() {
+    private int getTotalPageCount() {
 		this.totalPageCount = (this.totalRecordCount + pageSize - 1) / pageSize;
 		return totalPageCount;
 	}

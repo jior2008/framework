@@ -18,23 +18,6 @@
 
 package com.glaf.framework.system.factory;
 
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
-import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.concurrent.ForkJoinPool;
-import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
-
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.glaf.core.jdbc.DBConnectionFactory;
 import com.glaf.core.model.TableDefinition;
 import com.glaf.core.util.DBUtils;
@@ -42,19 +25,30 @@ import com.glaf.core.util.JdbcUtils;
 import com.glaf.framework.system.config.ConnectionTask;
 import com.glaf.framework.system.config.DatabaseConnectionConfig;
 import com.glaf.framework.system.domain.Database;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.concurrent.*;
 
 public class DatabaseFactory {
 	private static class DatabaseHolder {
-		public static DatabaseFactory instance = new DatabaseFactory();
+		static final DatabaseFactory instance = new DatabaseFactory();
 	}
 
-	protected static List<Database> databases = new CopyOnWriteArrayList<Database>();
+	private static final List<Database> databases = new CopyOnWriteArrayList<Database>();
 
-	protected static List<Long> fileDatabaseIds = new CopyOnWriteArrayList<Long>();
+	private static final List<Long> fileDatabaseIds = new CopyOnWriteArrayList<Long>();
 
-	protected static List<Database> activeDatabases = new CopyOnWriteArrayList<Database>();
+	private static final List<Database> activeDatabases = new CopyOnWriteArrayList<Database>();
 
-	protected static ConcurrentMap<Long, String> databaseNames = new ConcurrentHashMap<Long, String>();
+	private static final ConcurrentMap<Long, String> databaseNames = new ConcurrentHashMap<Long, String>();
 
 	public static List<Database> getActiveDatabases() {
 		return activeDatabases;
@@ -64,7 +58,7 @@ public class DatabaseFactory {
 		return DatabaseHolder.instance;
 	}
 
-	protected final Logger logger = LoggerFactory.getLogger(getClass());
+	private final Logger logger = LoggerFactory.getLogger(getClass());
 
 	private DatabaseFactory() {
 
@@ -96,7 +90,7 @@ public class DatabaseFactory {
 		activeDatabases.clear();
 	}
 
-	public synchronized List<Database> getDatabases() {
+	private synchronized List<Database> getDatabases() {
 		if (!databases.isEmpty()) {
 			return databases;
 		}
@@ -141,7 +135,7 @@ public class DatabaseFactory {
 			JdbcUtils.close(conn);
 		}
 
-		if (list != null && !list.isEmpty()) {
+		if (!list.isEmpty()) {
 			Collections.sort(list);
 			for (Database database : list) {
 				databases.add(database);
@@ -215,11 +209,11 @@ public class DatabaseFactory {
 
 	public void reload() {
 		try {
-			if (!DBUtils.tableExists("SYS_KEY")) {
+			if (DBUtils.tableExists("SYS_KEY")) {
 				TableDefinition tableDefinition = SysKeyDomainFactory.getTableDefinition();
 				DBUtils.createTable(tableDefinition);
 			}
-			if (!DBUtils.tableExists("SYS_DATABASE")) {
+			if (DBUtils.tableExists("SYS_DATABASE")) {
 				TableDefinition tableDefinition = DatabaseDomainFactory.getTableDefinition();
 				DBUtils.createTable(tableDefinition);
 			}
@@ -244,7 +238,7 @@ public class DatabaseFactory {
 				// 线程阻塞，等待所有任务完成
 				try {
 					pool.awaitTermination(500, TimeUnit.MILLISECONDS);
-				} catch (InterruptedException ex) {
+				} catch (InterruptedException ignored) {
 				}
 			}
 		} catch (java.lang.Throwable ex) {

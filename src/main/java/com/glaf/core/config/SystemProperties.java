@@ -18,20 +18,19 @@
 
 package com.glaf.core.config;
 
+import com.glaf.core.util.Constants;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
+
 import java.io.File;
 import java.net.URL;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.Resource;
-
-import com.glaf.core.util.Constants;
-
 public class SystemProperties {
 
-	protected static AtomicBoolean loading = new AtomicBoolean(false);
+	private static final AtomicBoolean loading = new AtomicBoolean(false);
 
-	protected static final String DEPLOYMENT_SYSTEM_NAME = "deploymentSystemName";
+	private static final String DEPLOYMENT_SYSTEM_NAME = "deploymentSystemName";
 
 	private static volatile String ROOT_CONF_PATH = null;
 
@@ -108,11 +107,9 @@ public class SystemProperties {
 			try {
 				loading.set(true);
 				Resource resource = new ClassPathResource(Constants.SYSTEM_CONFIG);
-				if (resource != null) {
-					ROOT_CONF_PATH = resource.getFile().getParentFile().getAbsolutePath();
-					ROOT_APP_PATH = resource.getFile().getParentFile().getAbsolutePath();
-					System.out.println("load system config:" + resource.getFile().getAbsolutePath());
-				}
+				ROOT_CONF_PATH = resource.getFile().getParentFile().getAbsolutePath();
+				ROOT_APP_PATH = resource.getFile().getParentFile().getAbsolutePath();
+				System.out.println("load system config:" + resource.getFile().getAbsolutePath());
 			} catch (Exception ex) {
 				ex.printStackTrace();
 				URL url = SystemProperties.class.getResource(Constants.SYSTEM_CONFIG);

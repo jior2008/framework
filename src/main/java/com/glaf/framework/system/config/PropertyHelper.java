@@ -17,6 +17,12 @@
  */
 package com.glaf.framework.system.config;
 
+import com.glaf.core.jdbc.DBConnectionFactory;
+import com.glaf.core.util.JdbcUtils;
+import com.glaf.framework.system.domain.SystemProperty;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -24,15 +30,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.glaf.core.jdbc.DBConnectionFactory;
-import com.glaf.core.util.JdbcUtils;
-import com.glaf.framework.system.domain.SystemProperty;
-
-public class PropertyHelper {
-	protected final Logger logger = LoggerFactory.getLogger(getClass());
+class PropertyHelper {
+	private final Logger logger = LoggerFactory.getLogger(getClass());
 
 	/**
 	 * 获取属性列表
@@ -129,7 +128,7 @@ public class PropertyHelper {
 		return property;
 	}
 
-	public void populdate(ResultSet rs, SystemProperty model) throws SQLException {
+	private void populdate(ResultSet rs, SystemProperty model) throws SQLException {
 		model.setId(rs.getString("ID_"));
 		model.setTitle(rs.getString("TITLE_"));
 		model.setType(rs.getString("TYPE_"));
@@ -176,7 +175,7 @@ public class PropertyHelper {
 			} else {
 				psmt.setObject(index++, null);
 			}
-			psmt.setInt(index++, model.getLocked());
+			psmt.setInt(index, model.getLocked());
 			psmt.executeUpdate();
 			psmt.close();
 			conn.commit();
@@ -201,7 +200,7 @@ public class PropertyHelper {
 			conn.setAutoCommit(false);
 			psmt = conn.prepareStatement(buffer.toString());
 			psmt.setString(index++, model.getValue());
-			psmt.setString(index++, model.getId());
+			psmt.setString(index, model.getId());
 			psmt.executeUpdate();
 			psmt.close();
 			conn.commit();

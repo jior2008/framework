@@ -18,29 +18,16 @@
 
 package com.glaf.framework.system.domain;
 
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Random;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-
+import com.alibaba.fastjson.JSONObject;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.glaf.core.base.JSONable;
+import com.glaf.framework.system.factory.DatabaseJsonFactory;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import com.alibaba.fastjson.JSONObject;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-
-import com.glaf.core.base.JSONable;
-import com.glaf.framework.system.factory.DatabaseJsonFactory;
+import javax.persistence.*;
+import java.io.Serializable;
+import java.util.*;
 
 /**
  * 
@@ -55,118 +42,118 @@ public class Database implements java.lang.Comparable<Database>, Cloneable, Seri
 
 	@Id
 	@Column(name = "ID_", nullable = false)
-	protected long id;
+	private long id;
 
 	@Column(name = "PARENTID_")
-	protected long parentId;
+	private long parentId;
 
 	/**
 	 * 名称
 	 */
 	@Column(name = "NAME_", length = 200)
-	protected String name;
+	private String name;
 
 	/**
 	 * 代码
 	 */
 	@Column(name = "CODE_", length = 50)
-	protected String code;
+	private String code;
 
 	/**
 	 * 鉴别符
 	 */
 	@Column(name = "DISCRIMINATOR_", length = 10)
-	protected String discriminator;
+	private String discriminator;
 
 	/**
 	 * 映射名
 	 */
 	@Column(name = "MAPPING_", length = 50)
-	protected String mapping;
+	private String mapping;
 
 	/**
 	 * 标段
 	 */
 	@Column(name = "SECTION_", length = 50)
-	protected String section;
+	private String section;
 
 	/**
 	 * 标题
 	 */
 	@Column(name = "TITLE_", length = 100)
-	protected String title;
+	private String title;
 
 	/**
 	 * 主机
 	 */
 	@Column(name = "HOST_", length = 100)
-	protected String host;
+	private String host;
 
 	/**
 	 * 端口
 	 */
 	@Column(name = "PORT_")
-	protected int port;
+	private int port;
 
 	/**
 	 * 用户名
 	 */
 	@Column(name = "USER_", length = 50)
-	protected String user;
+	private String user;
 
 	/**
 	 * 密码
 	 */
 	@Column(name = "PASSWORD_", length = 2000)
-	protected String password;
+	private String password;
 
 	/**
 	 * 密锁
 	 */
 	@Column(name = "KEY_", length = 1024)
-	protected String key;
+	private String key;
 
 	/**
 	 * IntToken
 	 */
 	@Column(name = "INTTOKEN_")
-	protected int intToken;
+	private int intToken;
 
 	/**
 	 * Token
 	 */
 	@Column(name = "TOKEN_", length = 200)
-	protected String token;
+	private String token;
 
 	/**
 	 * 数据库类型
 	 */
 	@Column(name = "TYPE_", length = 50)
-	protected String type;
+	private String type;
 
 	/**
 	 * 运行类型，模板库TPL还是实例库INST
 	 */
 	@Column(name = "RUNTYPE_", length = 50)
-	protected String runType;
+	private String runType;
 
 	/**
 	 * 使用类型
 	 */
 	@Column(name = "USEYPE_", length = 50)
-	protected String useType;
+	private String useType;
 
 	/**
 	 * 级别
 	 */
 	@Column(name = "LEVEL_")
-	protected int level = 0;
+	private int level = 0;
 
 	/**
 	 * 优先级
 	 */
 	@Column(name = "PRIORITY_")
-	protected int priority = 0;
+	private int priority = 0;
 
 	/**
 	 * 读写操作，支持存储库读写分离<br/>
@@ -175,147 +162,147 @@ public class Database implements java.lang.Comparable<Database>, Cloneable, Seri
 	 * 2-读写<br/>
 	 */
 	@Column(name = "OPERATION_")
-	protected int operation = 2;
+	private int operation = 2;
 
 	/**
 	 * 库名
 	 */
 	@Column(name = "DBNAME_", length = 50)
-	protected String dbname;
+	private String dbname;
 
 	/**
 	 * 分区名
 	 */
 	@Column(name = "BUCKET_", length = 50)
-	protected String bucket;
+	private String bucket;
 
 	/**
 	 * Catalog
 	 */
 	@Column(name = "CATALOG_", length = 50)
-	protected String catalog;
+	private String catalog;
 
 	/**
 	 * InfoServer
 	 */
 	@Column(name = "INFOSERVER_", length = 50)
-	protected String infoServer;
+	private String infoServer;
 
 	/**
 	 * LoginAs
 	 */
 	@Column(name = "LOGINAS_", length = 50)
-	protected String loginAs;
+	private String loginAs;
 
 	/**
 	 * LoginUrl
 	 */
 	@Column(name = "LOGINURL_", length = 250)
-	protected String loginUrl;
+	private String loginUrl;
 
 	/**
 	 * Ticket
 	 */
 	@Column(name = "TICKET_", length = 100)
-	protected String ticket;
+	private String ticket;
 
 	/**
 	 * ProgramId
 	 */
 	@Column(name = "PROGRAMID_", length = 250)
-	protected String programId;
+	private String programId;
 
 	/**
 	 * ProgramName
 	 */
 	@Column(name = "PROGRAMNAME_", length = 250)
-	protected String programName;
+	private String programName;
 
 	/**
 	 * UserNameKey
 	 */
 	@Column(name = "USERNAMEKEY_", length = 100)
-	protected String userNameKey;
+	private String userNameKey;
 
 	/**
 	 * ServerId
 	 */
 	@Column(name = "SERVERID_")
-	protected long serverId;
+	private long serverId;
 
 	/**
 	 * SysId
 	 */
 	@Column(name = "SYSID_", length = 50)
-	protected String sysId;
+	private String sysId;
 
 	/**
 	 * 激活标记
 	 */
 	@Column(name = "ACTIVE_", length = 10)
-	protected String active;
+	private String active;
 
 	/**
 	 * 验证标记
 	 */
 	@Column(name = "VERIFY_", length = 10)
-	protected String verify;
+	private String verify;
 
 	/**
 	 * 删除标记
 	 */
 	@Column(name = "REMOVEFLAG_", length = 10)
-	protected String removeFlag;
+	private String removeFlag;
 
 	/**
 	 * 初始化标记
 	 */
 	@Column(name = "INITFLAG_", length = 10)
-	protected String initFlag;
+	private String initFlag;
 
 	/**
 	 * 提供者类名
 	 */
 	@Column(name = "PROVIDERCLASS_", length = 100)
-	protected String providerClass;
+	private String providerClass;
 
 	/**
 	 * 远程地址
 	 */
 	@Column(name = "REMOTEURL_", length = 500)
-	protected String remoteUrl;
+	private String remoteUrl;
 
 	/**
 	 * 顺序号
 	 */
 	@Column(name = "SORTNO_")
-	protected int sort;
+	private int sort;
 
 	@Column(name = "CREATEBY_", length = 50)
-	protected String createBy;
+	private String createBy;
 
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "CREATETIME_")
-	protected Date createTime;
+	private Date createTime;
 
 	@Column(name = "UPDATEBY_", length = 50)
-	protected String updateBy;
+	private String updateBy;
 
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "UPDATETIME_")
-	protected Date updateTime;
+	private Date updateTime;
 
 	@javax.persistence.Transient
-	protected String selected;
+	private String selected;
 
 	@javax.persistence.Transient
-	protected String connectionString;
+	private String connectionString;
 
 	@javax.persistence.Transient
-	protected Collection<String> actorIds = new HashSet<String>();
+	private Collection<String> actorIds = new HashSet<String>();
 
 	@javax.persistence.Transient
-	protected List<DatabaseAccess> accesses = new ArrayList<DatabaseAccess>();
+	private List<DatabaseAccess> accesses = new ArrayList<DatabaseAccess>();
 
 	public Database() {
 
@@ -328,8 +315,7 @@ public class Database implements java.lang.Comparable<Database>, Cloneable, Seri
 		actorIds.add(actorId);
 	}
 
-	@Override
-	public Database clone() {
+	public Database copy() {
 		Database model = new Database();
 		model.setActive(this.getActive());
 		model.setCode(this.getCode());
@@ -377,9 +363,7 @@ public class Database implements java.lang.Comparable<Database>, Cloneable, Seri
 			return -1;
 		}
 
-		Database field = other;
-
-		int l = this.priority - field.getPriority();
+		int l = this.priority - other.getPriority();
 
 		int ret = 0;
 
@@ -400,10 +384,8 @@ public class Database implements java.lang.Comparable<Database>, Cloneable, Seri
 		if (getClass() != obj.getClass())
 			return false;
 		Database other = (Database) obj;
-		if (id != other.id)
-			return false;
-		return true;
-	}
+        return id == other.id;
+    }
 
 	public List<DatabaseAccess> getAccesses() {
 		return accesses;
@@ -429,7 +411,7 @@ public class Database implements java.lang.Comparable<Database>, Cloneable, Seri
 		return code;
 	}
 
-	public String getConnectionString() {
+	private String getConnectionString() {
 		return this.connectionString;
 	}
 
@@ -637,11 +619,11 @@ public class Database implements java.lang.Comparable<Database>, Cloneable, Seri
 		this.code = code;
 	}
 
-	public void setConnectionString(String connectionString) {
+	private void setConnectionString(String connectionString) {
 		this.connectionString = connectionString;
 	}
 
-	public void setCreateBy(String createBy) {
+	private void setCreateBy(String createBy) {
 		this.createBy = createBy;
 	}
 

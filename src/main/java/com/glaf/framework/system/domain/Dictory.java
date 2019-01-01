@@ -18,19 +18,16 @@
 
 package com.glaf.framework.system.domain;
 
-import java.io.*;
-import java.util.*;
-
-import javax.persistence.*;
-
-import com.alibaba.fastjson.*;
+import com.alibaba.fastjson.JSONObject;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-
+import com.glaf.core.base.JSONable;
+import com.glaf.framework.system.factory.DictoryJsonFactory;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import com.glaf.core.base.JSONable;
-import com.glaf.framework.system.factory.DictoryJsonFactory;
+import javax.persistence.*;
+import java.io.Serializable;
+import java.util.Date;
 
 @Entity
 @Table(name = "SYS_DICTORY")
@@ -40,207 +37,207 @@ public class Dictory implements Serializable, JSONable {
 
 	@Id
 	@Column(name = "ID", nullable = false)
-	protected long id;
+    private long id;
 
 	/**
 	 * 使用领域
 	 */
 	@Column(name = "CATEGORY", length = 50)
-	protected String category;
+    private String category;
 
 	/**
 	 * 编码
 	 */
 	@Column(name = "CODE", length = 50)
-	protected String code;
+    private String code;
 
 	/**
 	 * 描述
 	 */
 	@Column(name = "DICTDESC", length = 500)
-	protected String desc;
+    private String desc;
 
 	/**
 	 * 名称
 	 */
 	@Column(name = "NAME", length = 50)
-	protected String name;
+    private String name;
 
 	/**
 	 * 类型编号
 	 */
 	@Column(name = "TYPEID")
-	protected long nodeId;
+    private long nodeId;
 
 	/**
 	 * 序号
 	 */
 	@Column(name = "SORTNO")
-	protected int sort;
+    private int sort;
 
 	/**
 	 * 字符串值1
 	 */
 	@Column(name = "EXT1", length = 200)
-	protected String ext1;
+    private String ext1;
 
 	/**
 	 * 日期值10
 	 */
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "EXT10")
-	protected Date ext10;
+    private Date ext10;
 
 	/**
 	 * null
 	 */
 	@Column(name = "EXT11")
-	protected Long ext11;
+    private Long ext11;
 
 	/**
 	 * null
 	 */
 	@Column(name = "EXT12")
-	protected Long ext12;
+    private Long ext12;
 
 	/**
 	 * null
 	 */
 	@Column(name = "EXT13")
-	protected Long ext13;
+    private Long ext13;
 
 	/**
 	 * null
 	 */
 	@Column(name = "EXT14")
-	protected Long ext14;
+    private Long ext14;
 
 	/**
 	 * null
 	 */
 	@Column(name = "EXT15")
-	protected Long ext15;
+    private Long ext15;
 
 	/**
 	 * null
 	 */
 	@Column(name = "EXT16")
-	protected Double ext16;
+    private Double ext16;
 
 	/**
 	 * null
 	 */
 	@Column(name = "EXT17")
-	protected Double ext17;
+    private Double ext17;
 
 	/**
 	 * null
 	 */
 	@Column(name = "EXT18")
-	protected Double ext18;
+    private Double ext18;
 
 	/**
 	 * null
 	 */
 	@Column(name = "EXT19")
-	protected Double ext19;
+    private Double ext19;
 
 	/**
 	 * 字符串值2
 	 */
 	@Column(name = "EXT2", length = 200)
-	protected String ext2;
+    private String ext2;
 
 	/**
 	 * null
 	 */
 	@Column(name = "EXT20")
-	protected Double ext20;
+    private Double ext20;
 
 	/**
 	 * 字符串值3
 	 */
 	@Column(name = "EXT3", length = 200)
-	protected String ext3;
+    private String ext3;
 
 	/**
 	 * 字符串值4
 	 */
 	@Column(name = "EXT4", length = 200)
-	protected String ext4;
+    private String ext4;
 
 	/**
 	 * 日期值5
 	 */
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "EXT5")
-	protected Date ext5;
+    private Date ext5;
 
 	/**
 	 * 日期值6
 	 */
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "EXT6")
-	protected Date ext6;
+    private Date ext6;
 
 	/**
 	 * 日期值7
 	 */
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "EXT7")
-	protected Date ext7;
+    private Date ext7;
 
 	/**
 	 * 日期值8
 	 */
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "EXT8")
-	protected Date ext8;
+    private Date ext8;
 
 	/**
 	 * 日期值9
 	 */
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "EXT9")
-	protected Date ext9;
+    private Date ext9;
 
 	/**
 	 * 值
 	 */
 	@Column(name = "VALUE_", length = 2000)
-	protected String value;
+    private String value;
 
 	/**
 	 * 是否启用
 	 */
 	@Column(name = "LOCKED")
-	protected int locked;
+    private int locked;
 
 	/**
 	 * 创建人
 	 */
 	@Column(name = "CREATEBY", length = 50)
-	protected String createBy;
+    private String createBy;
 
 	/**
 	 * 创建日期
 	 */
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "CREATEDATE")
-	protected Date createDate;
+    private Date createDate;
 
 	/**
 	 * 修改人
 	 */
 	@Column(name = "UPDATEBY", length = 50)
-	protected String updateBy;
+    private String updateBy;
 
 	/**
 	 * 修改日期
 	 */
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "UPDATEDATE")
-	protected Date updateDate;
+    private Date updateDate;
 
 	public Dictory() {
 
@@ -255,10 +252,8 @@ public class Dictory implements Serializable, JSONable {
 		if (getClass() != obj.getClass())
 			return false;
 		Dictory other = (Dictory) obj;
-		if (id != other.id)
-			return false;
-		return true;
-	}
+        return id == other.id;
+    }
 
 	public int getLocked() {
 		return this.locked;

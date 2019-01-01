@@ -17,18 +17,17 @@
  */
 package com.glaf.core.base;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
+import com.glaf.core.util.DateUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import com.alibaba.fastjson.JSONObject;
-import com.alibaba.fastjson.JSONArray;
-import com.glaf.core.util.DateUtils;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
 
 public class DataRequest implements java.io.Serializable {
 
@@ -44,7 +43,7 @@ public class DataRequest implements java.io.Serializable {
 
 	private FilterDescriptor filter;
 
-	private HashMap<String, Object> data;
+	private final HashMap<String, Object> data;
 
 	private List<SortDescriptor> sort;
 
@@ -106,13 +105,13 @@ public class DataRequest implements java.io.Serializable {
 		private int level = 1;
 		private boolean ignoreCase = true;
 		private FilterDescriptor parent;
-		private List<FilterDescriptor> filters;
+		private final List<FilterDescriptor> filters;
 
-		public FilterDescriptor() {
+		FilterDescriptor() {
 			this.filters = new ArrayList<FilterDescriptor>();
 		}
 
-		public JSONObject toJSONObject() {
+		JSONObject toJSONObject() {
 			JSONObject json = new JSONObject();
 			if (logic != null) {
 				json.put("logic", logic);
@@ -131,7 +130,7 @@ public class DataRequest implements java.io.Serializable {
 
 			JSONArray array = new JSONArray();
 
-			if (filters != null && !filters.isEmpty()) {
+			if (!filters.isEmpty()) {
 				for (FilterDescriptor f : filters) {
 					array.add(f.toJSONObject());
 				}
@@ -168,7 +167,7 @@ public class DataRequest implements java.io.Serializable {
 			this.javaType = javaType;
 		}
 
-		public int getLevel() {
+		int getLevel() {
 			if (parent != null) {
 				level = parent.getLevel() + 1;
 			}
@@ -183,7 +182,7 @@ public class DataRequest implements java.io.Serializable {
 			return parent;
 		}
 
-		public void setParent(FilterDescriptor parent) {
+		void setParent(FilterDescriptor parent) {
 			this.parent = parent;
 		}
 
@@ -293,7 +292,7 @@ public class DataRequest implements java.io.Serializable {
 		}
 
 		public List<FilterDescriptor> getFilters() {
-			if (filters != null && !filters.isEmpty()) {
+			if (!filters.isEmpty()) {
 				for (FilterDescriptor f : filters) {
 					f.setParent(this);
 				}
@@ -347,7 +346,7 @@ public class DataRequest implements java.io.Serializable {
 
 		private static final long serialVersionUID = 1L;
 		
-		private List<DataRequest.AggregateDescriptor> aggregates;
+		private final List<DataRequest.AggregateDescriptor> aggregates;
 
 		public GroupDescriptor() {
 			this.aggregates = new ArrayList<DataRequest.AggregateDescriptor>();
@@ -404,7 +403,7 @@ public class DataRequest implements java.io.Serializable {
 		return this.filter;
 	}
 
-	public List<GroupDescriptor> getGroup() {
+	private List<GroupDescriptor> getGroup() {
 		return this.group;
 	}
 
@@ -420,7 +419,7 @@ public class DataRequest implements java.io.Serializable {
 		return this.skip;
 	}
 
-	public List<SortDescriptor> getSort() {
+	private List<SortDescriptor> getSort() {
 		return this.sort;
 	}
 

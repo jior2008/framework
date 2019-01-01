@@ -18,9 +18,6 @@
 
 package com.glaf.framework.config;
 
-import java.util.concurrent.Callable;
-import java.util.concurrent.ConcurrentHashMap;
-
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.Cache;
 import org.springframework.context.annotation.Bean;
@@ -37,6 +34,10 @@ import org.springframework.data.redis.listener.RedisMessageListenerContainer;
 import org.springframework.data.redis.listener.adapter.MessageListenerAdapter;
 import org.springframework.data.redis.serializer.JdkSerializationRedisSerializer;
 import org.springframework.data.redis.serializer.RedisSerializationContext.SerializationPair;
+
+import java.nio.charset.StandardCharsets;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * 支持一二级缓存,使得性能逆天快.默认不开启
@@ -59,8 +60,7 @@ public class CacheConfig {
 		SerializationPair pair = SerializationPair
 				.fromSerializer(new JdkSerializationRedisSerializer(this.getClass().getClassLoader()));
 		RedisCacheConfiguration config = RedisCacheConfiguration.defaultCacheConfig().serializeValuesWith(pair);
-		TowLevelCacheManager cacheManager = new TowLevelCacheManager(redisTemplate, writer, config);
-		return cacheManager;
+        return new TowLevelCacheManager(redisTemplate, writer, config);
 	}
 
 	@Bean
@@ -80,7 +80,7 @@ public class CacheConfig {
 				byte[] bs = message.getChannel();
 				try {
 					// Sub 一个消息，通知缓存管理器
-					String type = new String(bs, "UTF-8");
+					String type = new String(bs, StandardCharsets.UTF_8);
 					cacheManager.receiver(type);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -94,10 +94,10 @@ public class CacheConfig {
 	@SuppressWarnings("rawtypes")
 	class TowLevelCacheManager extends RedisCacheManager {
 
-		RedisTemplate redisTemplate;
+		final RedisTemplate redisTemplate;
 
-		public TowLevelCacheManager(RedisTemplate redisTemplate, RedisCacheWriter cacheWriter,
-				RedisCacheConfiguration defaultCacheConfiguration) {
+		TowLevelCacheManager(RedisTemplate redisTemplate, RedisCacheWriter cacheWriter,
+							 RedisCacheConfiguration defaultCacheConfiguration) {
 			super(cacheWriter, defaultCacheConfiguration);
 			this.redisTemplate = redisTemplate;
 		}
@@ -109,12 +109,12 @@ public class CacheConfig {
 		}
 
 		// 通过其他分布式节点，缓存改变
-		public void publishMessage(String cacheName) {
+		void publishMessage(String cacheName) {
 			this.redisTemplate.convertAndSend(topicName, cacheName);
 		}
 
 		// 接受一个消息清空本地缓存
-		public void receiver(String name) {
+		void receiver(String name) {
 			RedisAndLocalCache cache = ((RedisAndLocalCache) this.getCache(name));
 			if (cache != null) {
 				cache.clearLocal();
@@ -125,11 +125,11 @@ public class CacheConfig {
 
 	class RedisAndLocalCache implements Cache {
 		// 本地缓存提供
-		ConcurrentHashMap<Object, Object> local = new ConcurrentHashMap<Object, Object>();
-		RedisCache redisCache;
-		TowLevelCacheManager cacheManager;
+		final ConcurrentHashMap<Object, Object> local = new ConcurrentHashMap<Object, Object>();
+		final RedisCache redisCache;
+		final TowLevelCacheManager cacheManager;
 
-		public RedisAndLocalCache(TowLevelCacheManager cacheManager, RedisCache redisCache) {
+		RedisAndLocalCache(TowLevelCacheManager cacheManager, RedisCache redisCache) {
 			this.redisCache = redisCache;
 			this.cacheManager = cacheManager;
 		}
@@ -193,11 +193,11 @@ public class CacheConfig {
 			redisCache.clear();
 		}
 
-		public void clearLocal() {
+		void clearLocal() {
 			this.local.clear();
 		}
 
-		protected void clearOtherJVM() {
+		void clearOtherJVM() {
 			cacheManager.publishMessage(redisCache.getName());
 		}
 

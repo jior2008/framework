@@ -24,15 +24,15 @@ public abstract class AbstractQuery<T> implements java.io.Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	protected Map<String, String> columns = new java.util.HashMap<String, String>();
+	private Map<String, String> columns = new java.util.HashMap<String, String>();
 
-	protected Map<String, Object> parameters = new java.util.HashMap<String, Object>();
+	private Map<String, Object> parameters = new java.util.HashMap<String, Object>();
 
-	public AbstractQuery() {
+	AbstractQuery() {
 
 	}
 
-	public void addColumn(String property, String columnName) {
+	protected void addColumn(String property, String columnName) {
 		if (columns == null) {
 			columns = new java.util.HashMap<String, String>();
 		}
@@ -60,10 +60,6 @@ public abstract class AbstractQuery<T> implements java.io.Serializable {
 	}
 
 	public void initQueryColumns() {
-
-	}
-
-	public void initQueryParameters() {
 
 	}
 

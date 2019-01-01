@@ -18,37 +18,11 @@
 
 package com.glaf.framework.system.config;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStream;
-import java.sql.Connection;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Properties;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
-import java.util.concurrent.atomic.AtomicBoolean;
-
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import com.alibaba.fastjson.JSONObject;
 import com.glaf.core.base.ConnectionDefinition;
 import com.glaf.core.config.Environment;
 import com.glaf.core.config.SystemProperties;
-import com.glaf.core.dialect.DB2Dialect;
-import com.glaf.core.dialect.Dialect;
-import com.glaf.core.dialect.H2Dialect;
-import com.glaf.core.dialect.MySQLDialect;
-import com.glaf.core.dialect.OracleDialect;
-import com.glaf.core.dialect.PostgreSQLDialect;
-import com.glaf.core.dialect.SQLServer2008Dialect;
-import com.glaf.core.dialect.SQLiteDialect;
+import com.glaf.core.dialect.*;
 import com.glaf.core.el.ExpressionTools;
 import com.glaf.core.factory.ConnectionDefinitionJsonFactory;
 import com.glaf.core.util.Constants;
@@ -59,9 +33,22 @@ import com.glaf.framework.system.jdbc.connection.ConnectionConstants;
 import com.glaf.framework.system.jdbc.datasource.MultiRoutingDataSource;
 import com.glaf.framework.system.security.AESUtils;
 import com.glaf.framework.system.security.RSAUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
+import java.sql.Connection;
+import java.util.*;
+import java.util.Map.Entry;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class DBConfiguration {
-	protected static final Log logger = LogFactory.getLog(DBConfiguration.class);
+	private static final Log logger = LogFactory.getLog(DBConfiguration.class);
 
 	public static final String DIALECT = "dialect";
 
@@ -69,7 +56,7 @@ public class DBConfiguration {
 
 	public static final String JDBC_AUTOCOMMIT = "spring.datasource.autocommit";
 
-	public static final String JDBC_TYPE = "spring.datasource.type";
+	private static final String JDBC_TYPE = "spring.datasource.type";
 
 	public static final String JDBC_NAME = "spring.datasource.name";
 
@@ -90,34 +77,34 @@ public class DBConfiguration {
 	 */
 	public static final String JDBC_POOL_TYPE = "spring.datasource.pool_type";
 
-	public static final String HOST = "host";
+	private static final String HOST = "host";
 
 	public static final String PORT = "port";
 
-	public static final String DATABASE = "databaseName";
+	private static final String DATABASE = "databaseName";
 
 	public static final String DATABASE_NAME = "databaseName";
 
-	public static final String SUBJECT = "subject";
+	private static final String SUBJECT = "subject";
 
-	protected static AtomicBoolean loading = new AtomicBoolean(false);
+	private static final AtomicBoolean loading = new AtomicBoolean(false);
 
-	protected static ConcurrentMap<String, ConnectionDefinition> dataSourceProperties = new ConcurrentHashMap<String, ConnectionDefinition>();
+	private static final ConcurrentMap<String, ConnectionDefinition> dataSourceProperties = new ConcurrentHashMap<String, ConnectionDefinition>();
 
-	protected static ConcurrentMap<String, Properties> jdbcTemplateProperties = new ConcurrentHashMap<String, Properties>();
+	private static final ConcurrentMap<String, Properties> jdbcTemplateProperties = new ConcurrentHashMap<String, Properties>();
 
-	protected static ConcurrentMap<String, String> jsonProperties = new ConcurrentHashMap<String, String>();
+	private static final ConcurrentMap<String, String> jsonProperties = new ConcurrentHashMap<String, String>();
 
-	protected static ConcurrentMap<Integer, String> ISOLATION_LEVELS = new ConcurrentHashMap<Integer, String>();
+	private static final ConcurrentMap<Integer, String> ISOLATION_LEVELS = new ConcurrentHashMap<Integer, String>();
 
-	protected static ConcurrentMap<String, String> dbTypes = new ConcurrentHashMap<String, String>();
+	private static final ConcurrentMap<String, String> dbTypes = new ConcurrentHashMap<String, String>();
 
 	static {
-		ISOLATION_LEVELS.put(new Integer(Connection.TRANSACTION_NONE), "NONE");
-		ISOLATION_LEVELS.put(new Integer(Connection.TRANSACTION_READ_UNCOMMITTED), "READ_UNCOMMITTED");
-		ISOLATION_LEVELS.put(new Integer(Connection.TRANSACTION_READ_COMMITTED), "READ_COMMITTED");
-		ISOLATION_LEVELS.put(new Integer(Connection.TRANSACTION_REPEATABLE_READ), "REPEATABLE_READ");
-		ISOLATION_LEVELS.put(new Integer(Connection.TRANSACTION_SERIALIZABLE), "SERIALIZABLE");
+		ISOLATION_LEVELS.put(Connection.TRANSACTION_NONE, "NONE");
+		ISOLATION_LEVELS.put(Connection.TRANSACTION_READ_UNCOMMITTED, "READ_UNCOMMITTED");
+		ISOLATION_LEVELS.put(Connection.TRANSACTION_READ_COMMITTED, "READ_COMMITTED");
+		ISOLATION_LEVELS.put(Connection.TRANSACTION_REPEATABLE_READ, "REPEATABLE_READ");
+		ISOLATION_LEVELS.put(Connection.TRANSACTION_SERIALIZABLE, "SERIALIZABLE");
 		init();
 		reloadDS();
 	}
@@ -142,7 +129,7 @@ public class DBConfiguration {
 					dbTypes.put(name, dbType);
 					dataSourceProperties.put(name, conn);
 				}
-			} catch (Exception ex) {
+			} catch (Exception ignored) {
 
 			}
 		}
@@ -202,7 +189,7 @@ public class DBConfiguration {
 	 * @param password
 	 *            密码
 	 */
-	public static void addDataSourceProperties(String name, String driver, String url, String user, String password) {
+	private static void addDataSourceProperties(String name, String driver, String url, String user, String password) {
 		if (!dataSourceProperties.containsKey(name)) {
 			Properties props = new Properties();
 			props.put(JDBC_NAME, name);
@@ -238,13 +225,13 @@ public class DBConfiguration {
 					props.put(JDBC_TYPE, dbType);
 					dataSourceProperties.put(name, conn);
 				}
-			} catch (Exception ex) {
+			} catch (Exception ignored) {
 
 			}
 		}
 	}
 
-	public static String encodeJson(Properties props) {
+	private static String encodeJson(Properties props) {
 		JSONObject jsonObject = new JSONObject();
 		Enumeration<?> e = props.keys();
 		while (e.hasMoreElements()) {
@@ -270,7 +257,7 @@ public class DBConfiguration {
 		return jsonProperties.get(systemName);
 	}
 
-	public static ConnectionDefinition getConnectionDefinition(String systemName) {
+	private static ConnectionDefinition getConnectionDefinition(String systemName) {
 		if (systemName == null) {
 			return null;
 		}
@@ -288,9 +275,7 @@ public class DBConfiguration {
 
 	public static List<ConnectionDefinition> getConnectionDefinitions() {
 		List<ConnectionDefinition> rows = new java.util.ArrayList<ConnectionDefinition>();
-		Iterator<Entry<String, ConnectionDefinition>> iterator = dataSourceProperties.entrySet().iterator();
-		while (iterator.hasNext()) {
-			Entry<String, ConnectionDefinition> entry = iterator.next();
+		for (Entry<String, ConnectionDefinition> entry : dataSourceProperties.entrySet()) {
 			String name = (String) entry.getKey();
 			ConnectionDefinition model = getConnectionDefinition(name);
 			if (model != null && model.getName() != null) {
@@ -300,7 +285,7 @@ public class DBConfiguration {
 		return rows;
 	}
 
-	public static String getCurrentDatabaseType() {
+	private static String getCurrentDatabaseType() {
 		String currentSystemName = Environment.getCurrentSystemName();
 		ConnectionDefinition conn = getConnectionDefinition(currentSystemName);
 		if (conn != null && conn.getType() != null) {
@@ -312,8 +297,7 @@ public class DBConfiguration {
 	public static Properties getCurrentDataSourceProperties() {
 		String currentSystemName = Environment.getCurrentSystemName();
 		ConnectionDefinition conn = getConnectionDefinition(currentSystemName);
-		Properties props = toProperties(conn);
-		return props;
+        return toProperties(conn);
 	}
 
 	public static Dialect getCurrentDialect() {
@@ -341,6 +325,7 @@ public class DBConfiguration {
 				dbType = getCurrentDatabaseType();
 			}
 			logger.debug("databaseType:" + dbType);
+			assert dbType != null;
 			return dialects.getProperty(dbType);
 		}
 		return null;
@@ -356,7 +341,8 @@ public class DBConfiguration {
 				dbType = getCurrentDatabaseType();
 			}
 			logger.debug("databaseType:" + dbType);
-			return dialects.getProperty(dbType);
+			assert (dbType != null ? dbType : null) != null;
+			return dialects.getProperty(dbType != null ? dbType : null);
 		}
 		return null;
 	}
@@ -373,10 +359,8 @@ public class DBConfiguration {
 	public static Map<String, Dialect> getDatabaseDialects() {
 		Map<String, Dialect> dialects = new java.util.HashMap<String, Dialect>();
 		logger.debug("dataSourceProperties:" + dataSourceProperties);
-		if (dataSourceProperties != null && !dataSourceProperties.isEmpty()) {
-			Iterator<Entry<String, ConnectionDefinition>> iterator = dataSourceProperties.entrySet().iterator();
-			while (iterator.hasNext()) {
-				Entry<String, ConnectionDefinition> entry = iterator.next();
+		if (!dataSourceProperties.isEmpty()) {
+			for (Entry<String, ConnectionDefinition> entry : dataSourceProperties.entrySet()) {
 				String key = (String) entry.getKey();
 				ConnectionDefinition conn = entry.getValue();
 				String url = conn.getUrl();
@@ -403,7 +387,7 @@ public class DBConfiguration {
 		return dialects;
 	}
 
-	public static String getDatabaseType(String url) {
+	private static String getDatabaseType(String url) {
 		String dbType = null;
 		if (StringUtils.contains(url, "jdbc:mysql:")) {
 			dbType = "mysql";
@@ -440,10 +424,8 @@ public class DBConfiguration {
 
 	public static Map<String, Properties> getDataSourceProperties() {
 		Map<String, Properties> dsMap = new HashMap<String, Properties>();
-		if (dataSourceProperties != null && !dataSourceProperties.isEmpty()) {
-			Iterator<Entry<String, ConnectionDefinition>> iterator = dataSourceProperties.entrySet().iterator();
-			while (iterator.hasNext()) {
-				Entry<String, ConnectionDefinition> entry = iterator.next();
+		if (!dataSourceProperties.isEmpty()) {
+			for (Entry<String, ConnectionDefinition> entry : dataSourceProperties.entrySet()) {
 				String name = (String) entry.getKey();
 				ConnectionDefinition conn = entry.getValue();
 				dsMap.put(name, toProperties(conn));
@@ -458,11 +440,10 @@ public class DBConfiguration {
 		}
 		// logger.debug("->name:" + name);
 		ConnectionDefinition conn = getConnectionDefinition(name);
-		Properties props = toProperties(conn);
-		return props;
+        return toProperties(conn);
 	}
 
-	public static Properties getDefaultDataSourceProperties() {
+	private static Properties getDefaultDataSourceProperties() {
 		ConnectionDefinition conn = getConnectionDefinition(Environment.DEFAULT_SYSTEM_NAME);
 		Properties props = toProperties(conn);
 		if (props == null) {
@@ -483,7 +464,7 @@ public class DBConfiguration {
 		return null;
 	}
 
-	public static Properties getDialectMappings() {
+	private static Properties getDialectMappings() {
 		Properties dialectMappings = new Properties();
 		dialectMappings.setProperty("h2", "com.glaf.core.dialect.H2Dialect");
 		dialectMappings.setProperty("mysql", "com.glaf.core.dialect.MySQLDialect");
@@ -495,7 +476,7 @@ public class DBConfiguration {
 		return dialectMappings;
 	}
 
-	public static Map<String, Dialect> getDialects() {
+	private static Map<String, Dialect> getDialects() {
 		Map<String, Dialect> dialects = new java.util.HashMap<String, Dialect>();
 		dialects.put("h2", new H2Dialect());
 		dialects.put("mysql", new MySQLDialect());
@@ -507,7 +488,7 @@ public class DBConfiguration {
 		return dialects;
 	}
 
-	public static Properties getHibernateDialectMappings() {
+	private static Properties getHibernateDialectMappings() {
 		Properties dialectMappings = new Properties();
 		dialectMappings.setProperty("h2", "org.hibernate.dialect.H2Dialect");
 		dialectMappings.setProperty("mysql", "org.hibernate.dialect.MySQL5Dialect");
@@ -526,8 +507,7 @@ public class DBConfiguration {
 	public static Properties getMasterDataSourceProperties() {
 		String configFile = SystemProperties.getMasterDataSourceConfigFile();
 		String filename = SystemProperties.getConfigRootPath() + configFile;
-		Properties props = PropertiesUtils.loadFilePathResource(filename);
-		return props;
+        return PropertiesUtils.loadFilePathResource(filename);
 	}
 
 	public static Properties getProperties(String name) {
@@ -538,8 +518,7 @@ public class DBConfiguration {
 			reloadDS();
 		}
 		ConnectionDefinition conn = getConnectionDefinition(name);
-		Properties props = toProperties(conn);
-		return props;
+        return toProperties(conn);
 	}
 
 	public static Properties getQueryRewriterMappings() {
@@ -572,7 +551,7 @@ public class DBConfiguration {
 		return p;
 	}
 
-	public static void init() {
+	private static void init() {
 		if (!loading.get()) {
 			try {
 				loading.set(true);
@@ -581,8 +560,8 @@ public class DBConfiguration {
 				if (directory.exists() && directory.isDirectory()) {
 					String[] filelist = directory.list();
 					if (filelist != null) {
-						for (int i = 0, len = filelist.length; i < len; i++) {
-							String filename = config + "/" + filelist[i];
+						for (String s : filelist) {
+							String filename = config + "/" + s;
 							File file = new File(filename);
 							if (file.isFile() && file.getName().endsWith(".properties")) {
 								InputStream inputStream = new FileInputStream(file);
@@ -604,10 +583,10 @@ public class DBConfiguration {
 	}
 
 	public static String isolationLevelToString(int isolation) {
-		return (String) ISOLATION_LEVELS.get(new Integer(isolation));
+		return (String) ISOLATION_LEVELS.get(isolation);
 	}
 
-	protected static void reloadDS() {
+	private static void reloadDS() {
 		Map<String, String> sysEnv = System.getenv();
 		if (!loading.get()) {
 			try {
@@ -615,9 +594,7 @@ public class DBConfiguration {
 				/**
 				 * 判断运行环境是否为docker
 				 */
-				if (StringUtils.equals(sysEnv.get("PRD_RUN_ENV"), "docker")) {
-
-				} else {
+				if (!StringUtils.equals(sysEnv.get("PRD_RUN_ENV"), "docker")) {
 					String path = null;
 					String deploymentSystemName = SystemProperties.getDeploymentSystemName();
 					if (deploymentSystemName != null && deploymentSystemName.length() > 0) {
@@ -631,8 +608,7 @@ public class DBConfiguration {
 					if (dir.exists() && dir.isDirectory()) {
 						File[] filelist = dir.listFiles();
 						if (filelist != null) {
-							for (int i = 0, len = filelist.length; i < len; i++) {
-								File file = filelist[i];
+							for (File file : filelist) {
 								if (file.getName().endsWith(".properties")) {
 									logger.info("load jdbc properties:" + file.getAbsolutePath());
 									try {
@@ -695,7 +671,7 @@ public class DBConfiguration {
 							try {
 								byte[] bytes = AESUtils.decryptECB(key, data);
 								context.put("jdbc_password", new String(bytes));
-							} catch (Exception e) {
+							} catch (Exception ignored) {
 							}
 						}
 						url = ExpressionTools.evaluate(url, context);
@@ -741,7 +717,7 @@ public class DBConfiguration {
 								try {
 									byte[] bytes = AESUtils.decryptECB(key, data);
 									conn.setPassword(new String(bytes));
-								} catch (Exception e) {
+								} catch (Exception ignored) {
 								}
 							}
 							conn.setUrl(url);
@@ -760,13 +736,13 @@ public class DBConfiguration {
 		}
 	}
 
-	protected static void loadDefaultJdbcProperties() {
+	private static void loadDefaultJdbcProperties() {
 		String filename = SystemProperties.getConfigRootPath() + SystemProperties.getMasterDataSourceConfigFile();
 		File file = new File(filename);
 		if (file.exists() && file.isFile()) {
 			logger.info("load default jdbc config:" + filename);
 			Properties props = PropertiesUtils.loadFilePathResource(filename);
-			String dbType = props.getProperty(JDBC_TYPE);
+			String dbType = Objects.requireNonNull(props).getProperty(JDBC_TYPE);
 			if (StringUtils.isEmpty(dbType)) {
 				try {
 					dbType = getDatabaseType(props.getProperty(JDBC_URL));
@@ -791,7 +767,7 @@ public class DBConfiguration {
 		}
 	}
 
-	public static ConnectionDefinition toConnectionDefinition(Properties props) {
+	private static ConnectionDefinition toConnectionDefinition(Properties props) {
 		if (props != null && !props.isEmpty()) {
 			ConnectionDefinition model = new ConnectionDefinition();
 
@@ -827,7 +803,7 @@ public class DBConfiguration {
 		return null;
 	}
 
-	public static Properties toProperties(ConnectionDefinition conn) {
+	private static Properties toProperties(ConnectionDefinition conn) {
 		if (conn != null) {
 			Properties props = new Properties();
 			if (conn.getProperties() != null) {

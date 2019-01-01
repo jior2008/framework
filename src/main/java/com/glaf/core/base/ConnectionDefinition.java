@@ -27,37 +27,37 @@ public class ConnectionDefinition implements java.io.Serializable, JSONable {
 
 	private static final long serialVersionUID = 1L;
 
-	protected String id;
+	private String id;
 
-	protected String provider;
+	private String provider;
 
-	protected String type;
+	private String type;
 
-	protected String name;
+	private String name;
 
-	protected String subject;
+	private String subject;
 
-	protected String datasource;
+	private String datasource;
 
-	protected String database;
+	private String database;
 
-	protected String host;
+	private String host;
 
-	protected int port;
+	private int port;
 
-	protected String driver;
+	private String driver;
 
-	protected String url;
+	private String url;
 
-	protected String user;
+	private String user;
 
-	protected String password;
+	private String password;
 
-	protected String attribute;
+	private String attribute;
 
-	protected boolean autoCommit;
+	private boolean autoCommit;
 
-	protected java.util.Properties properties;
+	private java.util.Properties properties;
 
 	public ConnectionDefinition() {
 
@@ -72,12 +72,9 @@ public class ConnectionDefinition implements java.io.Serializable, JSONable {
 			return false;
 		ConnectionDefinition other = (ConnectionDefinition) obj;
 		if (name == null) {
-			if (other.name != null)
-				return false;
-		} else if (!name.equals(other.name))
-			return false;
-		return true;
-	}
+            return other.name == null;
+		} else return name.equals(other.name);
+    }
 
 	public String getAttribute() {
 		return attribute;

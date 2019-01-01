@@ -18,30 +18,31 @@
 
 package com.glaf.framework.system.query;
 
-import java.util.*;
 import com.glaf.core.query.DataQuery;
+
+import java.util.List;
 
 public class SysTreeQuery extends DataQuery {
 	private static final long serialVersionUID = 1L;
-	protected List<Long> nodeIds;
-	protected String code;
-	protected String codeLike;
-	protected List<String> codes;
-	protected Integer departmentStatus;
-	protected String descLike;
-	protected String discriminator;
-	protected String name;
-	protected String nameLike;
-	protected List<String> names;
-	protected String relationColumn;
-	protected String relationTable;
-	protected Integer sortGreaterThan;
-	protected Integer sortGreaterThanOrEqual;
-	protected Integer sortLessThan;
-	protected Integer sortLessThanOrEqual;
-	protected String treeIdLeftLike;
-	protected String treeIdRightLike;
-	protected String urlLike;
+	private List<Long> nodeIds;
+	private String code;
+	private String codeLike;
+	private List<String> codes;
+	private Integer departmentStatus;
+	private String descLike;
+	private String discriminator;
+	private String name;
+	private String nameLike;
+	private List<String> names;
+	private String relationColumn;
+	private String relationTable;
+	private Integer sortGreaterThan;
+	private Integer sortGreaterThanOrEqual;
+	private Integer sortLessThan;
+	private Integer sortLessThanOrEqual;
+	private String treeIdLeftLike;
+	private String treeIdRightLike;
+	private String urlLike;
 
 	public SysTreeQuery() {
 

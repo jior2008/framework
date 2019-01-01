@@ -42,13 +42,9 @@
  */
 package com.glaf.core.util;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
-import java.util.StringTokenizer;
+import java.util.*;
 
-public final class StringHelper {
+final class StringHelper {
 
 	private static final int ALIAS_TRUNCATE_LENGTH = 10;
 	public static final String WHITESPACE = " \n\r\f\t";
@@ -115,13 +111,13 @@ public final class StringHelper {
 		return new String(buffer);
 	}
 
-	public static String replace(String template, String placeholder,
-			String replacement) {
+	private static String replace(String template, String placeholder,
+								  String replacement) {
 		return replace(template, placeholder, replacement, false);
 	}
 
-	public static String[] replace(String templates[], String placeholder,
-			String replacement) {
+	public static String[] replace(String[] templates, String placeholder,
+								   String replacement) {
 		String[] result = new String[templates.length];
 		for (int i = 0; i < templates.length; i++) {
 			result[i] = replace(templates[i], placeholder, replacement);
@@ -129,16 +125,16 @@ public final class StringHelper {
 		return result;
 	}
 
-	public static String replace(String template, String placeholder,
-			String replacement, boolean wholeWords) {
+	private static String replace(String template, String placeholder,
+								  String replacement, boolean wholeWords) {
 		return replace(template, placeholder, replacement, wholeWords, false);
 	}
 
-	public static String replace(String template, String placeholder,
-			String replacement, boolean wholeWords,
-			boolean encloseInParensIfNecessary) {
+	private static String replace(String template, String placeholder,
+								  String replacement, boolean wholeWords,
+								  boolean encloseInParensIfNecessary) {
 		if (template == null) {
-			return template;
+			return null;
 		}
 		int loc = template.indexOf(placeholder);
 		if (loc < 0) {
@@ -152,9 +148,9 @@ public final class StringHelper {
 		}
 	}
 
-	public static String replace(String beforePlaceholder,
-			String afterPlaceholder, String placeholder, String replacement,
-			boolean wholeWords, boolean encloseInParensIfNecessary) {
+	private static String replace(String beforePlaceholder,
+								  String afterPlaceholder, String placeholder, String replacement,
+								  boolean wholeWords, boolean encloseInParensIfNecessary) {
 		final boolean actuallyReplace = !wholeWords
 				|| afterPlaceholder.length() == 0
 				|| !Character.isJavaIdentifierPart(afterPlaceholder.charAt(0));
@@ -174,7 +170,7 @@ public final class StringHelper {
 		return buf.toString();
 	}
 
-	public static char getLastNonWhitespaceCharacter(String str) {
+	private static char getLastNonWhitespaceCharacter(String str) {
 		if (str != null && str.length() > 0) {
 			for (int i = str.length() - 1; i >= 0; i--) {
 				char ch = str.charAt(i);
@@ -186,7 +182,7 @@ public final class StringHelper {
 		return '\0';
 	}
 
-	public static char getFirstNonWhitespaceCharacter(String str) {
+	private static char getFirstNonWhitespaceCharacter(String str) {
 		if (str != null && str.length() > 0) {
 			for (int i = 0; i < str.length(); i++) {
 				char ch = str.charAt(i);
@@ -198,10 +194,10 @@ public final class StringHelper {
 		return '\0';
 	}
 
-	public static String replaceOnce(String template, String placeholder,
-			String replacement) {
+	private static String replaceOnce(String template, String placeholder,
+									  String replacement) {
 		if (template == null) {
-			return template; // returnign null!
+			return null; // returnign null!
 		}
 		int loc = template.indexOf(placeholder);
 		if (loc < 0) {
@@ -218,7 +214,7 @@ public final class StringHelper {
 		return split(seperators, list, false);
 	}
 
-	public static String[] split(String seperators, String list, boolean include) {
+	private static String[] split(String seperators, String list, boolean include) {
 		StringTokenizer tokens = new StringTokenizer(list, seperators, include);
 		String[] result = new String[tokens.countTokens()];
 		int i = 0;
@@ -228,7 +224,7 @@ public final class StringHelper {
 		return result;
 	}
 
-	public static String unqualify(String qualifiedName) {
+	private static String unqualify(String qualifiedName) {
 		int loc = qualifiedName.lastIndexOf(".");
 		return (loc < 0) ? qualifiedName : qualifiedName
 				.substring(qualifiedName.lastIndexOf(".") + 1);
@@ -249,7 +245,7 @@ public final class StringHelper {
 	 *            The name to collapse.
 	 * @return The collapsed name.
 	 */
-	public static String collapse(String name) {
+	private static String collapse(String name) {
 		if (name == null) {
 			return null;
 		}
@@ -271,7 +267,7 @@ public final class StringHelper {
 	 * 
 	 * @return The collapsed form.
 	 */
-	public static String collapseQualifier(String qualifier, boolean includeDots) {
+	private static String collapseQualifier(String qualifier, boolean includeDots) {
 		StringTokenizer tokenizer = new StringTokenizer(qualifier, ".");
 		String collapsed = Character.toString(tokenizer.nextToken().charAt(0));
 		while (tokenizer.hasMoreTokens()) {
@@ -382,12 +378,12 @@ public final class StringHelper {
 			String[] replacements) {
 		String[] results = new String[replacements.length * strings.length];
 		int n = 0;
-		for (int i = 0; i < replacements.length; i++) {
-			for (int j = 0; j < strings.length; j++) {
-				results[n++] = replaceOnce(strings[j], placeholder,
-						replacements[i]);
-			}
-		}
+        for (String replacement : replacements) {
+            for (String string : strings) {
+                results[n++] = replaceOnce(string, placeholder,
+                        replacement);
+            }
+        }
 		return results;
 	}
 
@@ -445,19 +441,19 @@ public final class StringHelper {
 			} else if ('\'' == c) {
 				inQuote = true;
 			} else if (c == character) {
-				locations.add(new Integer(indx));
+				locations.add(indx);
 			}
 		}
 		return toIntArray(locations);
 	}
 
 	@SuppressWarnings("rawtypes")
-	public static int[] toIntArray(Collection coll) {
+	private static int[] toIntArray(Collection coll) {
 		Iterator iter = coll.iterator();
 		int[] arr = new int[coll.size()];
 		int i = 0;
 		while (iter.hasNext()) {
-			arr[i++] = ((Integer) iter.next()).intValue();
+			arr[i++] = (Integer) iter.next();
 		}
 		return arr;
 	}
@@ -470,7 +466,7 @@ public final class StringHelper {
 		return string == null || string.length() == 0;
 	}
 
-	public static String qualify(String prefix, String name) {
+	private static String qualify(String prefix, String name) {
 		if (name == null || prefix == null) {
 			throw new NullPointerException();
 		}
@@ -505,7 +501,7 @@ public final class StringHelper {
 		return matchAt;
 	}
 
-	public static String truncate(String string, int length) {
+	private static String truncate(String string, int length) {
 		if (string.length() <= length) {
 			return string;
 		} else {
@@ -530,7 +526,7 @@ public final class StringHelper {
 	 * @return an alias of the form <samp>foo1_</samp>
 	 */
 	public static String generateAlias(String description, int unique) {
-		return generateAliasRoot(description) + Integer.toString(unique) + '_';
+		return generateAliasRoot(description) + unique + '_';
 	}
 
 	/**
@@ -585,7 +581,7 @@ public final class StringHelper {
 		return alias;
 	}
 
-	public static String unqualifyEntityName(String entityName) {
+	private static String unqualifyEntityName(String entityName) {
 		String result = unqualify(entityName);
 		int slashPos = result.indexOf('/');
 		if (slashPos > 0) {
@@ -620,7 +616,7 @@ public final class StringHelper {
 	 * @return True if the given string starts and ends with '`'; false
 	 *         otherwise.
 	 */
-	public static boolean isQuoted(String name) {
+	private static boolean isQuoted(String name) {
 		return name != null && name.length() != 0 && name.charAt(0) == '`'
 				&& name.charAt(name.length() - 1) == '`';
 	}

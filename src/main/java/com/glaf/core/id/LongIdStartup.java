@@ -13,15 +13,15 @@
 
 package com.glaf.core.id;
 
+import com.glaf.core.jdbc.DBConnectionFactory;
+import com.glaf.core.util.JdbcUtils;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import com.glaf.core.jdbc.DBConnectionFactory;
-import com.glaf.core.util.JdbcUtils;
-
-public class LongIdStartup {
+class LongIdStartup {
 
 	public static void init() {
 		Connection con = null;
@@ -44,26 +44,26 @@ public class LongIdStartup {
 				psmt.executeUpdate();
 				JdbcUtils.close(psmt);
 			}
-		} catch (SQLException ex) {
+		} catch (SQLException ignored) {
 			
 		} finally {
 			try {
 				if (rs != null) {
 					rs.close();
 				}
-			} catch (SQLException ex) {
+			} catch (SQLException ignored) {
 			}
 			try {
 				if (psmt != null) {
 					psmt.close();
 				}
-			} catch (SQLException ex) {
+			} catch (SQLException ignored) {
 			}
 			try {
 				if (con != null && !con.isClosed()) {
 					con.close();
 				}
-			} catch (SQLException ex) {
+			} catch (SQLException ignored) {
 			}
 		}
 	}

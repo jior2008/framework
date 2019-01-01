@@ -18,14 +18,19 @@
 
 package com.glaf.framework.system.web;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.atomic.AtomicBoolean;
-
-import javax.servlet.http.HttpServletRequest;
-
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
+import com.glaf.core.security.LoginContext;
+import com.glaf.core.security.SecurityUtils;
+import com.glaf.core.util.*;
+import com.glaf.framework.system.config.DBConfiguration;
+import com.glaf.framework.system.config.DatabaseConnectionConfig;
+import com.glaf.framework.system.config.JdbcConnectionFactory;
+import com.glaf.framework.system.domain.Database;
+import com.glaf.framework.system.factory.DatabaseFactory;
+import com.glaf.framework.system.query.DatabaseQuery;
+import com.glaf.framework.system.security.RSAUtils;
+import com.glaf.framework.system.service.IDatabaseService;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
@@ -37,24 +42,12 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
-import com.glaf.core.security.LoginContext;
-import com.glaf.core.security.SecurityUtils;
-import com.glaf.core.util.Paging;
-import com.glaf.core.util.ParamUtils;
-import com.glaf.core.util.RequestUtils;
-import com.glaf.core.util.ResponseUtils;
-import com.glaf.core.util.StringTools;
-import com.glaf.core.util.Tools;
-import com.glaf.framework.system.config.DBConfiguration;
-import com.glaf.framework.system.config.JdbcConnectionFactory;
-import com.glaf.framework.system.config.DatabaseConnectionConfig;
-import com.glaf.framework.system.domain.Database;
-import com.glaf.framework.system.factory.DatabaseFactory;
-import com.glaf.framework.system.query.DatabaseQuery;
-import com.glaf.framework.system.security.RSAUtils;
-import com.glaf.framework.system.service.IDatabaseService;
+import javax.servlet.http.HttpServletRequest;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * 
@@ -65,11 +58,11 @@ import com.glaf.framework.system.service.IDatabaseService;
 @Controller("/sys/database")
 @RequestMapping("/sys/database")
 public class DatabaseController {
-	protected static final Log logger = LogFactory.getLog(DatabaseController.class);
+	private static final Log logger = LogFactory.getLog(DatabaseController.class);
 
-	protected static AtomicBoolean running = new AtomicBoolean(false);
+	private static final AtomicBoolean running = new AtomicBoolean(false);
 
-	protected IDatabaseService databaseService;
+	private IDatabaseService databaseService;
 
 	public DatabaseController() {
 
@@ -84,7 +77,7 @@ public class DatabaseController {
 		if (databases != null && !databases.isEmpty()) {
 			List<Long> selected = new ArrayList<Long>();
 			List<Database> unselected = new ArrayList<Database>();
-			if (selectedDatabaseIds != null && StringUtils.isNotEmpty(selectedDatabaseIds)) {
+			if (StringUtils.isNotEmpty(selectedDatabaseIds)) {
 				List<Long> ids = StringTools.splitToLong(selectedDatabaseIds);
 				for (Database database : databases) {
 					if (ids.contains(database.getId())) {
@@ -101,20 +94,19 @@ public class DatabaseController {
 			}
 			request.setAttribute("databases", databases);
 
-			StringBuffer bufferx = new StringBuffer();
-			StringBuffer buffery = new StringBuffer();
+			StringBuilder bufferx = new StringBuilder();
+			StringBuilder buffery = new StringBuilder();
 
-			if (databases != null && databases.size() > 0) {
-				for (int j = 0; j < databases.size(); j++) {
-					Database d = (Database) databases.get(j);
-					if (selected != null && selected.contains(d.getId())) {
-						buffery.append("\n<option value=\"").append(d.getId()).append("\">").append(d.getTitle())
-								.append(" [").append(d.getMapping()).append("]").append("</option>");
-					} else {
-						bufferx.append("\n<option value=\"").append(d.getId()).append("\">").append(d.getTitle())
-								.append(" [").append(d.getMapping()).append("]").append("</option>");
-					}
-				}
+			if (databases.size() > 0) {
+                for (Database d : databases) {
+                    if (selected.contains(d.getId())) {
+                        buffery.append("\n<option value=\"").append(d.getId()).append("\">").append(d.getTitle())
+                                .append(" [").append(d.getMapping()).append("]").append("</option>");
+                    } else {
+                        bufferx.append("\n<option value=\"").append(d.getId()).append("\">").append(d.getTitle())
+                                .append(" [").append(d.getMapping()).append("]").append("</option>");
+                    }
+                }
 			}
 			request.setAttribute("bufferx", bufferx.toString());
 			request.setAttribute("buffery", buffery.toString());
@@ -129,7 +121,7 @@ public class DatabaseController {
 	}
 
 	@RequestMapping("/delete")
-	public byte[] deleteById(HttpServletRequest request) throws IOException {
+	public byte[] deleteById(HttpServletRequest request) {
 		long databaseId = RequestUtils.getLong(request, "id");
 		if (databaseId > 0) {
 			try {
@@ -173,7 +165,7 @@ public class DatabaseController {
 
 		try {
 			running.set(true);
-			Database db = null;
+			Database db;
 			if (StringUtils.isNotEmpty(request.getParameter("id"))) {
 				db = databaseService.getDatabaseById(RequestUtils.getLong(request, "id"));
 				if (db != null) {
@@ -208,19 +200,14 @@ public class DatabaseController {
 
 	@RequestMapping("/json")
 	@ResponseBody
-	public byte[] json(HttpServletRequest request, ModelMap modelMap) throws IOException {
+	public byte[] json(HttpServletRequest request, ModelMap modelMap) {
 		LoginContext loginContext = RequestUtils.getLoginContext(request);
 		Map<String, Object> params = RequestUtils.getParameterMap(request);
 		DatabaseQuery query = new DatabaseQuery();
 		Tools.populate(query, params);
-		query.deleteFlag(0);
+
 		query.setActorId(loginContext.getActorId());
 		query.setLoginContext(loginContext);
-
-		if (!loginContext.isSystemAdministrator()) {
-			String actorId = loginContext.getActorId();
-			query.createBy(actorId);
-		}
 
 		String keywordsLike_base64 = request.getParameter("keywordsLike_base64");
 		if (StringUtils.isNotEmpty(keywordsLike_base64)) {
@@ -228,10 +215,10 @@ public class DatabaseController {
 			query.setKeywordsLike(keywordsLike);
 		}
 
-		int start = 0;
-		int limit = 10;
-		String orderName = null;
-		String order = null;
+		int start;
+		int limit;
+		String orderName;
+		String order;
 
 		int pageNo = ParamUtils.getInt(params, "page");
 		limit = ParamUtils.getInt(params, "rows");
@@ -290,7 +277,7 @@ public class DatabaseController {
 			result.put("rows", rowsJSON);
 			result.put("total", total);
 		}
-		return result.toJSONString().getBytes("UTF-8");
+		return result.toJSONString().getBytes(StandardCharsets.UTF_8);
 	}
 
 	@RequestMapping
@@ -443,7 +430,7 @@ public class DatabaseController {
 		Map<String, Object> params = RequestUtils.getParameterMap(request);
 		DatabaseQuery query = new DatabaseQuery();
 		Tools.populate(query, params);
-		query.deleteFlag(0);
+		//query.deleteFlag(0);
 
 		List<Database> list = databaseService.list(query);
 		request.setAttribute("list", list);
@@ -531,7 +518,7 @@ public class DatabaseController {
 	@RequestMapping("/verify2")
 	public byte[] verify2(HttpServletRequest request) {
 		try {
-			Database database = null;
+			Database database;
 			if (StringUtils.isNotEmpty(request.getParameter("id"))) {
 				database = databaseService.getDatabaseById(RequestUtils.getLong(request, "id"));
 				if (database != null) {

@@ -18,36 +18,15 @@
 
 package com.glaf.core.config;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.io.Reader;
-import java.io.Writer;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.ListIterator;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Properties;
-import java.util.Set;
-import java.util.StringTokenizer;
-import java.util.WeakHashMap;
-import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-import java.util.regex.PatternSyntaxException;
-import java.util.concurrent.TimeUnit;
+import com.fasterxml.jackson.core.JsonFactory;
+import com.fasterxml.jackson.core.JsonGenerator;
+import com.glaf.core.util.StringInterner;
+import com.glaf.core.util.StringTools;
+import com.google.common.base.Preconditions;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.w3c.dom.*;
+import org.xml.sax.SAXException;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -57,23 +36,16 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
- 
-import org.w3c.dom.DOMException;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-import org.w3c.dom.Text;
-import org.xml.sax.SAXException;
-
-import com.glaf.core.util.StringInterner;
-import com.glaf.core.util.StringTools;
-import com.fasterxml.jackson.core.JsonFactory;
-import com.fasterxml.jackson.core.JsonGenerator;
-import com.google.common.base.Preconditions;
+import java.io.*;
+import java.net.URL;
+import java.nio.charset.StandardCharsets;
+import java.util.*;
+import java.util.Map.Entry;
+import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.TimeUnit;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.regex.PatternSyntaxException;
 
 /**
  * Provides access to configuration parameters.
@@ -83,7 +55,7 @@ import com.google.common.base.Preconditions;
  * <p>
  * Configurations are specified by resources. A resource contains a set of
  * name/value pairs as XML data. Each resource is named by either a
- * <code>String</code> or by a {@link Path}. If named by a <code>String</code>,
+ * <code>String</code>. If named by a <code>String</code>,
  * then the classpath is examined for a file with that name. If named by a
  * <code>Path</code>, then the local filesystem is examined directly, without
  * referring to the classpath.
@@ -154,20 +126,20 @@ public class Configuration implements Iterable<Map.Entry<String, String>> {
 		private final Object resource;
 		private final String name;
 
-		public Resource(Object resource) {
+		Resource(Object resource) {
 			this(resource, resource.toString());
 		}
 
-		public Resource(Object resource, String name) {
+		Resource(Object resource, String name) {
 			this.resource = resource;
 			this.name = name;
 		}
 
-		public String getName() {
+		String getName() {
 			return name;
 		}
 
-		public Object getResource() {
+		Object getResource() {
 			return resource;
 		}
 
@@ -186,14 +158,14 @@ public class Configuration implements Iterable<Map.Entry<String, String>> {
 	 * The value reported as the setting resource when a key is set by code
 	 * rather than a file resource by dumpConfiguration.
 	 */
-	static final String UNKNOWN_RESOURCE = "Unknown";
+	private static final String UNKNOWN_RESOURCE = "Unknown";
 
 	/**
 	 * List of configuration parameters marked <b>final</b>.
 	 */
 	private Set<String> finalParameters = new HashSet<String>();
 
-	private boolean loadDefaults = true;
+	private boolean loadDefaults;
 
 	/**
 	 * Configuration objects
@@ -228,7 +200,7 @@ public class Configuration implements Iterable<Map.Entry<String, String>> {
 	}
 
 	/** A new configuration. */
-	public Configuration() {
+	Configuration() {
 		this(true);
 	}
 
@@ -242,7 +214,7 @@ public class Configuration implements Iterable<Map.Entry<String, String>> {
 	 * @param loadDefaults
 	 *            specifies whether to load from the default files
 	 */
-	public Configuration(boolean loadDefaults) {
+	private Configuration(boolean loadDefaults) {
 		this.loadDefaults = loadDefaults;
 		updatingResource = new HashMap<String, String[]>();
 		synchronized (Configuration.class) {
@@ -257,7 +229,7 @@ public class Configuration implements Iterable<Map.Entry<String, String>> {
 	 *            the configuration from which to clone settings.
 	 */
 	@SuppressWarnings("unchecked")
-	public Configuration(Configuration other) {
+	private Configuration(Configuration other) {
 		this.resources = (ArrayList<Resource>) other.resources.clone();
 		synchronized (other) {
 			if (other.properties != null) {
@@ -288,7 +260,7 @@ public class Configuration implements Iterable<Map.Entry<String, String>> {
 	 * @param name
 	 *            file name. File should be present in the classpath.
 	 */
-	public static synchronized void addDefaultResource(String name) {
+	private static synchronized void addDefaultResource(String name) {
 		if (!defaultResources.contains(name)) {
 			defaultResources.add(name);
 			for (Configuration conf : REGISTRY.keySet()) {
@@ -309,7 +281,7 @@ public class Configuration implements Iterable<Map.Entry<String, String>> {
 	 *            resource to be added, the classpath is examined for a file
 	 *            with that name.
 	 */
-	public void addResource(String name) {
+	void addResource(String name) {
 		addResourceObject(new Resource(name));
 	}
 
@@ -383,7 +355,7 @@ public class Configuration implements Iterable<Map.Entry<String, String>> {
 	 * again before accessing the values. Values that are added via set methods
 	 * will overlay values read from the resources.
 	 */
-	public synchronized void reloadConfiguration() {
+	private synchronized void reloadConfiguration() {
 		properties = null; // trigger reload
 		finalParameters.clear(); // clear site-limits
 	}
@@ -445,9 +417,8 @@ public class Configuration implements Iterable<Map.Entry<String, String>> {
 	 * @return the value of the <code>name</code> or its replacing property, or
 	 *         null if no such property exists.
 	 */
-	public String get(String name) {
-		String result = substituteVars(getProps().getProperty(name));
-		return result;
+	private String get(String name) {
+		return substituteVars(getProps().getProperty(name));
 	}
 
 	/**
@@ -464,7 +435,7 @@ public class Configuration implements Iterable<Map.Entry<String, String>> {
 	 * @return the value of the <code>name</code> or its replacing property, or
 	 *         null if no such property exists.
 	 */
-	public String getTrimmed(String name) {
+	private String getTrimmed(String name) {
 		String value = get(name);
 
 		if (null == value) {
@@ -502,9 +473,8 @@ public class Configuration implements Iterable<Map.Entry<String, String>> {
 	 * @return the value of the <code>name</code> property or its replacing
 	 *         property and null if no such property exists.
 	 */
-	public String getRaw(String name) {
-		String result = getProps().getProperty(name);
-		return result;
+	private String getRaw(String name) {
+		return getProps().getProperty(name);
 	}
 
 	/**
@@ -518,7 +488,7 @@ public class Configuration implements Iterable<Map.Entry<String, String>> {
 	 * @param value
 	 *            property value.
 	 */
-	public void set(String name, String value) {
+	void set(String name, String value) {
 		set(name, value, null);
 	}
 
@@ -538,7 +508,7 @@ public class Configuration implements Iterable<Map.Entry<String, String>> {
 	 * @throws IllegalArgumentException
 	 *             when the value or name is null.
 	 */
-	public void set(String name, String value, String source) {
+	private void set(String name, String value, String source) {
 		Preconditions.checkArgument(name != null,
 				"Property name must not be null");
 		Preconditions.checkArgument(value != null, "The value of property "
@@ -566,7 +536,7 @@ public class Configuration implements Iterable<Map.Entry<String, String>> {
 	 * @param value
 	 *            the new value
 	 */
-	public synchronized void setIfUnset(String name, String value) {
+	private synchronized void setIfUnset(String name, String value) {
 		if (get(name) == null) {
 			set(name, value);
 		}
@@ -688,7 +658,7 @@ public class Configuration implements Iterable<Map.Entry<String, String>> {
 	private String getHexDigits(String value) {
 		boolean negative = false;
 		String str = value;
-		String hexString = null;
+		String hexString;
 		if (value.startsWith("-")) {
 			negative = true;
 			str = value.substring(1);
@@ -1097,7 +1067,7 @@ public class Configuration implements Iterable<Map.Entry<String, String>> {
 			int at;
 			int end;
 
-			public RangeNumberIterator(List<Range> ranges) {
+			RangeNumberIterator(List<Range> ranges) {
 				if (ranges != null) {
 					internal = ranges.iterator();
 				}
@@ -1136,14 +1106,14 @@ public class Configuration implements Iterable<Map.Entry<String, String>> {
 			public void remove() {
 				throw new UnsupportedOperationException();
 			}
-		};
+		}
 
-		List<Range> ranges = new ArrayList<Range>();
+		final List<Range> ranges = new ArrayList<Range>();
 
 		public IntegerRanges() {
 		}
 
-		public IntegerRanges(String newValue) {
+		IntegerRanges(String newValue) {
 			StringTokenizer itr = new StringTokenizer(newValue, ",");
 			while (itr.hasMoreTokens()) {
 				String rng = itr.nextToken().trim();
@@ -1311,8 +1281,7 @@ public class Configuration implements Iterable<Map.Entry<String, String>> {
 	public Collection<String> getTrimmedStringCollection(String name) {
 		String valueString = get(name);
 		if (null == valueString) {
-			Collection<String> empty = new ArrayList<String>();
-			return empty;
+			return new ArrayList<String>();
 		}
 		return StringTools.getTrimmedStringCollection(valueString);
 	}
@@ -1328,7 +1297,7 @@ public class Configuration implements Iterable<Map.Entry<String, String>> {
 	 * @return property value as an array of trimmed <code>String</code>s, or
 	 *         empty array.
 	 */
-	public String[] getTrimmedStrings(String name) {
+	private String[] getTrimmedStrings(String name) {
 		String valueString = get(name);
 		return StringTools.getTrimmedStrings(valueString);
 	}
@@ -1423,7 +1392,7 @@ public class Configuration implements Iterable<Map.Entry<String, String>> {
 	 *            resource name.
 	 * @return the url for the named resource.
 	 */
-	public URL getResource(String name) {
+	private URL getResource(String name) {
 		return classLoader.getResource(name);
 	}
 
@@ -1486,7 +1455,7 @@ public class Configuration implements Iterable<Map.Entry<String, String>> {
 		return new HashSet<String>(finalParameters);
 	}
 
-	protected synchronized Properties getProps() {
+	private synchronized Properties getProps() {
 		if (properties == null) {
 			properties = new Properties();
 			HashMap<String, String[]> backup = new HashMap<String, String[]>(
@@ -1741,7 +1710,7 @@ public class Configuration implements Iterable<Map.Entry<String, String>> {
 	 *            the output stream to write to.
 	 */
 	public void writeXml(OutputStream out) throws IOException {
-		writeXml(new OutputStreamWriter(out, "UTF-8"));
+		writeXml(new OutputStreamWriter(out, StandardCharsets.UTF_8));
 	}
 
 	/**
@@ -1751,7 +1720,7 @@ public class Configuration implements Iterable<Map.Entry<String, String>> {
 	 * @param out
 	 *            the writer to write to.
 	 */
-	public void writeXml(Writer out) throws IOException {
+	private void writeXml(Writer out) throws IOException {
 		Document doc = asXmlDocument();
 
 		try {
@@ -1789,7 +1758,7 @@ public class Configuration implements Iterable<Map.Entry<String, String>> {
 		for (Enumeration<Object> e = properties.keys(); e.hasMoreElements();) {
 			String name = (String) e.nextElement();
 			Object object = properties.get(name);
-			String value = null;
+			String value;
 			if (object instanceof String) {
 				value = (String) object;
 			} else {
@@ -1915,11 +1884,11 @@ public class Configuration implements Iterable<Map.Entry<String, String>> {
 	 *            <code>true</code> to set quiet-mode on, <code>false</code> to
 	 *            turn it off.
 	 */
-	public synchronized void setQuietMode(boolean quietmode) {
+	private synchronized void setQuietMode(boolean quietmode) {
 		this.quietmode = quietmode;
 	}
 
-	synchronized boolean getQuietMode() {
+	private synchronized boolean getQuietMode() {
 		return this.quietmode;
 	}
  

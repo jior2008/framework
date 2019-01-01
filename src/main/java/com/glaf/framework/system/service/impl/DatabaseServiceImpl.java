@@ -18,29 +18,12 @@
 
 package com.glaf.framework.system.service.impl;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
-import java.util.Random;
-
-import org.apache.commons.codec.binary.Base64;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.ibatis.session.RowBounds;
-import org.mybatis.spring.SqlSessionTemplate;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
-
 import com.glaf.core.cache.CacheFactory;
-import com.glaf.core.dao.EntityDAO;
 import com.glaf.core.id.IdGenerator;
 import com.glaf.core.security.SecurityUtils;
+import com.glaf.core.util.UUID32;
 import com.glaf.framework.system.domain.Database;
 import com.glaf.framework.system.domain.DatabaseAccess;
 import com.glaf.framework.system.domain.SysKey;
@@ -50,24 +33,31 @@ import com.glaf.framework.system.mapper.DatabaseMapper;
 import com.glaf.framework.system.query.DatabaseQuery;
 import com.glaf.framework.system.service.IDatabaseService;
 import com.glaf.framework.system.service.SysKeyService;
-import com.glaf.core.util.UUID32;
+import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.ibatis.session.RowBounds;
+import org.mybatis.spring.SqlSessionTemplate;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.*;
 
 @Service("databaseService")
 @Transactional(readOnly = true)
 public class DatabaseServiceImpl implements IDatabaseService {
-	protected final Logger logger = LoggerFactory.getLogger(getClass());
+	private final Logger logger = LoggerFactory.getLogger(getClass());
 
-	protected EntityDAO entityDAO;
+	private IdGenerator idGenerator;
 
-	protected IdGenerator idGenerator;
+	private SqlSessionTemplate sqlSessionTemplate;
 
-	protected SqlSessionTemplate sqlSessionTemplate;
+	private DatabaseMapper databaseMapper;
 
-	protected DatabaseMapper databaseMapper;
+	private DatabaseAccessMapper databaseAccessMapper;
 
-	protected DatabaseAccessMapper databaseAccessMapper;
-
-	protected SysKeyService sysKeyService;
+	private SysKeyService sysKeyService;
 
 	public DatabaseServiceImpl() {
 
@@ -141,12 +131,11 @@ public class DatabaseServiceImpl implements IDatabaseService {
 		return databaseAccessMapper.getAllDatabaseAccesses();
 	}
 
-	public Database getDatabase(Long databaseId) {
+	private Database getDatabase(Long databaseId) {
 		if (databaseId == null || databaseId == 0) {
 			return null;
 		}
-		Database database = databaseMapper.getDatabaseById(databaseId);
-		return database;
+        return databaseMapper.getDatabaseById(databaseId);
 	}
 
 	/**
@@ -161,7 +150,7 @@ public class DatabaseServiceImpl implements IDatabaseService {
 			try {
 				JSONArray array = JSON.parseArray(text);
 				return DatabaseAccessJsonFactory.arrayToList(array);
-			} catch (Exception ex) {
+			} catch (Exception ignored) {
 			}
 		}
 		List<DatabaseAccess> accesses = databaseAccessMapper.getDatabaseAccessesByDatabaseId(databaseId);
@@ -355,8 +344,7 @@ public class DatabaseServiceImpl implements IDatabaseService {
 	 */
 	public List<Database> getDatabasesByQueryCriteria(int start, int pageSize, DatabaseQuery query) {
 		RowBounds rowBounds = new RowBounds(start, pageSize);
-		List<Database> rows = sqlSessionTemplate.selectList("getDatabases", query, rowBounds);
-		return rows;
+        return sqlSessionTemplate.selectList("getDatabases", query, rowBounds);
 	}
 
 	/**
@@ -606,11 +594,6 @@ public class DatabaseServiceImpl implements IDatabaseService {
 	@javax.annotation.Resource
 	public void setDatabaseMapper(DatabaseMapper databaseMapper) {
 		this.databaseMapper = databaseMapper;
-	}
-
-	@javax.annotation.Resource
-	public void setEntityDAO(EntityDAO entityDAO) {
-		this.entityDAO = entityDAO;
 	}
 
 	@javax.annotation.Resource

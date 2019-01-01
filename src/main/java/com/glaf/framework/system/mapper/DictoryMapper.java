@@ -18,12 +18,11 @@
 
 package com.glaf.framework.system.mapper;
 
-import java.util.List;
-
-import org.springframework.stereotype.Component;
-
 import com.glaf.framework.system.domain.Dictory;
 import com.glaf.framework.system.query.DictoryQuery;
+import org.springframework.stereotype.Component;
+
+import java.util.List;
 
 @Component
 public interface DictoryMapper {

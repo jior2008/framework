@@ -39,9 +39,6 @@ public final class ContextFactory {
 	@SuppressWarnings("unchecked")
 	public static <T> T getBean(String name) {
 		if (ctx == null) {
-			init();
-		}
-		if (ctx == null) {
 			throw new RuntimeException(" Spring context is null, please check your spring config.");
 		}
 		return (T) ctx.getBean(name);
@@ -49,16 +46,9 @@ public final class ContextFactory {
 
 	public static boolean hasBean(String name) {
 		if (ctx == null) {
-			init();
-		}
-		if (ctx == null) {
 			throw new RuntimeException(" Spring context is null, please check your spring config.");
 		}
 		return ctx.containsBean(name);
-	}
-
-	protected static void init() {
-
 	}
 
 	public static void setContext(org.springframework.context.ApplicationContext context) {

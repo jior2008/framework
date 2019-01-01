@@ -18,6 +18,15 @@
 
 package com.glaf.core.config;
 
+import com.glaf.core.jdbc.DBConnectionFactory;
+import com.glaf.core.util.JdbcUtils;
+import com.glaf.core.util.PropertiesUtils;
+import org.apache.commons.io.IOUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.Connection;
@@ -27,19 +36,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
-import org.apache.commons.io.IOUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.Resource;
-
-import com.glaf.core.jdbc.DBConnectionFactory;
-import com.glaf.core.util.JdbcUtils;
-import com.glaf.core.util.PropertiesUtils;
-
 public class GlobalConfig {
 
-	protected final static Logger logger = LoggerFactory.getLogger(GlobalConfig.class);
+	private final static Logger logger = LoggerFactory.getLogger(GlobalConfig.class);
 
 	public static Properties getConfigProperties(String filename) {
 		String path = "/conf/" + filename;
@@ -49,11 +48,9 @@ public class GlobalConfig {
 		try {
 			resource = new ClassPathResource(path);
 			inputStream = resource.getInputStream();
-			if (inputStream != null) {
-				Properties props = PropertiesUtils.loadProperties(inputStream);
-				if (props != null && !props.isEmpty()) {
-					return props;
-				}
+			Properties props = PropertiesUtils.loadProperties(inputStream);
+			if (props != null && !props.isEmpty()) {
+				return props;
 			}
 		} catch (IOException ex) {
 			logger.error("load classpath properties error", ex);
@@ -139,7 +136,7 @@ public class GlobalConfig {
 		}
 	}
 
-	public GlobalConfig() {
+	private GlobalConfig() {
 
 	}
 

@@ -18,27 +18,26 @@
 
 package com.glaf.core.util.serializer;
 
-import java.util.Properties;
-
+import com.glaf.core.config.CustomProperties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.glaf.core.config.CustomProperties;
+import java.util.Properties;
 
 /**
  * 管理器
  */
-public class SerializerFactory {
+class SerializerFactory {
 
-	protected final static Logger log = LoggerFactory.getLogger(SerializerFactory.class);
+	private final static Logger log = LoggerFactory.getLogger(SerializerFactory.class);
 
 	private static String serializer;
 
-	public final static String getSerializer() {
+	public static String getSerializer() {
 		return serializer;
 	}
 
-	public static void init() {
+	private static void init() {
 		try {
 			Properties props = CustomProperties.getProperties();
 			SerializerFactory.serializer = props.getProperty("serialization");

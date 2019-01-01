@@ -18,118 +18,118 @@
 
 package com.glaf.core.base;
 
+import com.alibaba.fastjson.JSONObject;
+import com.glaf.core.util.SearchFilter;
+
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.alibaba.fastjson.JSONObject;
-import com.glaf.core.util.SearchFilter;
-
 public class ColumnModel implements java.io.Serializable, java.lang.Comparable<ColumnModel> {
 
 	private static final long serialVersionUID = 1L;
 
-	protected Boolean booleanValue;
+	private Boolean booleanValue;
 
-	protected String category;
+	private String category;
 
-	protected Collection<?> collectionValues;
+	private Collection<?> collectionValues;
 
-	protected String columnName;
+	private String columnName;
 
 	/**
 	 * 货币格式
 	 */
-	protected String currency;
+	private String currency;
 
-	protected Date dateValue;
+	private Date dateValue;
 
 	/**
 	 * 小数位数
 	 */
-	protected int decimal;
+	private int decimal;
 
-	protected Double doubleValue;
+	private Double doubleValue;
 
 	/**
 	 * 数据格式，如果是日期，需要指定格式，如YYYYMMDD
 	 */
-	protected String format;
+	private String format;
 
-	protected Integer intValue;
+	private Integer intValue;
 
-	protected String javaType;
+	private String javaType;
 
 	/**
 	 * 长度
 	 */
-	protected int length;
+	private int length;
 
-	protected Long longValue;
+	private Long longValue;
 
 	/**
 	 * 映射名称
 	 */
-	protected String mapping;
+	private String mapping;
 
 	/**
 	 * Java属性名称
 	 */
-	protected String name;
+	private String name;
 
 	/**
 	 * 取数位置，csv或Excel单元格的位置（从1开始）
 	 */
-	protected int position;
+	private int position;
 
 	/**
 	 * 精度
 	 */
-	protected int precision;
+	private int precision;
 
-	protected boolean required;
+	private boolean required;
 
 	/**
 	 * 次标题
 	 */
-	protected String secondTitle;
+	private String secondTitle;
 
-	protected String series;
+	private String series;
 
-	protected String stringValue;
+	private String stringValue;
 
-	protected TableModel table;
+	private TableModel table;
 
-	protected boolean temporary;
+	private boolean temporary;
 
 	/**
 	 * 标题
 	 */
-	protected String title;
+	private String title;
 
 	/**
 	 * 去掉首尾空格
 	 */
-	protected String trimType;
+	private String trimType;
 
 	/**
 	 * 数据类型:String,Boolean,Integer,Double,Long,Date
 	 */
-	protected String type;
+	private String type;
 
-	protected Object value;
+	private Object value;
 
 	/**
 	 * 取值表达式
 	 */
-	protected String valueExpression;
+	private String valueExpression;
 
-	protected String exportFlag;
+	private String exportFlag;
 
-	protected String operator = SearchFilter.EQUALS;
+	private String operator = SearchFilter.EQUALS;
 
-	protected Map<String, String> attributes = new HashMap<String, String>();
+	private Map<String, String> attributes = new HashMap<String, String>();
 
 	public ColumnModel() {
 
@@ -175,12 +175,9 @@ public class ColumnModel implements java.io.Serializable, java.lang.Comparable<C
 			return false;
 		ColumnModel other = (ColumnModel) obj;
 		if (columnName == null) {
-			if (other.columnName != null)
-				return false;
-		} else if (!columnName.equalsIgnoreCase(other.columnName))
-			return false;
-		return true;
-	}
+            return other.columnName == null;
+		} else return columnName.equalsIgnoreCase(other.columnName);
+    }
 
 	public Map<String, String> getAttributes() {
 		return attributes;
@@ -198,7 +195,7 @@ public class ColumnModel implements java.io.Serializable, java.lang.Comparable<C
 		return collectionValues;
 	}
 
-	public String getColumnName() {
+	private String getColumnName() {
 		if (columnName != null) {
 			columnName = columnName.trim().toUpperCase();
 		}
@@ -217,7 +214,7 @@ public class ColumnModel implements java.io.Serializable, java.lang.Comparable<C
 		return decimal;
 	}
 
-	public Double getDoubleValue() {
+	private Double getDoubleValue() {
 		return doubleValue;
 	}
 
@@ -233,7 +230,7 @@ public class ColumnModel implements java.io.Serializable, java.lang.Comparable<C
 		return intValue;
 	}
 
-	public String getJavaType() {
+	private String getJavaType() {
 		return javaType;
 	}
 
@@ -249,7 +246,7 @@ public class ColumnModel implements java.io.Serializable, java.lang.Comparable<C
 		return mapping;
 	}
 
-	public String getName() {
+	private String getName() {
 		return name;
 	}
 
@@ -292,11 +289,11 @@ public class ColumnModel implements java.io.Serializable, java.lang.Comparable<C
 		return trimType;
 	}
 
-	public String getType() {
+	private String getType() {
 		return type;
 	}
 
-	public Object getValue() {
+	private Object getValue() {
 		return value;
 	}
 

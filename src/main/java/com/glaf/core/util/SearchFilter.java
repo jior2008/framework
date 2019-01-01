@@ -39,8 +39,8 @@ public class SearchFilter {
 
 	public final static String NOT_LIKE = "not like";
 
-	protected final static ConcurrentMap<String, String> searchFilters = new ConcurrentHashMap<String, String>();
-	protected final static ConcurrentMap<Integer, String> searchTypeFilters = new ConcurrentHashMap<Integer, String>();
+	private final static ConcurrentMap<String, String> searchFilters = new ConcurrentHashMap<String, String>();
+	private final static ConcurrentMap<Integer, String> searchTypeFilters = new ConcurrentHashMap<Integer, String>();
 
 	static {
 		searchFilters.put("=", "eq");

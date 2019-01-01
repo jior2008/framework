@@ -18,18 +18,6 @@
 
 package com.glaf.framework.system.config;
 
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
-import java.util.concurrent.atomic.AtomicBoolean;
-
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import com.alibaba.fastjson.JSONObject;
 import com.glaf.core.config.Environment;
 import com.glaf.core.config.SystemProperties;
@@ -39,25 +27,36 @@ import com.glaf.core.util.StringTools;
 import com.glaf.framework.system.domain.SystemProperty;
 import com.glaf.framework.system.factory.SystemPropertyJsonFactory;
 import com.glaf.framework.system.service.ISystemPropertyService;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class SystemConfig {
-	protected static final Log logger = LogFactory.getLog(SystemConfig.class);
+	private static final Log logger = LogFactory.getLog(SystemConfig.class);
 
-	protected static ConcurrentMap<String, SystemProperty> concurrentMap = new ConcurrentHashMap<String, SystemProperty>();
+	private static final ConcurrentMap<String, SystemProperty> concurrentMap = new ConcurrentHashMap<String, SystemProperty>();
 
-	protected static ConcurrentMap<String, Long> concurrentTimeMap = new ConcurrentHashMap<String, Long>();
+	private static final ConcurrentMap<String, Long> concurrentTimeMap = new ConcurrentHashMap<String, Long>();
 
-	protected static AtomicBoolean loading = new AtomicBoolean(false);
+	private static final AtomicBoolean loading = new AtomicBoolean(false);
 
-	public static final String DEFAULT_ENCODING = "UTF-8";
+	private static final String DEFAULT_ENCODING = "UTF-8";
 
-	public final static String CURR_YYYYMMDD = "#{curr_yyyymmdd}";
+	private final static String CURR_YYYYMMDD = "#{curr_yyyymmdd}";
 
-	public final static String CURR_YYYYMM = "#{curr_yyyymm}";
+	private final static String CURR_YYYYMM = "#{curr_yyyymm}";
 
-	public final static String INPUT_YYYYMMDD = "#{input_yyyymmdd}";
+	private final static String INPUT_YYYYMMDD = "#{input_yyyymmdd}";
 
-	public final static String INPUT_YYYYMM = "#{input_yyyymm}";
+	private final static String INPUT_YYYYMM = "#{input_yyyymm}";
 
 	public final static String LONG_ID = "#{longId}";
 
@@ -99,7 +98,7 @@ public class SystemConfig {
 			 * 判断是否需要从数据库获取配置
 			 */
 			Long ts = concurrentTimeMap.get(key);
-			if (ts == null || ((System.currentTimeMillis() - ts.longValue()) > DateUtils.MINUTE * 5)) {
+			if (ts == null || ((System.currentTimeMillis() - ts) > DateUtils.MINUTE * 5)) {
 				PropertyHelper propertyHelper = new PropertyHelper();
 				property = propertyHelper.getSystemPropertyByKey(key);
 				if (property != null) {
@@ -147,7 +146,7 @@ public class SystemConfig {
 		return dataMap;
 	}
 
-	public static String getCurrentYYYYMM() {
+	private static String getCurrentYYYYMM() {
 		String value = getString("curr_yyyymm");
 		if (StringUtils.isEmpty(value) || StringUtils.equals("curr_yyyymm", value)
 				|| StringUtils.equals(CURR_YYYYMM, value)) {
@@ -158,7 +157,7 @@ public class SystemConfig {
 		return value;
 	}
 
-	public static String getCurrentYYYYMMDD() {
+	private static String getCurrentYYYYMMDD() {
 		String value = getString("curr_yyyymmdd");
 		if (StringUtils.isEmpty(value) || StringUtils.equals("curr_yyyymmdd", value)
 				|| StringUtils.equals(CURR_YYYYMMDD, value)) {
@@ -181,7 +180,7 @@ public class SystemConfig {
 		return DEFAULT_ENCODING;
 	}
 
-	public static String getInputYYYYMM() {
+	private static String getInputYYYYMM() {
 		String value = getString("input_yyyymm");
 		if (StringUtils.isEmpty(value) || StringUtils.equals("input_yyyymm", value)
 				|| StringUtils.equals(INPUT_YYYYMM, value)) {
@@ -213,7 +212,7 @@ public class SystemConfig {
 		return value;
 	}
 
-	public static String getInputYYYYMMDD() {
+	private static String getInputYYYYMMDD() {
 		String value = getString("input_yyyymmdd");
 		if (StringUtils.isEmpty(value) || StringUtils.equals("input_yyyymmdd", value)
 				|| StringUtils.equals(INPUT_YYYYMMDD, value)) {
@@ -263,7 +262,7 @@ public class SystemConfig {
 			}
 			try {
 				ret = Integer.parseInt(value);
-			} catch (Exception ex) {
+			} catch (Exception ignored) {
 			}
 		}
 		return ret;
@@ -303,19 +302,18 @@ public class SystemConfig {
 			}
 			try {
 				ret = Long.parseLong(value);
-			} catch (Exception ex) {
+			} catch (Exception ignored) {
 			}
 		}
 		return ret;
 	}
 
 	public static String getMappingPath() {
-		String mappingDir = SystemProperties.getConfigRootPath() + "/report/mapping";
-		return mappingDir;
+        return SystemProperties.getConfigRootPath() + "/report/mapping";
 	}
 
-	public static SystemProperty getProperty(String key) {
-		SystemProperty property = null;
+	private static SystemProperty getProperty(String key) {
+		SystemProperty property;
 		if (concurrentMap.size() == 0) {
 			reload();
 		}
@@ -325,7 +323,7 @@ public class SystemConfig {
 			 * 判断是否需要从数据库获取配置
 			 */
 			Long ts = concurrentTimeMap.get(key);
-			if (ts == null || ((System.currentTimeMillis() - ts.longValue()) > DateUtils.MINUTE * 5)) {
+			if (ts == null || ((System.currentTimeMillis() - ts) > DateUtils.MINUTE * 5)) {
 				PropertyHelper propertyHelper = new PropertyHelper();
 				property = propertyHelper.getSystemPropertyById(key);
 				if (property == null) {
@@ -357,10 +355,10 @@ public class SystemConfig {
 			buffer.append(name);
 		}
 		String regionName = buffer.toString();
-		if (regionName.indexOf("/") != -1) {
+		if (regionName.contains("/")) {
 			regionName = StringTools.replace(regionName, "/", "_");
 		}
-		if (regionName.indexOf("\\") != -1) {
+		if (regionName.contains("\\")) {
 			regionName = StringTools.replace(regionName, "\\", "_");
 		}
 		return regionName;
@@ -383,7 +381,7 @@ public class SystemConfig {
 		return getString("serviceUrl");
 	}
 
-	public static String getString(String key) {
+	private static String getString(String key) {
 		String ret = null;
 		SystemProperty prop = getProperty(key);
 		if (prop != null) {
@@ -417,7 +415,7 @@ public class SystemConfig {
 			 * 判断是否需要从数据库获取配置
 			 */
 			Long ts = concurrentTimeMap.get(key);
-			if (ts == null || ((System.currentTimeMillis() - ts.longValue()) > DateUtils.MINUTE * 5)) {
+			if (ts == null || ((System.currentTimeMillis() - ts) > DateUtils.MINUTE * 5)) {
 				PropertyHelper propertyHelper = new PropertyHelper();
 				property = propertyHelper.getSystemPropertyByKey(key);
 				if (property != null) {

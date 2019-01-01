@@ -18,35 +18,23 @@
 
 package com.glaf.core.util;
 
-import java.io.InputStream;
-import java.lang.reflect.Array;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Field;
-import java.lang.reflect.GenericArrayType;
-import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
-import java.lang.reflect.ParameterizedType;
-import java.net.URL;
-import java.security.CodeSource;
-import java.security.ProtectionDomain;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.regex.Pattern;
-
 import javassist.CtClass;
 import javassist.CtConstructor;
 import javassist.CtMethod;
 import javassist.NotFoundException;
-
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.util.ReflectionUtils;
+
+import java.io.InputStream;
+import java.lang.reflect.*;
+import java.net.URL;
+import java.security.CodeSource;
+import java.security.ProtectionDomain;
+import java.util.*;
+import java.util.regex.Pattern;
 
 public class ReflectUtils {
 
@@ -55,63 +43,63 @@ public class ReflectUtils {
 	/**
 	 * void(V).
 	 */
-	public static final char JVM_VOID = 'V';
+	private static final char JVM_VOID = 'V';
 
 	/**
 	 * boolean(Z).
 	 */
-	public static final char JVM_BOOLEAN = 'Z';
+	private static final char JVM_BOOLEAN = 'Z';
 
 	/**
 	 * byte(B).
 	 */
-	public static final char JVM_BYTE = 'B';
+	private static final char JVM_BYTE = 'B';
 
 	/**
 	 * char(C).
 	 */
-	public static final char JVM_CHAR = 'C';
+	private static final char JVM_CHAR = 'C';
 
 	/**
 	 * double(D).
 	 */
-	public static final char JVM_DOUBLE = 'D';
+	private static final char JVM_DOUBLE = 'D';
 
 	/**
 	 * float(F).
 	 */
-	public static final char JVM_FLOAT = 'F';
+	private static final char JVM_FLOAT = 'F';
 
 	/**
 	 * int(I).
 	 */
-	public static final char JVM_INT = 'I';
+	private static final char JVM_INT = 'I';
 
 	/**
 	 * long(J).
 	 */
-	public static final char JVM_LONG = 'J';
+	private static final char JVM_LONG = 'J';
 
 	/**
 	 * short(S).
 	 */
-	public static final char JVM_SHORT = 'S';
+	private static final char JVM_SHORT = 'S';
 
-	public static final Class<?>[] EMPTY_CLASS_ARRAY = new Class<?>[0];
+	private static final Class<?>[] EMPTY_CLASS_ARRAY = new Class<?>[0];
 
-	public static final String JAVA_IDENT_REGEX = "(?:[_$a-zA-Z][_$a-zA-Z0-9]*)";
+	private static final String JAVA_IDENT_REGEX = "(?:[_$a-zA-Z][_$a-zA-Z0-9]*)";
 
 	public static final String JAVA_NAME_REGEX = "(?:" + JAVA_IDENT_REGEX + "(?:\\." + JAVA_IDENT_REGEX + ")*)";
 
-	public static final String CLASS_DESC = "(?:L" + JAVA_IDENT_REGEX + "(?:\\/" + JAVA_IDENT_REGEX + ")*;)";
+	private static final String CLASS_DESC = "(?:L" + JAVA_IDENT_REGEX + "(?:\\/" + JAVA_IDENT_REGEX + ")*;)";
 
-	public static final String ARRAY_DESC = "(?:\\[+(?:(?:[VZBCDFIJS])|" + CLASS_DESC + "))";
+	private static final String ARRAY_DESC = "(?:\\[+(?:(?:[VZBCDFIJS])|" + CLASS_DESC + "))";
 
-	public static final String DESC_REGEX = "(?:(?:[VZBCDFIJS])|" + CLASS_DESC + "|" + ARRAY_DESC + ")";
+	private static final String DESC_REGEX = "(?:(?:[VZBCDFIJS])|" + CLASS_DESC + "|" + ARRAY_DESC + ")";
 
 	public static final Pattern DESC_PATTERN = Pattern.compile(DESC_REGEX);
 
-	public static final String METHOD_DESC_REGEX = "(?:(" + JAVA_IDENT_REGEX + ")?\\((" + DESC_REGEX + "*)\\)("
+	private static final String METHOD_DESC_REGEX = "(?:(" + JAVA_IDENT_REGEX + ")?\\((" + DESC_REGEX + "*)\\)("
 			+ DESC_REGEX + ")?)";
 
 	public static final Pattern METHOD_DESC_PATTERN = Pattern.compile(METHOD_DESC_REGEX);
@@ -215,7 +203,7 @@ public class ReflectUtils {
 		return null;
 	}
 
-	private static Method findMethod(Class<? extends Object> clazz, String methodName, Object[] args) {
+	private static Method findMethod(Class<?> clazz, String methodName, Object[] args) {
 		for (Method method : clazz.getDeclaredMethods()) {
 			if (method.getName().equals(methodName) && matches(method.getParameterTypes(), args)) {
 				return method;
@@ -283,7 +271,7 @@ public class ReflectUtils {
 	 * @return desc.
 	 * @throws NotFoundException
 	 */
-	public static String getDesc(Class<?> c) {
+	private static String getDesc(Class<?> c) {
 		StringBuilder ret = new StringBuilder();
 
 		while (c.isArray()) {
@@ -348,8 +336,7 @@ public class ReflectUtils {
 	public static String getDesc(final Constructor<?> c) {
 		StringBuilder ret = new StringBuilder("(");
 		Class<?>[] parameterTypes = c.getParameterTypes();
-		for (int i = 0; i < parameterTypes.length; i++)
-			ret.append(getDesc(parameterTypes[i]));
+		for (Class<?> parameterType : parameterTypes) ret.append(getDesc(parameterType));
 		ret.append(')').append('V');
 		return ret.toString();
 	}
@@ -362,7 +349,7 @@ public class ReflectUtils {
 	 * @return desc.
 	 * @throws NotFoundException
 	 */
-	public static String getDesc(final CtClass c) throws NotFoundException {
+	private static String getDesc(final CtClass c) throws NotFoundException {
 		StringBuilder ret = new StringBuilder();
 		if (c.isArray()) {
 			ret.append('[');
@@ -405,8 +392,7 @@ public class ReflectUtils {
 	public static String getDesc(final CtConstructor c) throws NotFoundException {
 		StringBuilder ret = new StringBuilder("(");
 		CtClass[] parameterTypes = c.getParameterTypes();
-		for (int i = 0; i < parameterTypes.length; i++)
-			ret.append(getDesc(parameterTypes[i]));
+		for (CtClass parameterType : parameterTypes) ret.append(getDesc(parameterType));
 		ret.append(')').append('V');
 		return ret.toString();
 	}
@@ -421,8 +407,7 @@ public class ReflectUtils {
 	public static String getDesc(final CtMethod m) throws NotFoundException {
 		StringBuilder ret = new StringBuilder(m.getName()).append('(');
 		CtClass[] parameterTypes = m.getParameterTypes();
-		for (int i = 0; i < parameterTypes.length; i++)
-			ret.append(getDesc(parameterTypes[i]));
+		for (CtClass parameterType : parameterTypes) ret.append(getDesc(parameterType));
 		ret.append(')').append(getDesc(m.getReturnType()));
 		return ret.toString();
 	}
@@ -438,8 +423,7 @@ public class ReflectUtils {
 	public static String getDesc(final Method m) {
 		StringBuilder ret = new StringBuilder(m.getName()).append('(');
 		Class<?>[] parameterTypes = m.getParameterTypes();
-		for (int i = 0; i < parameterTypes.length; i++)
-			ret.append(getDesc(parameterTypes[i]));
+		for (Class<?> parameterType : parameterTypes) ret.append(getDesc(parameterType));
 		ret.append(')').append(getDesc(m.getReturnType()));
 		return ret.toString();
 	}
@@ -455,8 +439,7 @@ public class ReflectUtils {
 		StringBuilder ret = new StringBuilder();
 		ret.append('(');
 		CtClass[] parameterTypes = m.getParameterTypes();
-		for (int i = 0; i < parameterTypes.length; i++)
-			ret.append(getDesc(parameterTypes[i]));
+		for (CtClass parameterType : parameterTypes) ret.append(getDesc(parameterType));
 		ret.append(')').append(getDesc(m.getReturnType()));
 		return ret.toString();
 	}
@@ -472,8 +455,7 @@ public class ReflectUtils {
 		StringBuilder ret = new StringBuilder();
 		ret.append('(');
 		Class<?>[] parameterTypes = m.getParameterTypes();
-		for (int i = 0; i < parameterTypes.length; i++)
-			ret.append(getDesc(parameterTypes[i]));
+		for (Class<?> parameterType : parameterTypes) ret.append(getDesc(parameterType));
 		ret.append(')').append(getDesc(m.getReturnType()));
 		return ret.toString();
 	}
@@ -531,7 +513,7 @@ public class ReflectUtils {
 									field.setAccessible(true);
 								}
 								field.set(value, property);
-							} catch (Throwable e) {
+							} catch (Throwable ignored) {
 							}
 						}
 					}
@@ -549,13 +531,13 @@ public class ReflectUtils {
 	/**
 	 * Returns the field of the given class or null if it doesnt exist.
 	 */
-	public static Field getField(String fieldName, Class<?> clazz) {
+	private static Field getField(String fieldName, Class<?> clazz) {
 		Field field = null;
 		try {
 			field = clazz.getDeclaredField(fieldName);
 		} catch (SecurityException e) {
 			throw new RuntimeException(
-					"not allowed to access field " + field + " on class " + clazz.getCanonicalName());
+					"not allowed to access field " + null + " on class " + clazz.getCanonicalName());
 		} catch (NoSuchFieldException e) {
 			// for some reason getDeclaredFields doesnt search superclasses
 			// (which getFields() does ... but that gives only public fields)
@@ -586,7 +568,7 @@ public class ReflectUtils {
 		} catch (Exception ex) {
 			try {
 				return BeanUtils.getProperty(object, fieldName);
-			} catch (Exception e) {
+			} catch (Exception ignored) {
 			}
 		}
 		return null;
@@ -596,7 +578,7 @@ public class ReflectUtils {
 		return getGenericClass(cls, 0);
 	}
 
-	public static Class<?> getGenericClass(Class<?> cls, int i) {
+	private static Class<?> getGenericClass(Class<?> cls, int i) {
 		try {
 			ParameterizedType parameterizedType = ((ParameterizedType) cls.getGenericInterfaces()[0]);
 			Object genericClass = parameterizedType.getActualTypeArguments()[i];
@@ -619,7 +601,7 @@ public class ReflectUtils {
 	 *            class.
 	 * @return name.
 	 */
-	public static String getName(Class<?> c) {
+	private static String getName(Class<?> c) {
 		if (c.isArray()) {
 			StringBuilder sb = new StringBuilder();
 			do {
@@ -746,7 +728,7 @@ public class ReflectUtils {
 			for (Method method : methods) {
 				if (method.getName().equals(setterName)) {
 					Class<?>[] paramTypes = method.getParameterTypes();
-					if (paramTypes != null && paramTypes.length == 1 && paramTypes[0].isAssignableFrom(fieldType)) {
+					if (paramTypes.length == 1 && paramTypes[0].isAssignableFrom(fieldType)) {
 						return method;
 					}
 				}
@@ -817,8 +799,9 @@ public class ReflectUtils {
 
 	public static Object invoke(Object target, String methodName, Object[] args) {
 		try {
-			Class<? extends Object> clazz = target.getClass();
+			Class<?> clazz = target.getClass();
 			Method method = findMethod(clazz, methodName, args);
+			assert method != null;
 			method.setAccessible(true);
 			return method.invoke(target, args);
 		} catch (Exception e) {
@@ -826,7 +809,7 @@ public class ReflectUtils {
 		}
 	}
 
-	public static boolean isBeanPropertyReadMethod(Method method) {
+	private static boolean isBeanPropertyReadMethod(Method method) {
 		return method != null && Modifier.isPublic(method.getModifiers()) && !Modifier.isStatic(method.getModifiers())
 				&& method.getReturnType() != void.class && method.getDeclaringClass() != Object.class
 				&& method.getParameterTypes().length == 0
@@ -834,7 +817,7 @@ public class ReflectUtils {
 						|| (method.getName().startsWith("is") && method.getName().length() > 2));
 	}
 
-	public static boolean isBeanPropertyWriteMethod(Method method) {
+	private static boolean isBeanPropertyWriteMethod(Method method) {
 		return method != null && Modifier.isPublic(method.getModifiers()) && !Modifier.isStatic(method.getModifiers())
 				&& method.getDeclaringClass() != Object.class && method.getParameterTypes().length == 1
 				&& method.getName().startsWith("set") && method.getName().length() > 3;
@@ -849,7 +832,7 @@ public class ReflectUtils {
 	 *            instance.
 	 * @return compatible or not.
 	 */
-	public static boolean isCompatible(Class<?> c, Object o) {
+	private static boolean isCompatible(Class<?> c, Object o) {
 		boolean pt = c.isPrimitive();
 		if (o == null)
 			return !pt;
@@ -922,7 +905,7 @@ public class ReflectUtils {
 		return false;
 	}
 
-	public static boolean isPrimitive(Class<?> cls) {
+	private static boolean isPrimitive(Class<?> cls) {
 		return cls.isPrimitive() || cls == String.class || cls == Boolean.class || cls == Character.class
 				|| Number.class.isAssignableFrom(cls) || Date.class.isAssignableFrom(cls);
 	}
@@ -939,7 +922,7 @@ public class ReflectUtils {
 				&& !Modifier.isFinal(field.getModifiers()) && !field.isSynthetic();
 	}
 
-	public static Class<?> loadClass(String className) {
+	private static Class<?> loadClass(String className) {
 		Class<?> clazz = null;
 		ClassLoader classLoader = getCustomClassLoader();
 
@@ -1068,13 +1051,13 @@ public class ReflectUtils {
 					field.setAccessible(true);
 				}
 				field.set(target, value);
-			} catch (Exception e) {
+			} catch (Exception ignored) {
 
 			}
 		}
 	}
 
-	public static Constructor<?> getConstructor(Class<?> type, Class<?>[] parameterTypes) {
+	private static Constructor<?> getConstructor(Class<?> type, Class<?>[] parameterTypes) {
 		try {
 			Constructor<?> constructor = type.getDeclaredConstructor(parameterTypes);
 			constructor.setAccessible(true);
@@ -1088,16 +1071,15 @@ public class ReflectUtils {
 		return newInstance(type, EMPTY_CLASS_ARRAY, null);
 	}
 
-	public static Object newInstance(Class<?> type, Class<?>[] parameterTypes, Object[] args) {
+	private static Object newInstance(Class<?> type, Class<?>[] parameterTypes, Object[] args) {
 		return newInstance(getConstructor(type, parameterTypes), args);
 	}
 
-	public static Object newInstance(final Constructor<?> cstruct, final Object[] args) {
+	private static Object newInstance(final Constructor<?> cstruct, final Object[] args) {
 		boolean flag = cstruct.isAccessible();
 		try {
 			cstruct.setAccessible(true);
-			Object result = cstruct.newInstance(args);
-			return result;
+            return cstruct.newInstance(args);
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		} finally {
@@ -1117,7 +1099,7 @@ public class ReflectUtils {
 		} catch (Exception ex) {
 			try {
 				BeanUtils.setProperty(target, fieldName, fieldValue);
-			} catch (Exception e) {
+			} catch (Exception ignored) {
 			}
 		}
 	}

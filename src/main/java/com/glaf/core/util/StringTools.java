@@ -18,28 +18,20 @@
 
 package com.glaf.core.util;
 
+import org.apache.commons.lang3.StringUtils;
+
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.text.BreakIterator;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
-import java.util.Locale;
-import java.util.Random;
-import java.util.StringTokenizer;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import org.apache.commons.lang3.StringUtils;
 
 public final class StringTools {
 	public final static int BUFFER = 4096;
 	public final static int IMAGE_SIZE = 120;
-	public static final Pattern INT_PATTERN = Pattern.compile("^\\d+$");
+	private static final Pattern INT_PATTERN = Pattern.compile("^\\d+$");
 	public static final String HTML_END = "</body></html>";
 	public static final String HTML_START = "<html><body>";
 	private static final char[] QUOTE_ENCODE = "&quot;".toCharArray();
@@ -48,13 +40,13 @@ public final class StringTools {
 	private static final char[] GT_ENCODE = "&gt;".toCharArray();
 	private static final String[] emptyStringArray = {};
 	private static final char SEPARATOR = '_';
-	private static String[] _emptyStringArray = new String[0];
+	private static final String[] _emptyStringArray = new String[0];
 
 	public static String arrayToString(String[] strs) {
 		if (strs.length == 0) {
 			return "";
 		}
-		StringBuffer sbuf = new StringBuffer();
+		StringBuilder sbuf = new StringBuilder();
 		sbuf.append(strs[0]);
 		for (int idx = 1; idx < strs.length; idx++) {
 			sbuf.append(",");
@@ -71,22 +63,22 @@ public final class StringTools {
 		if (src == null || src.length <= 0) {
 			return null;
 		}
-		for (int i = 0; i < src.length; i++) {
-			int v = src[i] & 0xFF;
-			String hv = Integer.toHexString(v);
-			if (hv.length() < 2) {
-				sb.append(0);
-			}
-			sb.append(hv.toUpperCase());
-		}
+        for (byte b : src) {
+            int v = b & 0xFF;
+            String hv = Integer.toHexString(v);
+            if (hv.length() < 2) {
+                sb.append(0);
+            }
+            sb.append(hv.toUpperCase());
+        }
 		return sb.toString();
 	}
 
 	public static String camelStyle(String str) {
-		if (str == null || str.indexOf("_") == -1) {
+		if (str == null || !str.contains("_")) {
 			return str;
 		}
-		StringBuffer buffer = new StringBuffer(str.length() + 100);
+		StringBuilder buffer = new StringBuilder(str.length() + 100);
 		int index = 0;
 		StringTokenizer tokenizer = new StringTokenizer(str, "_");
 		while (tokenizer.hasMoreTokens()) {
@@ -148,17 +140,16 @@ public final class StringTools {
 		char[] inArray = in.toCharArray();
 		StringBuilder out = new StringBuilder(inArray.length);
 		boolean lastWasSpace = false;
-		for (int i = 0; i < inArray.length; i++) {
-			char c = inArray[i];
-			if (Character.isWhitespace(c)) {
-				if (!lastWasSpace)
-					out.append(' ');
-				lastWasSpace = true;
-			} else {
-				out.append(c);
-				lastWasSpace = false;
-			}
-		}
+        for (char c : inArray) {
+            if (Character.isWhitespace(c)) {
+                if (!lastWasSpace)
+                    out.append(' ');
+                lastWasSpace = true;
+            } else {
+                out.append(c);
+                lastWasSpace = false;
+            }
+        }
 		return out.toString();
 	}
 
@@ -205,11 +196,11 @@ public final class StringTools {
 
 	public static String encodeHtml(String text) {
 		if (text == null) {
-			return text;
+			return null;
 		}
 		int length = text.length();
-		if (text != null && length > 0) {
-			StringBuffer ret = new StringBuffer(length * 12 / 10);
+		if (length > 0) {
+			StringBuilder ret = new StringBuilder(length * 12 / 10);
 
 			boolean isEncodeSpace = true;
 			int last = 0;
@@ -333,8 +324,7 @@ public final class StringTools {
 		StringBuilder out = new StringBuilder((int) (len * 1.3));
 		for (; i < len; i++) {
 			ch = input[i];
-			if (ch > '>') {
-			} else if (ch == '<') {
+			if (ch == '<') {
 				if (i > last) {
 					out.append(input, last, i - last);
 				}
@@ -375,8 +365,7 @@ public final class StringTools {
 		StringBuilder out = new StringBuilder((int) (len * 1.3));
 		for (; i < len; i++) {
 			ch = input[i];
-			if (ch > '>') {
-			} else if (ch == '<') {
+			if (ch == '<') {
 				if (i > last) {
 					out.append(input, last, i - last);
 				}
@@ -430,7 +419,7 @@ public final class StringTools {
 	 *            second search character (or)
 	 * @return index or -1 if not found
 	 */
-	public static int findIndexOf(String str, char search1, char search2) {
+	private static int findIndexOf(String str, char search1, char search2) {
 		if (str == null) {
 			return -1;
 		}
@@ -493,7 +482,7 @@ public final class StringTools {
 			return "";
 		}
 		if (sourceString.length() <= length) {
-			StringBuffer buffer = new StringBuffer(sourceString.length() + 10);
+			StringBuilder buffer = new StringBuilder(sourceString.length() + 10);
 			int k = length - sourceString.length();
 			for (int j = 0; j < k; j++) {
 				buffer.append(sourceString).append("&nbsp;");
@@ -508,11 +497,11 @@ public final class StringTools {
 			if (i >= sourceChrs.length) {
 				return sourceString;
 			}
-			Character chr = Character.valueOf(sourceChrs[i]);
-			if (chr.charValue() <= 202 && chr.charValue() >= 8) {
-				distinChrs[i] = chr.charValue();
+			Character chr = sourceChrs[i];
+			if (chr <= 202 && chr >= 8) {
+				distinChrs[i] = chr;
 			} else {
-				distinChrs[i] = chr.charValue();
+				distinChrs[i] = chr;
 				length--;
 			}
 		}
@@ -524,7 +513,7 @@ public final class StringTools {
 			throw new RuntimeException("Error deserializing string.");
 		}
 		int len = s.length();
-		StringBuffer sb = new StringBuffer(len - 1);
+		StringBuilder sb = new StringBuilder(len - 1);
 		for (int i = 1; i < len; i++) {
 			char c = s.charAt(i);
 			if (c == '%') {
@@ -554,7 +543,7 @@ public final class StringTools {
 	}
 
 	public static byte[] getBucketId(byte[] key, Integer bit) {
-		MessageDigest mdInst = null;
+		MessageDigest mdInst;
 		try {
 			mdInst = MessageDigest.getInstance("MD5");
 		} catch (NoSuchAlgorithmException ex) {
@@ -790,7 +779,7 @@ public final class StringTools {
 		return 0x00;
 	}
 
-	public static boolean isInteger(String str) {
+	private static boolean isInteger(String str) {
 		if (str == null || str.length() == 0)
 			return false;
 		return INT_PATTERN.matcher(str).matches();
@@ -800,21 +789,18 @@ public final class StringTools {
 		String regex = "^[a-zA-Z]\\w{2,19}$";
 		Pattern pattern = Pattern.compile(regex);
 		Matcher matcher = pattern.matcher(str);
-		if (matcher.matches()) {
-			return true;
-		}
-		return false;
-	}
+        return matcher.matches();
+    }
 
 	public static String listToString(List<String> strs) {
 		return listToString(strs, ",");
 	}
 
-	public static String listToString(List<String> strs, String separator) {
+	private static String listToString(List<String> strs, String separator) {
 		if (strs == null || strs.size() == 0) {
 			return "";
 		}
-		StringBuffer sbuf = new StringBuffer();
+		StringBuilder sbuf = new StringBuilder();
 		sbuf.append(strs.get(0));
 		for (int idx = 1; idx < strs.size(); idx++) {
 			sbuf.append(separator);
@@ -837,7 +823,7 @@ public final class StringTools {
 		return random(9999);
 	}
 
-	public static String random(int bits) {
+	private static String random(int bits) {
 		Random random = new Random();
 		int x = Math.abs(random.nextInt(bits));
 		int a = String.valueOf(x).length();
@@ -850,8 +836,7 @@ public final class StringTools {
 		}
 		xx = xx + x;
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmss");
-		String ret = formatter.format(new Date()) + xx;
-		return ret;
+		return formatter.format(new Date()) + xx;
 	}
 
 	public static String replace(String string, String oldString, String newString) {
@@ -988,7 +973,7 @@ public final class StringTools {
 		return split(text, ",");
 	}
 
-	public static String[] split(String s, char delimiter) {
+	private static String[] split(String s, char delimiter) {
 		if (StringUtils.isEmpty(s)) {
 			return _emptyStringArray;
 		}
@@ -1024,7 +1009,7 @@ public final class StringTools {
 	}
 
 	@SuppressWarnings("unchecked")
-	public static List<String> split(String text, String delimiter) {
+	private static List<String> split(String text, String delimiter) {
 		if (delimiter == null) {
 			throw new RuntimeException("delimiter is null");
 		}
@@ -1056,18 +1041,18 @@ public final class StringTools {
 			if (i >= sourceChrs.length) {
 				return sourceString;
 			}
-			Character chr = Character.valueOf(sourceChrs[i]);
-			if (chr.charValue() <= 202 && chr.charValue() >= 8) {
-				distinChrs[i] = chr.charValue();
+			Character chr = sourceChrs[i];
+			if (chr <= 202 && chr >= 8) {
+				distinChrs[i] = chr;
 			} else {
-				distinChrs[i] = chr.charValue();
+				distinChrs[i] = chr;
 				length--;
 			}
 		}
 		return new String(distinChrs) + "…";
 	}
 
-	public static String[] splitLines(String s) {
+	private static String[] splitLines(String s) {
 		if (StringUtils.isEmpty(s)) {
 			return _emptyStringArray;
 		}
@@ -1121,7 +1106,7 @@ public final class StringTools {
 	}
 
 	@SuppressWarnings("unchecked")
-	public static List<String> splitLowerCase(String text, String delimiter) {
+	private static List<String> splitLowerCase(String text, String delimiter) {
 		if (delimiter == null) {
 			throw new RuntimeException("delimiter is null");
 		}
@@ -1149,7 +1134,7 @@ public final class StringTools {
 	}
 
 	@SuppressWarnings("unchecked")
-	public static List<Integer> splitToInt(String text, String delimiter) {
+	private static List<Integer> splitToInt(String text, String delimiter) {
 		if (delimiter == null) {
 			throw new RuntimeException("delimiter is null");
 		}
@@ -1174,7 +1159,7 @@ public final class StringTools {
 	}
 
 	@SuppressWarnings("unchecked")
-	public static List<Long> splitToLong(String text, String delimiter) {
+	private static List<Long> splitToLong(String text, String delimiter) {
 		if (delimiter == null) {
 			throw new RuntimeException("delimiter is null");
 		}
@@ -1257,7 +1242,7 @@ public final class StringTools {
 		return collection;
 	}
 
-	public static String toCamelCase(String s) {
+	private static String toCamelCase(String s) {
 		if (s == null) {
 			return null;
 		}
@@ -1291,7 +1276,7 @@ public final class StringTools {
 	}
 
 	public static String toCSVString(String s) {
-		StringBuffer sb = new StringBuffer(s.length() + 1);
+		StringBuilder sb = new StringBuilder(s.length() + 1);
 		sb.append('\'');
 		int len = s.length();
 		for (int i = 0; i < len; i++) {
@@ -1346,7 +1331,7 @@ public final class StringTools {
 	 * @return the string, converted to lower case, or <code>null</code> if the
 	 *         string is <code>null</code>
 	 */
-	public static String toLowerCase(String s, Locale locale) {
+	private static String toLowerCase(String s, Locale locale) {
 		if (s == null) {
 			return null;
 		}
@@ -1424,7 +1409,7 @@ public final class StringTools {
 				nextUpperCase = Character.isUpperCase(s.charAt(i + 1));
 			}
 
-			if ((i >= 0) && Character.isUpperCase(c)) {
+			if (Character.isUpperCase(c)) {
 				if (!upperCase || !nextUpperCase) {
 					if (i > 0)
 						sb.append(SEPARATOR);

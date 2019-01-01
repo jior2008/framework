@@ -1,8 +1,5 @@
 package com.glaf.core.security;
 
-import java.util.Collection;
-import java.util.Iterator;
-
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.glaf.core.identity.Tenant;
@@ -10,7 +7,9 @@ import com.glaf.core.identity.User;
 import com.glaf.core.identity.impl.TenantImpl;
 import com.glaf.core.identity.impl.UserImpl;
 
-public class LoginContextUtils {
+import java.util.Collection;
+
+class LoginContextUtils {
 
 	public static LoginContext clone(LoginContext loginContext) {
 		LoginContext m = new LoginContext();
@@ -117,83 +116,74 @@ public class LoginContextUtils {
 
 		if (jsonObject.containsKey("roles")) {
 			JSONArray jsonArray = jsonObject.getJSONArray("roles");
-			Iterator<Object> iterator = jsonArray.iterator();
-			while (iterator.hasNext()) {
-				String role = (String) iterator.next();
-				loginContext.addRole(role);
-			}
+            for (Object o : jsonArray) {
+                String role = (String) o;
+                loginContext.addRole(role);
+            }
 		}
 
 		if (jsonObject.containsKey("gradeIds")) {
 			JSONArray jsonArray = jsonObject.getJSONArray("gradeIds");
-			Iterator<Object> iterator = jsonArray.iterator();
-			while (iterator.hasNext()) {
-				String gradeId = (String) iterator.next();
-				loginContext.addGradeId(gradeId);
-			}
+            for (Object o : jsonArray) {
+                String gradeId = (String) o;
+                loginContext.addGradeId(gradeId);
+            }
 		}
 
 		if (jsonObject.containsKey("managedTenantIds")) {
 			JSONArray jsonArray = jsonObject.getJSONArray("managedTenantIds");
-			Iterator<Object> iterator = jsonArray.iterator();
-			while (iterator.hasNext()) {
-				String tenantId = (String) iterator.next();
-				loginContext.addManagedTenantId(tenantId);
-			}
+            for (Object o : jsonArray) {
+                String tenantId = (String) o;
+                loginContext.addManagedTenantId(tenantId);
+            }
 		}
 
 		if (jsonObject.containsKey("subOrganizationIds")) {
 			JSONArray jsonArray = jsonObject.getJSONArray("subOrganizationIds");
-			Iterator<Object> iterator = jsonArray.iterator();
-			while (iterator.hasNext()) {
-				String subOrganizationId = (String) iterator.next();
-				loginContext.addSubOrganizationId(Long.parseLong(subOrganizationId));
-			}
+            for (Object o : jsonArray) {
+                String subOrganizationId = (String) o;
+                loginContext.addSubOrganizationId(Long.parseLong(subOrganizationId));
+            }
 		}
 
 		if (jsonObject.containsKey("databaseIds")) {
 			JSONArray jsonArray = jsonObject.getJSONArray("databaseIds");
-			Iterator<Object> iterator = jsonArray.iterator();
-			while (iterator.hasNext()) {
-				String databaseId = (String) iterator.next();
-				loginContext.addDatabaseId(Long.parseLong(databaseId));
-			}
+            for (Object o : jsonArray) {
+                String databaseId = (String) o;
+                loginContext.addDatabaseId(Long.parseLong(databaseId));
+            }
 		}
 
 		if (jsonObject.containsKey("agents")) {
 			JSONArray jsonArray = jsonObject.getJSONArray("agents");
-			Iterator<Object> iterator = jsonArray.iterator();
-			while (iterator.hasNext()) {
-				String agent = (String) iterator.next();
-				loginContext.addAgent(agent);
-			}
+            for (Object o : jsonArray) {
+                String agent = (String) o;
+                loginContext.addAgent(agent);
+            }
 		}
 
 		if (jsonObject.containsKey("functions")) {
 			JSONArray jsonArray = jsonObject.getJSONArray("functions");
-			Iterator<Object> iterator = jsonArray.iterator();
-			while (iterator.hasNext()) {
-				String function = (String) iterator.next();
-				loginContext.addFunction(function);
-			}
+            for (Object o : jsonArray) {
+                String function = (String) o;
+                loginContext.addFunction(function);
+            }
 		}
 
 		if (jsonObject.containsKey("permissions")) {
 			JSONArray jsonArray = jsonObject.getJSONArray("permissions");
-			Iterator<Object> iterator = jsonArray.iterator();
-			while (iterator.hasNext()) {
-				String permission = (String) iterator.next();
-				loginContext.addPermission(permission);
-			}
+            for (Object o : jsonArray) {
+                String permission = (String) o;
+                loginContext.addPermission(permission);
+            }
 		}
 
 		if (jsonObject.containsKey("observers")) {
 			JSONArray jsonArray = jsonObject.getJSONArray("observers");
-			Iterator<Object> iterator = jsonArray.iterator();
-			while (iterator.hasNext()) {
-				String observer = (String) iterator.next();
-				loginContext.addObserver(observer);
-			}
+            for (Object o : jsonArray) {
+                String observer = (String) o;
+                loginContext.addObserver(observer);
+            }
 		}
 
 		return loginContext;

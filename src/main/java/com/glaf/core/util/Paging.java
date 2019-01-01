@@ -54,22 +54,22 @@ public class Paging implements java.io.Serializable {
 	/**
 	 * 当前页号
 	 */
-	private int currentPage = 1;
+	private int currentPage;
 
 	/**
 	 * 每页记录数
 	 */
-	private int pageSize = DEFAULT_PAGE_SIZE;
+	private int pageSize;
 
 	/**
 	 * 总记录数
 	 */
-	private int total = 0;
+	private int total;
 
 	/**
 	 * 本页的数据
 	 */
-	private List<Object> rows = new java.util.ArrayList<Object>();
+	private List<Object> rows;
 
 	/**
 	 * 是否需要缓存结果集
@@ -100,7 +100,7 @@ public class Paging implements java.io.Serializable {
 		this.total = 0;
 	}
 
-	public Paging(List<Object> rows, int currPageNo, int pageSize, int total) {
+	private Paging(List<Object> rows, int currPageNo, int pageSize, int total) {
 		this.rows = rows;
 		this.currentPage = currPageNo;
 		this.pageSize = pageSize;
@@ -178,7 +178,7 @@ public class Paging implements java.io.Serializable {
 	 * 
 	 * @return 记录总数
 	 */
-	public int getTotal() {
+	private int getTotal() {
 		return total;
 	}
 
@@ -217,7 +217,7 @@ public class Paging implements java.io.Serializable {
 	/**
 	 * 设置当前页数。
 	 * 
-	 * @param currPageNo
+	 * @param currentPage
 	 */
 	public void setCurrentPage(int currentPage) {
 		this.currentPage = currentPage;

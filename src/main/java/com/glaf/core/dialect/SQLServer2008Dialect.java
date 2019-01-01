@@ -20,7 +20,7 @@ package com.glaf.core.dialect;
 
 public class SQLServer2008Dialect implements Dialect {
 
-	protected static String getOrderByPart(String sql) {
+	private static String getOrderByPart(String sql) {
 		String loweredString = sql.toLowerCase();
 		int orderByIndex = loweredString.lastIndexOf("order by");
 		if (orderByIndex != -1) {
@@ -67,7 +67,7 @@ public class SQLServer2008Dialect implements Dialect {
 		pagingBuilder.append(sqlPartString);
 
 		// if no ORDER BY is specified use fake ORDER BY field to avoid errors
-		if (orderby == null || orderby.length() == 0) {
+		if (orderby.length() == 0) {
 			orderby = "ORDER BY CURRENT_TIMESTAMP";
 		}
 

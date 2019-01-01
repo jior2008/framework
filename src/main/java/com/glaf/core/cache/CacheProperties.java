@@ -24,10 +24,10 @@ import java.util.Enumeration;
 import java.util.Properties;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-public class CacheProperties {
-    private static volatile Properties properties = new Properties();
+class CacheProperties {
+    private static final Properties properties = new Properties();
 
-    protected static AtomicBoolean loading = new AtomicBoolean(false);
+    private static final AtomicBoolean loading = new AtomicBoolean(false);
 
     static {
         reload();
@@ -36,7 +36,7 @@ public class CacheProperties {
     public static boolean getBoolean(String key) {
         if (hasObject(key)) {
             String value = properties.getProperty(key);
-            return Boolean.valueOf(value).booleanValue();
+            return Boolean.valueOf(value);
         }
         return false;
     }
@@ -44,7 +44,7 @@ public class CacheProperties {
     public static boolean getBoolean(String key, boolean defaultValue) {
         if (hasObject(key)) {
             String value = properties.getProperty(key);
-            return Boolean.valueOf(value).booleanValue();
+            return Boolean.valueOf(value);
         }
         return defaultValue;
     }
@@ -86,29 +86,24 @@ public class CacheProperties {
 
     public static String getString(String key) {
         if (hasObject(key)) {
-            String value = properties.getProperty(key);
-            return value;
+            return properties.getProperty(key);
         }
         return null;
     }
 
     public static String getString(String key, String defaultValue) {
         if (hasObject(key)) {
-            String value = properties.getProperty(key);
-            return value;
+            return properties.getProperty(key);
         }
         return defaultValue;
     }
 
-    public static boolean hasObject(String key) {
+    private static boolean hasObject(String key) {
         String value = properties.getProperty(key);
-        if (value != null) {
-            return true;
-        }
-        return false;
+        return value != null;
     }
 
-    public static void reload() {
+    private static void reload() {
         if (!loading.get()) {
             try {
                 loading.set(true);

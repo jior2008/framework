@@ -18,23 +18,21 @@
 
 package com.glaf.framework.system.domain;
 
-import java.io.Serializable;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
-
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
-
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.glaf.core.base.JSONable;
 import com.glaf.framework.system.factory.SystemPropertyJsonFactory;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import java.io.Serializable;
 
 @Entity
 @Table(name = "SYS_PROPERTY")
@@ -43,16 +41,16 @@ public class SystemProperty implements Serializable, JSONable {
 
 	@Id
 	@Column(name = "ID_", length = 50, nullable = false)
-	protected String id;
+    private String id;
 
 	@Column(name = "NAME_", length = 50)
-	protected String name;
+    private String name;
 
 	@Column(name = "TITLE_", length = 200)
-	protected String title;
+    private String title;
 
 	@Column(name = "CATEGORY_", length = 200)
-	protected String category;
+    private String category;
 
 	/**
 	 * 输入类型，easyui对应的输入组件 <br>
@@ -63,36 +61,36 @@ public class SystemProperty implements Serializable, JSONable {
 	 * checkbox（复选框输入）<br>
 	 */
 	@Column(name = "INPUTTYPE_", length = 50)
-	protected String inputType;
+    private String inputType;
 
 	@Column(name = "TYPE_", length = 50)
-	protected String type;
+    private String type;
 
 	@Column(name = "DESCRIPTION_", length = 500)
-	protected String description;
+    private String description;
 
 	@Column(name = "VALUE_", length = 1000)
-	protected String value;
+    private String value;
 
 	@Column(name = "INITVALUE_", length = 1000)
-	protected String initValue;
+    private String initValue;
 
 	@Column(name = "MAXVALUE_")
-	protected Double maxValue;
+    private Double maxValue;
 
 	@Column(name = "MINVALUE_")
-	protected Double minValue;
+    private Double minValue;
 
 	@Column(name = "LOCKED_")
-	protected int locked;
+    private int locked;
 
 	@javax.persistence.Transient
 	@JsonIgnore
-	protected JSONArray array = null;
+    private JSONArray array = null;
 
 	@javax.persistence.Transient
 	@JsonIgnore
-	protected String selectedScript = null;
+    private String selectedScript = null;
 
 	public SystemProperty() {
 
@@ -108,12 +106,9 @@ public class SystemProperty implements Serializable, JSONable {
 			return false;
 		SystemProperty other = (SystemProperty) obj;
 		if (id == null) {
-			if (other.id != null)
-				return false;
-		} else if (!id.equals(other.id))
-			return false;
-		return true;
-	}
+            return other.id == null;
+		} else return id.equals(other.id);
+    }
 
 	public JSONArray getArray() {
 		return array;

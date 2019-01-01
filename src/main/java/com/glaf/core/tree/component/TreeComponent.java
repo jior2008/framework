@@ -18,33 +18,29 @@
 
 package com.glaf.core.tree.component;
 
-import java.io.Serializable;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-
 import com.glaf.core.base.TreeModel;
+
+import java.io.Serializable;
+import java.util.*;
 
 public class TreeComponent extends TreeBase implements Serializable, Component {
 
 	// ~ Static fields/initializers
 	// =============================================
-	protected static TreeComponent[] _treeComponent = new TreeComponent[0];
+	private static final TreeComponent[] _treeComponent = new TreeComponent[0];
 
 	private static final long serialVersionUID = 1L;
 
 	// ~ Instance fields
 	// ========================================================
 
-	protected Map<String, Object> dataMap;
+	private Map<String, Object> dataMap;
 	private boolean last;
-	protected List<TreeComponent> components = Collections.synchronizedList(new java.util.ArrayList<TreeComponent>());
-	protected TreeComponent parent;
-	protected TreeModel treeModel;
-	protected Object treeObject;
-	protected String parentId;
+	private final List<TreeComponent> components = Collections.synchronizedList(new java.util.ArrayList<TreeComponent>());
+	private TreeComponent parent;
+	private TreeModel treeModel;
+	private Object treeObject;
+	private String parentId;
 
 	public void addChild(TreeComponent component) {
 		if (component != null && component.getId() != null && !components.contains(component)) {
@@ -56,8 +52,7 @@ public class TreeComponent extends TreeBase implements Serializable, Component {
 
 	/**
 	 * This method compares all attributes, except for parent and children
-	 * 
-	 * @param o the object to compare to
+	 *
 	 */
 	@Override
 	public boolean equals(Object obj) {
@@ -69,17 +64,12 @@ public class TreeComponent extends TreeBase implements Serializable, Component {
 			return false;
 		TreeComponent other = (TreeComponent) obj;
 		if (id == null) {
-			if (other.id != null)
-				return false;
-		} else if (!id.equals(other.id))
-			return false;
-		return true;
-	}
+            return other.id == null;
+		} else return id.equals(other.id);
+    }
 
 	public List<TreeComponent> getComponents() {
-		if (components != null) {
-			java.util.Collections.sort(components);
-		}
+		Collections.sort(components);
 		return components;
 	}
 
@@ -116,12 +106,12 @@ public class TreeComponent extends TreeBase implements Serializable, Component {
 
 		TreeComponent[] subTrees = component.getTreeComponents();
 		if (subTrees != null) {
-			for (int a = 0; a < subTrees.length; a++) {
-				int depthx = getTreeDepth(subTrees[a], currentDepth + 1);
-				if (depth < depthx) {
-					depth = depthx;
-				}
-			}
+            for (TreeComponent subTree : subTrees) {
+                int depthx = getTreeDepth(subTree, currentDepth + 1);
+                if (depth < depthx) {
+                    depth = depthx;
+                }
+            }
 		}
 
 		return depth;
@@ -190,10 +180,9 @@ public class TreeComponent extends TreeBase implements Serializable, Component {
 	}
 
 	public void setTreeComponents(TreeComponent[] menuComponents) {
-		for (int i = 0; i < menuComponents.length; i++) {
-			TreeComponent component = menuComponents[i];
-			this.components.add(component);
-		}
+        for (TreeComponent component : menuComponents) {
+            this.components.add(component);
+        }
 	}
 
 	public void setTreeModel(TreeModel treeModel) {

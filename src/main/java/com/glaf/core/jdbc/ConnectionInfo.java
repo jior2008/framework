@@ -17,20 +17,20 @@
  */
 package com.glaf.core.jdbc;
 
-import java.sql.*;
-
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-public class ConnectionInfo {
+import java.sql.Connection;
 
-	protected String id;
+class ConnectionInfo {
 
-	protected String actorId;
+	private String id;
 
-	protected long startTime;
+	private String actorId;
 
-	protected Connection connection;
+	private long startTime;
+
+	private Connection connection;
 
 	public ConnectionInfo() {
 
@@ -46,12 +46,9 @@ public class ConnectionInfo {
 			return false;
 		ConnectionInfo other = (ConnectionInfo) obj;
 		if (id == null) {
-			if (other.id != null)
-				return false;
-		} else if (!id.equals(other.id))
-			return false;
-		return true;
-	}
+            return other.id == null;
+		} else return id.equals(other.id);
+    }
 
 	public String getActorId() {
 		return actorId;

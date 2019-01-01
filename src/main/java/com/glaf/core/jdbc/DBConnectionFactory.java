@@ -18,26 +18,24 @@
 
 package com.glaf.core.jdbc;
 
+import com.glaf.core.context.ContextFactory;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
 import java.util.Properties;
 
-import javax.sql.DataSource;
-
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.glaf.core.context.ContextFactory;
-
 public class DBConnectionFactory {
 
-	protected final static Logger logger = LoggerFactory.getLogger(DBConnectionFactory.class);
+	private final static Logger logger = LoggerFactory.getLogger(DBConnectionFactory.class);
 
-	protected static Properties databaseTypeMappings = getDatabaseTypeMappings();
+	private static final Properties databaseTypeMappings = getDatabaseTypeMappings();
 
-	protected static String databaseType;
+	private static String databaseType;
 
 	public static Connection getConnection() {
 		DataSource dataSource = ContextFactory.getBean("dataSource");
@@ -54,7 +52,7 @@ public class DBConnectionFactory {
 
 	public static String getDatabaseType(Connection connection) {
 		if (connection != null) {
-			String databaseProductName = null;
+			String databaseProductName;
 			try {
 				DatabaseMetaData databaseMetaData = connection.getMetaData();
 				databaseProductName = databaseMetaData.getDatabaseProductName();
@@ -96,7 +94,7 @@ public class DBConnectionFactory {
 		return dbType;
 	}
 
-	public static Properties getDatabaseTypeMappings() {
+	private static Properties getDatabaseTypeMappings() {
 		Properties databaseTypeMappings = new Properties();
 		databaseTypeMappings.setProperty("H2", "h2");
 		databaseTypeMappings.setProperty("MySQL", "mysql");

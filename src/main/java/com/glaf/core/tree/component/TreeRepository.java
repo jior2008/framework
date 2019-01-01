@@ -18,23 +18,22 @@
 
 package com.glaf.core.tree.component;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import java.io.Serializable;
-import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 public class TreeRepository implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	private static Log log = LogFactory.getLog(TreeRepository.class);
+	private static final Log log = LogFactory.getLog(TreeRepository.class);
 
-	protected Map<String, TreeComponent> treesMap = new LinkedHashMap<String, TreeComponent>();
+	private final Map<String, TreeComponent> treesMap = new LinkedHashMap<String, TreeComponent>();
 
 	/**
 	 * Adds a new component.
@@ -50,10 +49,9 @@ public class TreeRepository implements Serializable {
 			}
 			List<TreeComponent> children = (getTree(component.getId())).getComponents();
 			if (children != null && component.getComponents() != null) {
-				for (Iterator<TreeComponent> it = children.iterator(); it.hasNext();) {
-					TreeComponent child = (TreeComponent) it.next();
-					component.addChild(child);
-				}
+                for (TreeComponent child : children) {
+                    component.addChild(child);
+                }
 			}
 		}
 		treesMap.put(component.getId(), component);
@@ -64,18 +62,13 @@ public class TreeRepository implements Serializable {
 	 */
 	public List<TreeComponent> getTopTrees() {
 		List<TreeComponent> topTrees = new java.util.ArrayList<TreeComponent>();
-		if (treesMap == null) {
-			log.warn("No trees found in repository!");
-			return topTrees;
-		}
 
-		for (Iterator<?> it = treesMap.keySet().iterator(); it.hasNext();) {
-			String id = (String) it.next();
-			TreeComponent component = getTree(id);
-			if (component.getParent() == null) {
-				topTrees.add(component);
-			}
-		}
+		for (String id : treesMap.keySet()) {
+            TreeComponent component = getTree(id);
+            if (component.getParent() == null) {
+                topTrees.add(component);
+            }
+        }
 		return topTrees;
 	}
 

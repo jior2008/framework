@@ -18,13 +18,13 @@
 
 package com.glaf.core.util;
 
+import org.apache.commons.collections.MapUtils;
+import org.apache.commons.lang3.StringUtils;
+
 import java.sql.Timestamp;
 import java.util.Collection;
 import java.util.Date;
 import java.util.Map;
-
-import org.apache.commons.collections.MapUtils;
-import org.apache.commons.lang3.StringUtils;
 
 public class ParamUtils {
 
@@ -45,7 +45,7 @@ public class ParamUtils {
 	public static Boolean getBoolean(Map<String, Object> dataMap, String key) {
 		Boolean result = null;
 		if (dataMap == null || key == null) {
-			return result;
+			return null;
 		}
 		Object value = dataMap.get(key);
 		if (value == null) {
@@ -89,7 +89,7 @@ public class ParamUtils {
 	}
 
 	public static double getDouble(Map<String, Object> dataMap, String key) {
-		double result = 0.0D;
+		double result;
 		Object value = dataMap.get(key);
 		if (value == null) {
 			value = dataMap.get(key.toLowerCase());
@@ -110,8 +110,8 @@ public class ParamUtils {
 				Long x = (Long) value;
 				result = x.doubleValue();
 			} else if (value instanceof Double) {
-				Double x = (Double) value;
-				result = x.doubleValue();
+				Double d = (Double) value;
+				result = d;
 			} else {
 				String tmp = value.toString();
 				tmp = StringTools.replace(tmp, ",", "");
@@ -125,7 +125,7 @@ public class ParamUtils {
 	}
 
 	public static Double getDoubleValue(Map<String, Object> dataMap, String key) {
-		Double result = null;
+		Double result;
 		Object value = dataMap.get(key);
 		if (value == null) {
 			value = dataMap.get(key.toLowerCase());
@@ -145,8 +145,8 @@ public class ParamUtils {
 				Long x = (Long) value;
 				result = x.doubleValue();
 			} else if (value instanceof Double) {
-				Double x = (Double) value;
-				result = x.doubleValue();
+				Double d = (Double) value;
+				result = d;
 			} else {
 				String tmp = value.toString();
 				tmp = StringTools.replace(tmp, ",", "");
@@ -173,8 +173,8 @@ public class ParamUtils {
 				tmp = StringTools.replace(tmp, ",", "");
 				result = Integer.parseInt(tmp);
 			} else if (value instanceof Integer) {
-				Integer x = (Integer) value;
-				result = x.intValue();
+				Integer i = (Integer) value;
+				result = i;
 			} else if (value instanceof Long) {
 				Long x = (Long) value;
 				result = x.intValue();
@@ -205,14 +205,14 @@ public class ParamUtils {
 				tmp = StringTools.replace(tmp, ",", "");
 				result = Integer.parseInt(tmp);
 			} else if (value instanceof Integer) {
-				Integer x = (Integer) value;
-				result = x.intValue();
+				Integer i = (Integer) value;
+				result = i;
 			} else if (value instanceof Long) {
-				Long x = (Long) value;
-				result = x.intValue();
+				Long l = (Long) value;
+				result = l.intValue();
 			} else if (value instanceof Double) {
-				Double x = (Double) value;
-				result = x.intValue();
+				Double d = (Double) value;
+				result = d.intValue();
 			} else {
 				String tmp = value.toString();
 				tmp = StringTools.replace(tmp, ",", "");
@@ -237,14 +237,14 @@ public class ParamUtils {
 				tmp = StringTools.replace(tmp, ",", "");
 				result = Long.parseLong(tmp);
 			} else if (value instanceof Integer) {
-				Integer x = (Integer) value;
-				result = Long.valueOf(x.intValue());
+				Integer i = (Integer) value;
+				result = (long) i.intValue();
 			} else if (value instanceof Long) {
-				Long x = (Long) value;
-				result = x.longValue();
+				Long l = (Long) value;
+				result = l;
 			} else if (value instanceof Double) {
-				Double x = (Double) value;
-				result = x.longValue();
+				Double d = (Double) value;
+				result = d.longValue();
 			} else {
 				String tmp = value.toString();
 				tmp = StringTools.replace(tmp, ",", "");
@@ -269,14 +269,14 @@ public class ParamUtils {
 				tmp = StringTools.replace(tmp, ",", "");
 				result = Long.parseLong(tmp);
 			} else if (value instanceof Integer) {
-				Integer x = (Integer) value;
-				result = Long.valueOf(x.intValue());
+				Integer i = (Integer) value;
+				result = (long) i.intValue();
 			} else if (value instanceof Long) {
-				Long x = (Long) value;
-				result = x.longValue();
+				Long l = (Long) value;
+				result = l;
 			} else if (value instanceof Double) {
-				Double x = (Double) value;
-				result = x.longValue();
+				Double d = (Double) value;
+				result = d.longValue();
 			} else {
 				String tmp = value.toString();
 				tmp = StringTools.replace(tmp, ",", "");
@@ -364,8 +364,6 @@ public class ParamUtils {
 			} else if (value instanceof Date) {
 				Date date = (Date) value;
 				result = new Timestamp(date.getTime());
-			} else if (value instanceof Timestamp) {
-				result = (Timestamp) value;
 			}
 		}
 		return result;
@@ -376,9 +374,7 @@ public class ParamUtils {
 			Object obj = paramMap.get(name);
 			if (obj instanceof Collection<?>) {
 				Collection<?> rows = (Collection<?>) obj;
-				if (rows != null && rows.size() > 0) {
-					return true;
-				}
+                return rows.size() > 0;
 			}
 		}
 		return false;

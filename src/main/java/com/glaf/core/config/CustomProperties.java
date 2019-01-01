@@ -18,6 +18,12 @@
 
 package com.glaf.core.config;
 
+import com.glaf.core.util.PropertiesUtils;
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
@@ -25,25 +31,18 @@ import java.util.Enumeration;
 import java.util.Properties;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
-import com.glaf.core.util.PropertiesUtils;
-
 public class CustomProperties {
 
-	protected static final Log logger = LogFactory.getLog(CustomProperties.class);
+	private static final Log logger = LogFactory.getLog(CustomProperties.class);
 
-	private static volatile Properties properties = new Properties();
+	private static final Properties properties = new Properties();
 
-	protected static AtomicBoolean loading = new AtomicBoolean(false);
+	private static final AtomicBoolean loading = new AtomicBoolean(false);
 
 	static {
 		try {
 			reload();
-		} catch (Exception ex) {
+		} catch (Exception ignored) {
 
 		}
 	}
@@ -51,9 +50,7 @@ public class CustomProperties {
 	public static boolean eq(String key, String value) {
 		if (key != null && value != null) {
 			String x = properties.getProperty(key);
-			if (StringUtils.equals(value, x)) {
-				return true;
-			}
+            return StringUtils.equals(value, x);
 		}
 		return false;
 	}
@@ -61,7 +58,7 @@ public class CustomProperties {
 	public static boolean getBoolean(String key) {
 		if (hasObject(key)) {
 			String value = properties.getProperty(key);
-			return Boolean.valueOf(value).booleanValue();
+			return Boolean.valueOf(value);
 		}
 		return false;
 	}
@@ -112,18 +109,15 @@ public class CustomProperties {
 		return null;
 	}
 
-	public static boolean hasObject(String key) {
-		if (properties == null || key == null) {
+	private static boolean hasObject(String key) {
+		if (key == null) {
 			return false;
 		}
 		String value = properties.getProperty(key);
-		if (value != null) {
-			return true;
-		}
-		return false;
-	}
+        return value != null;
+    }
 
-	public static void reload() {
+	private static void reload() {
 		if (!loading.get()) {
 			InputStream inputStream = null;
 			try {
@@ -134,8 +128,7 @@ public class CustomProperties {
 				if (directory.exists() && directory.isDirectory()) {
 					File[] filelist = directory.listFiles();
 					if (filelist != null) {
-						for (int i = 0, len = filelist.length; i < len; i++) {
-							File file = filelist[i];
+						for (File file : filelist) {
 							if (file.isFile() && file.getName().endsWith(".properties")) {
 								logger.info("load properties:" + file.getAbsolutePath());
 								inputStream = new FileInputStream(file);

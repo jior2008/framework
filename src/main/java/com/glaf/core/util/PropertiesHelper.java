@@ -25,7 +25,7 @@ import java.util.StringTokenizer;
 
 public final class PropertiesHelper {
 
-	public static final String[] EMPTY_STRING_ARRAY = {};
+	private static final String[] EMPTY_STRING_ARRAY = {};
 
 	private static final String PLACEHOLDER_START = "${";
 
@@ -66,8 +66,8 @@ public final class PropertiesHelper {
 	 *            The properties object
 	 * @return The property value; may be null.
 	 */
-	public static String extractPropertyValue(String propertyName,
-			Properties properties) {
+	private static String extractPropertyValue(String propertyName,
+											   Properties properties) {
 		String value = properties.getProperty(propertyName);
 		if (value == null) {
 			return null;
@@ -111,11 +111,10 @@ public final class PropertiesHelper {
 	 *            The default property value to use.
 	 * @return The property value.
 	 */
-	public static boolean getBoolean(String propertyName,
-			Properties properties, boolean defaultValue) {
+	private static boolean getBoolean(String propertyName,
+									  Properties properties, boolean defaultValue) {
 		String value = extractPropertyValue(propertyName, properties);
-		return value == null ? defaultValue : Boolean.valueOf(value)
-				.booleanValue();
+		return value == null ? defaultValue : Boolean.valueOf(value);
 	}
 
 	/**
@@ -223,7 +222,7 @@ public final class PropertiesHelper {
 	 *            The delimiter used to separate individual array elements.
 	 * @return The array; never null, though may be empty.
 	 */
-	public static String[] toStringArray(String stringForm, String delim) {
+	private static String[] toStringArray(String stringForm, String delim) {
 		// todo : move to StringHelper?
 		if (stringForm != null) {
 			return StringHelper.split(delim, stringForm);
@@ -261,7 +260,7 @@ public final class PropertiesHelper {
 		while (itr.hasNext()) {
 			final Map.Entry entry = (Map.Entry) itr.next();
 			final Object value = entry.getValue();
-			if (value != null && String.class.isInstance(value)) {
+			if (String.class.isInstance(value)) {
 				final String resolved = resolvePlaceHolder((String) value);
 				if (!value.equals(resolved)) {
 					if (resolved == null) {
@@ -281,8 +280,8 @@ public final class PropertiesHelper {
 	 *            The property value to be processed for interpolation.
 	 * @return The (possibly) interpolated property value.
 	 */
-	public static String resolvePlaceHolder(String property) {
-		if (property.indexOf(PLACEHOLDER_START) < 0) {
+	private static String resolvePlaceHolder(String property) {
+		if (!property.contains(PLACEHOLDER_START)) {
 			return property;
 		}
 		StringBuilder buff = new StringBuilder();

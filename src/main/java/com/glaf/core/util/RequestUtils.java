@@ -18,21 +18,12 @@
 
 package com.glaf.core.util;
 
-import java.io.IOException;
-import java.net.URLEncoder;
-import java.util.Date;
-import java.util.Enumeration;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
-
-import javax.servlet.ServletException;
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
+import com.glaf.core.security.IdentityFactory;
+import com.glaf.core.security.LoginContext;
+import com.glaf.framework.system.config.SystemConfig;
+import com.glaf.framework.system.security.AESUtils;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.codec.digest.DigestUtils;
@@ -41,19 +32,26 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
-import com.glaf.core.security.IdentityFactory;
-import com.glaf.core.security.LoginContext;
-import com.glaf.framework.system.config.SystemConfig;
-import com.glaf.framework.system.security.AESUtils;
+import javax.servlet.ServletException;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import java.io.IOException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
+import java.util.Date;
+import java.util.Enumeration;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 
 public class RequestUtils {
 	private static final int COOKIE_LIVING_SECONDS = 3600 * 8;
 
-	protected final static Log logger = LogFactory.getLog(RequestUtils.class);
+	private final static Log logger = LogFactory.getLog(RequestUtils.class);
 
-	private static StringBuilder append(Object key, Object value, StringBuilder queryString, String ampersand) {
+	private static void append(Object key, Object value, StringBuilder queryString, String ampersand) {
 		if (queryString.length() > 0) {
 			queryString.append(ampersand);
 		}
@@ -61,12 +59,11 @@ public class RequestUtils {
 			queryString.append(URLEncoder.encode(key.toString(), "UTF-8"));
 			queryString.append('=');
 			queryString.append(URLEncoder.encode(value.toString(), "UTF-8"));
-		} catch (IOException e) {
+		} catch (IOException ignored) {
 		}
-		return queryString;
 	}
 
-	public static StringBuilder createQueryStringFromMap(Map<String, Object> m, String ampersand) {
+	private static StringBuilder createQueryStringFromMap(Map<String, Object> m, String ampersand) {
 		StringBuilder aReturn = new StringBuilder("");
 		Set<Entry<String, Object>> entrySet = m.entrySet();
 		for (Entry<String, Object> entry : entrySet) {
@@ -78,8 +75,8 @@ public class RequestUtils {
 				append(key, value, aReturn, ampersand);
 			} else if (value instanceof String[]) {
 				String[] aValues = (String[]) value;
-				for (int i = 0; i < aValues.length; i++) {
-					append(key, aValues[i], aReturn, ampersand);
+				for (String aValue : aValues) {
+					append(key, aValue, aReturn, ampersand);
 				}
 			} else {
 				append(key, value, aReturn, ampersand);
@@ -94,12 +91,12 @@ public class RequestUtils {
 	 * @param str
 	 * @return
 	 */
-	public static String decodeString(String str) {
+	private static String decodeString(String str) {
 		try {
 			// logger.debug("AES解密前:" + str);
 			byte[] key = AESUtils.initAndLoadKey();
 			byte[] data = AESUtils.decryptECB(key, Hex.hex2byte(str));
-			String tmp = new String(Base64.decodeBase64(data), "UTF-8");
+			String tmp = new String(Base64.decodeBase64(data), StandardCharsets.UTF_8);
 			String salt = DigestUtils.md5Hex(SystemConfig.getToken());
 			tmp = StringUtils.replace(tmp, salt, "");
 			// logger.debug("AES解密后:" + tmp);
@@ -123,7 +120,7 @@ public class RequestUtils {
 			// logger.debug("AES解密前:" + str);
 			byte[] key = AESUtils.initAndLoadKey();
 			byte[] data = AESUtils.decryptECB(key, Hex.hex2byte(str));
-			String tmp = new String(Base64.decodeBase64(data), "UTF-8");
+			String tmp = new String(Base64.decodeBase64(data), StandardCharsets.UTF_8);
 			String salt = DigestUtils.md5Hex(token);
 			tmp = StringUtils.replace(tmp, salt, "");
 			// logger.debug("AES解密后:" + tmp);
@@ -157,9 +154,7 @@ public class RequestUtils {
 				// Ignore Exception
 			}
 			if (jsonObject != null) {
-				Iterator<Entry<String, Object>> iterator = jsonObject.entrySet().iterator();
-				while (iterator.hasNext()) {
-					Entry<String, Object> entry = iterator.next();
+				for (Entry<String, Object> entry : jsonObject.entrySet()) {
 					String key = (String) entry.getKey();
 					Object val = entry.getValue();
 					if (val != null) {
@@ -183,7 +178,7 @@ public class RequestUtils {
 			str = str + salt;
 			// logger.error("待加密数据:" + str);
 			byte[] key = AESUtils.initAndLoadKey();
-			byte[] bytes = Base64.encodeBase64(str.getBytes("UTF-8"));
+			byte[] bytes = Base64.encodeBase64(str.getBytes(StandardCharsets.UTF_8));
 			byte[] data = AESUtils.encryptECB(key, bytes);
 			str = Hex.byte2hex(data);
 			// logger.debug("AES加密后:" + str);
@@ -207,7 +202,7 @@ public class RequestUtils {
 			String salt = DigestUtils.md5Hex(token);
 			str = str + salt;
 			byte[] key = AESUtils.initAndLoadKey();
-			byte[] bytes = Base64.encodeBase64(str.getBytes("UTF-8"));
+			byte[] bytes = Base64.encodeBase64(str.getBytes(StandardCharsets.UTF_8));
 			byte[] data = AESUtils.encryptECB(key, bytes);
 			str = Hex.byte2hex(data);
 			// logger.debug("AES加密后:" + str);
@@ -243,7 +238,7 @@ public class RequestUtils {
 		return text;
 	}
 
-	public static String getActorId(HttpServletRequest request) {
+	private static String getActorId(HttpServletRequest request) {
 		String actorId = null;
 		String ip = getIPAddress(request);
 		ip = DigestUtils.md5Hex(ip + SystemConfig.getIntToken());
@@ -315,9 +310,7 @@ public class RequestUtils {
 			if ("true".equalsIgnoreCase(paramValue)) {
 				return true;
 			}
-			if ("1".equalsIgnoreCase(paramValue)) {
-				return true;
-			}
+            return "1".equalsIgnoreCase(paramValue);
 		}
 		return false;
 	}
@@ -335,11 +328,8 @@ public class RequestUtils {
 	 */
 	public static boolean getBooleanParameter(HttpServletRequest request, String param, String value) {
 		String temp = getParameter(request, param);
-		if (temp != null && temp.equals(value)) {
-			return true;
-		}
-		return false;
-	}
+        return temp != null && temp.equals(value);
+    }
 
 	public static String getCookieValue(HttpServletRequest request, String name) {
 		String value = null;
@@ -354,7 +344,7 @@ public class RequestUtils {
 		return value;
 	}
 
-	public static String getCurrentSystem(HttpServletRequest request) {
+	private static String getCurrentSystem(HttpServletRequest request) {
 		String currentSystem = null;
 		String paramValue = request.getParameter(Constants.SYSTEM_NAME);
 		if (StringUtils.isNotEmpty(paramValue)) {
@@ -407,7 +397,7 @@ public class RequestUtils {
 		if (StringUtils.isNotEmpty(paramValue)) {
 			try {
 				return DateUtils.toDate(paramValue);
-			} catch (Exception ex) {
+			} catch (Exception ignored) {
 			}
 		}
 		return null;
@@ -432,7 +422,7 @@ public class RequestUtils {
 	 * @param defaultValue
 	 * @return
 	 */
-	public static double getDouble(HttpServletRequest request, String paramName, double defaultValue) {
+	private static double getDouble(HttpServletRequest request, String paramName, double defaultValue) {
 		String paramValue = request.getParameter(paramName);
 		if (StringUtils.isNotEmpty(paramValue) && StringUtils.isNumeric(paramValue)) {
 			return Double.parseDouble(paramValue);
@@ -440,7 +430,7 @@ public class RequestUtils {
 			if (StringUtils.isNotEmpty(paramValue)) {
 				try {
 					return Double.parseDouble(paramValue);
-				} catch (Exception ex) {
+				} catch (Exception ignored) {
 				}
 			}
 		}
@@ -462,7 +452,7 @@ public class RequestUtils {
 			}
 			try {
 				return DateUtils.toDate(paramValue);
-			} catch (Exception ex) {
+			} catch (Exception ignored) {
 			}
 		}
 		return null;
@@ -505,7 +495,7 @@ public class RequestUtils {
 	 * @param defaultValue
 	 * @return
 	 */
-	public static int getInt(HttpServletRequest request, String paramName, int defaultValue) {
+	private static int getInt(HttpServletRequest request, String paramName, int defaultValue) {
 		String paramValue = request.getParameter(paramName);
 		if (StringUtils.isNotEmpty(paramValue) && StringUtils.isNumeric(paramValue)) {
 			return Integer.parseInt(paramValue);
@@ -516,7 +506,7 @@ public class RequestUtils {
 			if (StringUtils.isNotEmpty(paramValue)) {
 				try {
 					return Integer.parseInt(paramValue);
-				} catch (Exception ex) {
+				} catch (Exception ignored) {
 				}
 			}
 		}
@@ -542,7 +532,7 @@ public class RequestUtils {
 	 * @param defaultValue
 	 * @return
 	 */
-	public static Integer getInteger(HttpServletRequest request, String paramName, Integer defaultValue) {
+	private static Integer getInteger(HttpServletRequest request, String paramName, Integer defaultValue) {
 		String paramValue = request.getParameter(paramName);
 		if (StringUtils.isNotEmpty(paramValue) && StringUtils.isNumeric(paramValue)) {
 			return Integer.parseInt(paramValue);
@@ -553,7 +543,7 @@ public class RequestUtils {
 			if (StringUtils.isNotEmpty(paramValue)) {
 				try {
 					return Integer.parseInt(paramValue);
-				} catch (Exception ex) {
+				} catch (Exception ignored) {
 				}
 			}
 		}
@@ -602,7 +592,7 @@ public class RequestUtils {
 	// proxy_set_header host $host;
 	// proxy_set_header x-real-ip $remote_addr;
 	// proxy_set_header x-forwarded-for $proxy_add_x_forwarded_for;
-	public static String getIPAddress(HttpServletRequest request) {
+	private static String getIPAddress(HttpServletRequest request) {
 		String ipAddress = request.getHeader("x-real-ip");
 		if (StringUtils.isEmpty(ipAddress) || "unknown".equalsIgnoreCase(ipAddress)) {
 			ipAddress = request.getHeader("x-forwarded-for");
@@ -653,7 +643,7 @@ public class RequestUtils {
 		return getLocalHostAddress(request, false);
 	}
 
-	public static String getLocalHostAddress(HttpServletRequest request, boolean includePort) {
+	private static String getLocalHostAddress(HttpServletRequest request, boolean includePort) {
 		String scheme = request.getScheme();
 		String serverName = request.getServerName();
 		String port = "";
@@ -691,7 +681,7 @@ public class RequestUtils {
 	 * @param defaultValue
 	 * @return
 	 */
-	public static long getLong(HttpServletRequest request, String paramName, long defaultValue) {
+	private static long getLong(HttpServletRequest request, String paramName, long defaultValue) {
 		String paramValue = request.getParameter(paramName);
 		if (StringUtils.isNotEmpty(paramValue) && StringUtils.isNumeric(paramValue)) {
 			return Long.parseLong(paramValue);
@@ -702,7 +692,7 @@ public class RequestUtils {
 			if (StringUtils.isNotEmpty(paramValue)) {
 				try {
 					return Integer.parseInt(paramValue);
-				} catch (Exception ex) {
+				} catch (Exception ignored) {
 				}
 			}
 		}
@@ -740,12 +730,12 @@ public class RequestUtils {
 	/**
 	 * 从request中封装一个对象
 	 * 
-	 * @param pRequest
+	 * @param request
 	 *            request对象
-	 * @param pModel
+	 * @param object
 	 *            封装对象的类
 	 * @return 超类
-	 * @throws InputInvalidException
+	 * @throws ServletException
 	 */
 	public static Object getParameter(HttpServletRequest request, Object object) throws ServletException {
 		Map<String, Object> dataMap = new java.util.HashMap<String, Object>();
@@ -762,7 +752,7 @@ public class RequestUtils {
 					try {
 						Date date = DateUtils.toDate(paramValue);
 						dataMap.put(paramName, date);
-					} catch (Exception ex) {
+					} catch (Exception ignored) {
 					}
 				}
 			}
@@ -782,7 +772,7 @@ public class RequestUtils {
 	 * @param name
 	 * @return
 	 */
-	public static String getParameter(HttpServletRequest request, String name) {
+	private static String getParameter(HttpServletRequest request, String name) {
 		String value = request.getParameter(name);
 		if (StringUtils.isEmpty(value)) {
 			String[] values = request.getParameterValues(name);
@@ -856,7 +846,7 @@ public class RequestUtils {
 						logger.debug(paramName + " value:" + paramValue);
 						Date date = DateUtils.toDate(paramValue);
 						dataMap.put(tmp, date);
-					} catch (java.lang.Throwable ex) {
+					} catch (java.lang.Throwable ignored) {
 					}
 				} else if (tmp.startsWith("x_encode_")) {
 					String name = StringTools.replace(paramName, "x_encode_", "");
@@ -918,7 +908,7 @@ public class RequestUtils {
 					try {
 						Date date = DateUtils.toDate(paramValue);
 						dataMap.put(paramName, date);
-					} catch (Exception ex) {
+					} catch (Exception ignored) {
 					}
 				} else if (tmp.startsWith("x_encode_")) {
 					String name = StringTools.replace(paramName, "x_encode_", "");
@@ -1003,7 +993,6 @@ public class RequestUtils {
 	 * 
 	 * @param request
 	 * @param paramName
-	 * @param defaultValue
 	 * @return
 	 */
 	public static String getString(HttpServletRequest request, String paramName) {

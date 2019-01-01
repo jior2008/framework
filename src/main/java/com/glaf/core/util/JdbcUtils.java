@@ -18,15 +18,10 @@
 
 package com.glaf.core.util;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.sql.Timestamp;
-import java.util.List;
-
 import org.apache.ibatis.session.SqlSession;
+
+import java.sql.*;
+import java.util.List;
 
 public final class JdbcUtils {
 
@@ -35,7 +30,7 @@ public final class JdbcUtils {
 			if (con != null && !con.isClosed()) {
 				con.close();
 			}
-		} catch (SQLException ex) {
+		} catch (SQLException ignored) {
 		}
 	}
 
@@ -44,23 +39,21 @@ public final class JdbcUtils {
 			if (con != null && !con.isClosed()) {
 				con.close();
 			}
-		} catch (SQLException ex) {
+		} catch (SQLException ignored) {
 		}
 
 		try {
 			if (stmt != null) {
 				stmt.close();
-				stmt = null;
 			}
-		} catch (SQLException ex) {
+		} catch (SQLException ignored) {
 		}
 
 		try {
 			if (rs != null) {
 				rs.close();
-				rs = null;
 			}
-		} catch (SQLException ex) {
+		} catch (SQLException ignored) {
 		}
 	}
 
@@ -68,9 +61,8 @@ public final class JdbcUtils {
 		try {
 			if (rs != null) {
 				rs.close();
-				rs = null;
 			}
-		} catch (SQLException ex) {
+		} catch (SQLException ignored) {
 		}
 	}
 
@@ -79,7 +71,7 @@ public final class JdbcUtils {
 			if (session != null) {
 				session.close();
 			}
-		} catch (Exception ex) {
+		} catch (Exception ignored) {
 		}
 	}
 
@@ -87,9 +79,8 @@ public final class JdbcUtils {
 		try {
 			if (stmt != null) {
 				stmt.close();
-				stmt = null;
 			}
-		} catch (SQLException ex) {
+		} catch (SQLException ignored) {
 		}
 	}
 
@@ -97,17 +88,15 @@ public final class JdbcUtils {
 		try {
 			if (stmt != null) {
 				stmt.close();
-				stmt = null;
 			}
-		} catch (SQLException ex) {
+		} catch (SQLException ignored) {
 		}
 
 		try {
 			if (rs != null) {
 				rs.close();
-				rs = null;
 			}
-		} catch (SQLException ex) {
+		} catch (SQLException ignored) {
 		}
 	}
 
@@ -144,7 +133,7 @@ public final class JdbcUtils {
 			if (con != null && !con.isClosed()) {
 				con.rollback();
 			}
-		} catch (SQLException ex) {
+		} catch (SQLException ignored) {
 		}
 	}
 

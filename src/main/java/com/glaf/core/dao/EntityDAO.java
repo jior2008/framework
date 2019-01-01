@@ -18,9 +18,9 @@
 
 package com.glaf.core.dao;
 
-import java.util.List;
-
 import com.glaf.core.id.IdBlock;
+
+import java.util.List;
 
 public interface EntityDAO {
 
@@ -36,7 +36,7 @@ public interface EntityDAO {
 	 * 删除多条记录
 	 * 
 	 * @param statementId
-	 * @param parameterObject
+	 * @param rowIds
 	 */
 	void deleteAll(String statementId, List<Object> rowIds);
 
@@ -114,7 +114,7 @@ public interface EntityDAO {
 	 * 插入多条记录
 	 * 
 	 * @param statementId
-	 * @param parameterObject
+	 * @param rows
 	 */
 	void insertAll(String statementId, List<Object> rows);
 
@@ -148,7 +148,8 @@ public interface EntityDAO {
 	 * 修改多条记录
 	 * 
 	 * @param statementId
-	 * @param parameterObject
+	 * @param rows
+	 *
 	 */
 	void updateAll(String statementId, List<Object> rows);
 

@@ -23,40 +23,40 @@ public abstract class TreeBase implements Component, java.lang.Comparable<TreeBa
 	// ========================================================
 
 	/** Holds value of property action, that is, Struts Logical Action Name. */
-	protected String action;
+	private String action;
 
 	/**
 	 * Align menu 'left','right','top','bottom' ...and other alignment of particular
 	 * menu system
 	 */
-	protected String align;
+	private String align;
 
 	/** Holds value of property altImage. */
-	protected String altImage;
+	private String altImage;
 
-	protected boolean checked;
+	private boolean checked;
 
 	private String cls;
 
-	protected String code;
+	private String code;
 
 	/** Holds value of property description. */
-	protected String description;
+	private String description;
 
 	/** Holds value of property forward. */
-	protected String forward;
+	private String forward;
 
 	/** Holds value of property height. */
-	protected String height;
+	private String height;
 
 	/** Holds value of property name. */
-	protected String id;
+	String id;
 
 	/** Holds value of property image. */
-	protected String image;
+	private String image;
 
 	/** Holds value of property location. */
-	protected String location;
+	private String location;
 
 	/**
 	 * Holds value of property module; a Struts module prefix that overrides the
@@ -66,51 +66,51 @@ public abstract class TreeBase implements Component, java.lang.Comparable<TreeBa
 	 * The default module is specified by <code>""</code>. Any non-default module
 	 * should begin with <code>"/"</code>.
 	 */
-	protected String module;
+	private String module;
 
 	/** Holds value of property onclick. */
-	protected String onclick;
+	private String onclick;
 
 	/** Holds value of property onContextTree */
-	protected String onContextTree;
+	private String onContextTree;
 
 	/** Holds value of property ondblclick. */
-	protected String ondblclick;
+	private String ondblclick;
 
 	/** Holds value of property onmouseout. */
-	protected String onmouseout;
+	private String onmouseout;
 
 	/** Holds value of property onmouseover. */
-	protected String onmouseover;
+	private String onmouseover;
 
 	/** Holds value of property page. */
-	protected String page;
+	private String page;
 
 	/** Holds value of property roles. */
-	protected String roles;
+	private String roles;
 
 	/** Holds value of property target. */
-	protected String target;
+	private String target;
 
 	/** Holds value of property title. */
-	protected String title;
+	private String title;
 
 	/** Holds value of property toolTip. */
-	protected String toolTip;
+	private String toolTip;
 
-	protected String treeId;
+	private String treeId;
 
 	/** Holds parsed (with variables) url that is used to render a link */
 	private String url;
 
 	/** Holds value of property width. */
-	protected String width;
+	private String width;
 
-	protected int level;
+	private int level;
 
-	protected int sortNo;
+	private int sortNo;
 
-	protected int locked;
+	private int locked;
 
 	// ~ Methods
 	// ================================================================
@@ -120,9 +120,7 @@ public abstract class TreeBase implements Component, java.lang.Comparable<TreeBa
 			return -1;
 		}
 
-		TreeBase obj = o;
-
-		int l = this.sortNo - obj.getSortNo();
+		int l = this.sortNo - o.getSortNo();
 
 		int ret = 0;
 
@@ -144,12 +142,9 @@ public abstract class TreeBase implements Component, java.lang.Comparable<TreeBa
 			return false;
 		TreeBase other = (TreeBase) obj;
 		if (id == null) {
-			if (other.id != null)
-				return false;
-		} else if (!id.equals(other.id))
-			return false;
-		return true;
-	}
+            return other.id == null;
+		} else return id.equals(other.id);
+    }
 
 	/**
 	 * Returns the value for action.
@@ -309,7 +304,7 @@ public abstract class TreeBase implements Component, java.lang.Comparable<TreeBa
 		return roles;
 	}
 
-	public int getSortNo() {
+	private int getSortNo() {
 		return sortNo;
 	}
 
@@ -442,7 +437,7 @@ public abstract class TreeBase implements Component, java.lang.Comparable<TreeBa
 	/**
 	 * Setter for property name.
 	 * 
-	 * @param name
+	 * @param id
 	 *            New value of property name.
 	 */
 	public void setId(String id) {

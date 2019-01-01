@@ -18,9 +18,6 @@
 
 package com.glaf.framework.config;
 
-import java.io.IOException;
-import javax.sql.DataSource;
-
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.SqlSessionFactoryBean;
 import org.mybatis.spring.SqlSessionTemplate;
@@ -34,10 +31,13 @@ import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.core.io.support.ResourcePatternResolver;
 
+import javax.sql.DataSource;
+import java.io.IOException;
+
 @Configuration
 @AutoConfigureAfter(DruidConfig.class)
 public class MyBatisConfig {
-	protected final Logger logger = LoggerFactory.getLogger(getClass());
+	private final Logger logger = LoggerFactory.getLogger(getClass());
 
 	@Bean
 	@ConditionalOnMissingBean // 当容器里没有指定的Bean的情况下创建该对象

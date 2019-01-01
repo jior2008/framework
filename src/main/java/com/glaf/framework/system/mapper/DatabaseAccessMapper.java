@@ -17,9 +17,10 @@
  */
 package com.glaf.framework.system.mapper;
 
-import java.util.List;
+import com.glaf.framework.system.domain.DatabaseAccess;
 import org.springframework.stereotype.Component;
-import com.glaf.framework.system.domain.*;
+
+import java.util.List;
 
 /**
  * 

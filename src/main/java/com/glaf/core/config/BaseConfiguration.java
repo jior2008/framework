@@ -18,10 +18,10 @@
 
 package com.glaf.core.config;
 
-import java.util.Map.Entry;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
+import java.util.Map.Entry;
 
 /**
  * Adds base configuration files to a Configuration
@@ -35,7 +35,7 @@ public class BaseConfiguration extends Configuration {
 		addCustomResources(this);
 	}
 
-	public static Configuration addCustomResources(Configuration conf) {
+	private static Configuration addCustomResources(Configuration conf) {
 		conf.addResource("glaf-core-default.xml");
 		conf.addResource("glaf-core-site.xml");
 		return conf;
@@ -74,7 +74,7 @@ public class BaseConfiguration extends Configuration {
 	 * @param srcConf
 	 *            the source configuration
 	 **/
-	public static void merge(Configuration destConf, Configuration srcConf) {
+	private static void merge(Configuration destConf, Configuration srcConf) {
 		for (Entry<String, String> e : srcConf) {
 			destConf.set(e.getKey(), e.getValue());
 		}

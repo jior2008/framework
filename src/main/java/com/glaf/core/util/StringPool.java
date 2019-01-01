@@ -20,7 +20,7 @@ package com.glaf.core.util;
 
 import java.nio.charset.Charset;
 
-public class StringPool {
+class StringPool {
 
 	public static final String AMPERSAND = "&";
 
@@ -28,7 +28,7 @@ public class StringPool {
 
 	public static final String APOSTROPHE = "'";
 
-	public static final String[] ASCII_TABLE = new String[128];
+	private static final String[] ASCII_TABLE = new String[128];
 
 	public static final String AT = "@";
 
@@ -99,7 +99,7 @@ public class StringPool {
 
 	public static final String FALSE = "false";
 
-	public static final String FORWARD_SLASH = "/";
+	private static final String FORWARD_SLASH = "/";
 
 	public static final String FOUR_SPACES = "    ";
 

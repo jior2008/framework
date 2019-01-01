@@ -18,12 +18,9 @@
 
 package com.glaf.core.util;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.PrintWriter;
-import java.io.StringWriter;
-import java.util.Iterator;
-import java.util.List;
+import org.w3c.dom.CharacterData;
+import org.w3c.dom.*;
+import org.xml.sax.SAXException;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -34,15 +31,14 @@ import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.util.Iterator;
+import java.util.List;
 
-import org.w3c.dom.CharacterData;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-import org.xml.sax.SAXException;
-
-public class XmlUtils {
+class XmlUtils {
 
 	public static Element element(Element element) {
 		NodeList nodeList = element.getChildNodes();
@@ -73,7 +69,7 @@ public class XmlUtils {
 		return elements(element, tagName).iterator();
 	}
 
-	public static List<Element> elements(Element element) {
+	private static List<Element> elements(Element element) {
 		List<Element> elements = new java.util.ArrayList<Element>();
 		NodeList nodeList = element.getChildNodes();
 		for (int i = 0; i < nodeList.getLength(); i++) {
@@ -85,7 +81,7 @@ public class XmlUtils {
 		return elements;
 	}
 
-	public static List<Element> elements(Element element, String tagName) {
+	private static List<Element> elements(Element element, String tagName) {
 		NodeList nodeList = element.getElementsByTagName(tagName);
 		List<Element> elements = new java.util.ArrayList<Element>(nodeList.getLength());
 		for (int i = 0; i < nodeList.getLength(); i++) {
@@ -110,7 +106,7 @@ public class XmlUtils {
 		return text.toString();
 	}
 
-	public static DocumentBuilder getDocumentBuilder() {
+	private static DocumentBuilder getDocumentBuilder() {
 		try {
 			return DocumentBuilderFactory.newInstance().newDocumentBuilder();
 		} catch (ParserConfigurationException e) {
@@ -119,7 +115,7 @@ public class XmlUtils {
 	}
 
 	public static Document parseXmlInputStream(InputStream inputStream) {
-		Document document = null;
+		Document document;
 		try {
 			document = getDocumentBuilder().parse(inputStream);
 			inputStream.close();

@@ -13,13 +13,12 @@
 
 package com.glaf.core.base;
 
-import org.dom4j.Document;
-
 import com.glaf.core.model.TableDefinition;
+import org.dom4j.Document;
 
 public interface Generation {
 
-	public final static String newline = System.getProperty("line.separator");
+	String newline = System.getProperty("line.separator");
 
 	/**
 	 * 添加节点

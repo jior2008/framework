@@ -18,12 +18,12 @@
 
 package com.glaf.core.util.serializer;
 
+import org.nustaq.serialization.FSTObjectInput;
+import org.nustaq.serialization.FSTObjectOutput;
+
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-
-import org.nustaq.serialization.FSTObjectInput;
-import org.nustaq.serialization.FSTObjectOutput;
 
 /**
  * 使用 FST 实现序列化
@@ -44,7 +44,7 @@ public class FSTSerializer implements Serializer {
 			if (in != null)
 				try {
 					in.close();
-				} catch (IOException e) {
+				} catch (IOException ignored) {
 				}
 		}
 	}
@@ -56,7 +56,7 @@ public class FSTSerializer implements Serializer {
 
 	@Override
 	public byte[] serialize(Object obj) throws IOException {
-		ByteArrayOutputStream out = null;
+		ByteArrayOutputStream out;
 		FSTObjectOutput fout = null;
 		try {
 			out = new ByteArrayOutputStream();
@@ -68,7 +68,7 @@ public class FSTSerializer implements Serializer {
 			if (fout != null)
 				try {
 					fout.close();
-				} catch (IOException e) {
+				} catch (IOException ignored) {
 				}
 		}
 	}

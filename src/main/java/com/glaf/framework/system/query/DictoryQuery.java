@@ -18,25 +18,26 @@
 
 package com.glaf.framework.system.query;
 
-import java.util.*;
 import com.glaf.core.query.DataQuery;
+
+import java.util.List;
 
 public class DictoryQuery extends DataQuery {
 	private static final long serialVersionUID = 1L;
-	protected String code;
-	protected String codeLike;
-	protected List<String> codes;
-	protected String descLike;
-	protected String name;
-	protected String nameLike;
-	protected List<String> names;
-	protected Long nodeId;
-	protected List<Long> nodeIds;
-	protected Integer sortGreaterThan;
-	protected Integer sortGreaterThanOrEqual;
-	protected Integer sortLessThan;
-	protected Integer sortLessThanOrEqual;
-	protected Long idNotEqual;
+	private String code;
+	private String codeLike;
+	private List<String> codes;
+	private String descLike;
+	private String name;
+	private String nameLike;
+	private List<String> names;
+	private Long nodeId;
+	private List<Long> nodeIds;
+	private Integer sortGreaterThan;
+	private Integer sortGreaterThanOrEqual;
+	private Integer sortLessThan;
+	private Integer sortLessThanOrEqual;
+	private Long idNotEqual;
 
 	public Long getIdNotEqual() {
 		return idNotEqual;

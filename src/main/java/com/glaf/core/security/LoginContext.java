@@ -18,17 +18,16 @@
 
 package com.glaf.core.security;
 
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.StringTokenizer;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import com.alibaba.fastjson.JSONObject;
 import com.glaf.core.base.JSONable;
 import com.glaf.core.identity.Tenant;
 import com.glaf.core.identity.User;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.StringTokenizer;
 
 /**
  * 安全上下文 <br/>
@@ -52,90 +51,90 @@ public class LoginContext implements java.io.Serializable, Cloneable, JSONable {
 	/**
 	 * 代理人编号集合
 	 */
-	protected Collection<String> agents = new HashSet<String>();
+	private Collection<String> agents = new HashSet<String>();
 
 	/**
 	 * 当前访问级别
 	 */
-	protected int currentAccessLevel;
+	private int currentAccessLevel;
 
 	/**
 	 * 部门编号
 	 */
-	protected long organizationId;
+	private long organizationId;
 
 	/**
 	 * 功能集合
 	 */
-	protected Collection<String> functions = new HashSet<String>();
+	private Collection<String> functions = new HashSet<String>();
 
 	/**
 	 * 观察者集合
 	 */
-	protected Collection<String> observers = new HashSet<String>();
+	private Collection<String> observers = new HashSet<String>();
 
 	/**
 	 * 权限点集合
 	 */
-	protected Collection<String> permissions = new HashSet<String>();
+	private Collection<String> permissions = new HashSet<String>();
 
 	/**
 	 * 角色代码集合
 	 */
-	protected Collection<String> roles = new HashSet<String>();
+	private Collection<String> roles = new HashSet<String>();
 
 	/**
 	 * 班级集合
 	 */
-	protected Collection<String> gradeIds = new HashSet<String>();
+	private Collection<String> gradeIds = new HashSet<String>();
 
 	/**
 	 * 管理的租户集合
 	 */
-	protected Collection<String> managedTenantIds = new HashSet<String>();
+	private Collection<String> managedTenantIds = new HashSet<String>();
 
 	/**
 	 * 首页链接
 	 */
-	protected String indexUrl;
+	private String indexUrl;
 
 	/**
 	 * 皮肤
 	 */
-	protected String skin;
+	private String skin;
 
 	/**
 	 * 子部门编号
 	 */
-	protected Collection<Long> subOrganizationIds = new HashSet<Long>();
+	private Collection<Long> subOrganizationIds = new HashSet<Long>();
 
 	/**
 	 * 标段编号
 	 */
-	protected Collection<Long> databaseIds = new HashSet<Long>();
+	private Collection<Long> databaseIds = new HashSet<Long>();
 
-	protected long currentDatabaseId;
+	private long currentDatabaseId;
 
-	protected String currentSystemName;
+	private String currentSystemName;
 
 	/**
 	 * 用户系统
 	 */
-	protected int systemType;
+	private int systemType;
 
 	/**
 	 * 登录用户
 	 */
-	protected User user;
+	private User user;
 
 	/**
 	 * 登录用户所属租户
 	 */
-	protected Tenant tenant;
+	private Tenant tenant;
 
 	protected String tenantId;
 
-	protected int limit;
+	private int limit;
 
 	public LoginContext() {
 
@@ -227,11 +226,11 @@ public class LoginContext implements java.io.Serializable, Cloneable, JSONable {
 		}
 	}
 
-	public LoginContext clone() {
+	public LoginContext copy() {
 		return clone(this);
 	}
 
-	public LoginContext clone(LoginContext loginContext) {
+	private LoginContext clone(LoginContext loginContext) {
 		return LoginContextUtils.clone(loginContext);
 	}
 
@@ -248,14 +247,9 @@ public class LoginContext implements java.io.Serializable, Cloneable, JSONable {
 		}
 		LoginContext other = (LoginContext) obj;
 		if (user == null) {
-			if (other.getUser() != null) {
-				return false;
-			}
-		} else if (!user.equals(other.getUser())) {
-			return false;
-		}
-		return true;
-	}
+            return other.getUser() == null;
+		} else return user.equals(other.getUser());
+    }
 
 	public String getActorId() {
 		if (user != null) {

@@ -18,19 +18,18 @@
 
 package com.glaf.framework.system.domain;
 
+import com.alibaba.fastjson.JSONObject;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.glaf.core.base.JSONable;
+import com.glaf.core.base.TreeModel;
+import com.glaf.framework.system.factory.SysTreeJsonFactory;
+
+import javax.persistence.*;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-import javax.persistence.*;
-import com.alibaba.fastjson.*;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-
-import com.glaf.framework.system.factory.SysTreeJsonFactory;
-
-import com.glaf.core.base.JSONable;
-import com.glaf.core.base.TreeModel;
 
 @Entity
 @Table(name = "SYS_TREE")
@@ -39,160 +38,160 @@ public class SysTree implements Serializable, TreeModel, JSONable {
 
 	@Id
 	@Column(name = "ID", nullable = false)
-	protected long id;
+	private long id;
 
 	/**
 	 * 父节点编号
 	 */
 	@Column(name = "PARENTID")
-	protected long parentId;
+	private long parentId;
 
 	/**
 	 * 编码
 	 */
 	@Column(name = "CODE", length = 50)
-	protected String code;
+	private String code;
 
 	/**
 	 * 节点描述
 	 */
 	@Column(name = "NODEDESC", length = 500)
-	protected String desc;
+	private String desc;
 
 	/**
 	 * 鉴别符
 	 */
 	@Column(name = "DISCRIMINATOR", length = 10)
-	protected String discriminator;
+	private String discriminator;
 
 	/**
 	 * 图标
 	 */
 	@Column(name = "ICON", length = 50)
-	protected String icon;
+	private String icon;
 
 	/**
 	 * 图标样式
 	 */
 	@Column(name = "ICONCLS", length = 50)
-	protected String iconCls;
+	private String iconCls;
 
 	@Column(name = "LEVEL")
-	protected int level;
+	private int level;
 
 	/**
 	 * 是否启用
 	 */
 	@Column(name = "LOCKED")
-	protected int locked;// 是否有效[默认有效0]
+	private int locked;// 是否有效[默认有效0]
 
 	@Column(name = "DELETEFLAG")
-	protected int deleteFlag;
+	private int deleteFlag;
 
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "DELETETIME")
-	protected Date deleteTime;
+	private Date deleteTime;
 
 	/**
 	 * 是否可以移动
 	 */
 	@Column(name = "MOVEABLE", length = 10)
-	protected String moveable;
+	private String moveable;
 
 	/**
 	 * 名称
 	 */
 	@Column(name = "NAME", length = 100)
-	protected String name;
+	private String name;
 
 	/**
 	 * 序号
 	 */
 	@Column(name = "SORTNO")
-	protected int sort;
+	private int sort;
 
 	/**
 	 * 树型结构编号
 	 */
 	@Column(name = "TREEID", length = 500)
-	protected String treeId;
+	private String treeId;
 
 	/**
 	 * 允许单个文件大小
 	 */
 	@Column(name = "ALLOWEDFIZESIZE")
-	protected int allowedFizeSize;
+	private int allowedFizeSize;
 
 	/**
 	 * 允许文件列表
 	 */
 	@Column(name = "ALLOWEDFILEEXTS", length = 200)
-	protected String allowedFileExts;
+	private String allowedFileExts;
 
 	/**
 	 * Provider
 	 */
 	@Column(name = "PROVIDERCLASS", length = 100)
-	protected String providerClass;
+	private String providerClass;
 
 	/**
 	 * 值
 	 */
 	@Column(name = "VALUE_", length = 2000)
-	protected String value;
+	private String value;
 
 	/**
 	 * 创建人
 	 */
 	@Column(name = "CREATEBY", length = 50)
-	protected String createBy;
+	private String createBy;
 
 	/**
 	 * 创建日期
 	 */
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "CREATEDATE")
-	protected Date createDate;
+	private Date createDate;
 
 	/**
 	 * 修改人
 	 */
 	@Column(name = "UPDATEBY", length = 50)
-	protected String updateBy;
+	private String updateBy;
 
 	/**
 	 * 修改日期
 	 */
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "UPDATEDATE")
-	protected Date updateDate;
+	private Date updateDate;
 
 	/**
 	 * 链接地址
 	 */
 	@Column(name = "URL", length = 500)
-	protected String url;
+	private String url;
 
 	@javax.persistence.Transient
-	protected String blank;
+	private String blank;
 
 	@javax.persistence.Transient
-	protected String cacheFlag;
+	private String cacheFlag;
 
 	@javax.persistence.Transient
-	protected boolean checked;
+	private boolean checked;
 
 	@javax.persistence.Transient
-	protected TreeModel parent;
+	private TreeModel parent;
 
 	@javax.persistence.Transient
-	protected SysTree parentTree;
+	private SysTree parentTree;
 
 	@javax.persistence.Transient
-	protected Map<String, Object> dataMap;
+	private Map<String, Object> dataMap;
 
 	@javax.persistence.Transient
-	protected List<TreeModel> children = new ArrayList<TreeModel>();
+	private List<TreeModel> children = new ArrayList<TreeModel>();
 
 	public SysTree() {
 
@@ -211,9 +210,7 @@ public class SysTree implements Serializable, TreeModel, JSONable {
 			return -1;
 		}
 
-		TreeModel obj = o;
-
-		int l = this.sort - obj.getSortNo();
+		int l = this.sort - o.getSortNo();
 
 		int ret = 0;
 
@@ -234,10 +231,8 @@ public class SysTree implements Serializable, TreeModel, JSONable {
 		if (getClass() != obj.getClass())
 			return false;
 		SysTree other = (SysTree) obj;
-		if (id != other.id)
-			return false;
-		return true;
-	}
+        return id == other.id;
+    }
 
 	public String getAllowedFileExts() {
 		return allowedFileExts;

@@ -18,13 +18,13 @@
 
 package com.glaf.framework.system.factory;
 
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
-
 import com.glaf.core.model.ColumnDefinition;
 import com.glaf.core.model.TableDefinition;
 import com.glaf.core.util.DBUtils;
+
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 /**
  * 
@@ -33,11 +33,11 @@ import com.glaf.core.util.DBUtils;
  */
 public class DatabaseDomainFactory {
 
-	public static final String TABLENAME = "SYS_DATABASE";
+	private static final String TABLENAME = "SYS_DATABASE";
 
-	public static final ConcurrentMap<String, String> columnMap = new ConcurrentHashMap<String, String>();
+	private static final ConcurrentMap<String, String> columnMap = new ConcurrentHashMap<String, String>();
 
-	public static final ConcurrentMap<String, String> javaTypeMap = new ConcurrentHashMap<String, String>();
+	private static final ConcurrentMap<String, String> javaTypeMap = new ConcurrentHashMap<String, String>();
 
 	static {
 		columnMap.put("id", "ID_");
@@ -133,7 +133,7 @@ public class DatabaseDomainFactory {
 
 	public static TableDefinition createTable() {
 		TableDefinition tableDefinition = getTableDefinition(TABLENAME);
-		if (!DBUtils.tableExists(TABLENAME)) {
+		if (DBUtils.tableExists(TABLENAME)) {
 			DBUtils.createTable(tableDefinition);
 		} else {
 			DBUtils.alterTable(tableDefinition);
@@ -143,7 +143,7 @@ public class DatabaseDomainFactory {
 
 	public static TableDefinition createTable(String tableName) {
 		TableDefinition tableDefinition = getTableDefinition(tableName);
-		if (!DBUtils.tableExists(tableName)) {
+		if (DBUtils.tableExists(tableName)) {
 			DBUtils.createTable(tableDefinition);
 		} else {
 			DBUtils.alterTable(tableDefinition);
@@ -163,7 +163,7 @@ public class DatabaseDomainFactory {
 		return getTableDefinition(TABLENAME);
 	}
 
-	public static TableDefinition getTableDefinition(String tableName) {
+	private static TableDefinition getTableDefinition(String tableName) {
 		tableName = tableName.toUpperCase();
 		TableDefinition tableDefinition = new TableDefinition();
 		tableDefinition.setTableName(tableName);

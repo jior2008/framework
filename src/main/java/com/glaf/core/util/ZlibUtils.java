@@ -17,6 +17,8 @@
  */
 package com.glaf.core.util;
 
+import org.apache.commons.io.IOUtils;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -26,13 +28,11 @@ import java.util.zip.DeflaterOutputStream;
 import java.util.zip.Inflater;
 import java.util.zip.InflaterInputStream;
 
-import org.apache.commons.io.IOUtils;
-
 /**
  * ZLib压缩工具
  * 
  */
-public class ZlibUtils {
+class ZlibUtils {
 	private static final int BUFFER = 8192;
 
 	/**
@@ -43,7 +43,7 @@ public class ZlibUtils {
 	 * @return byte[] 压缩后的数据
 	 */
 	public static byte[] compress(byte[] data) {
-		byte[] output = null;
+		byte[] output;
 		Deflater compresser = new Deflater();
 		compresser.reset();
 		compresser.setInput(data);
@@ -59,13 +59,12 @@ public class ZlibUtils {
 			output = baos.toByteArray();
 			compresser.end();
 		} catch (Exception ex) {
-
 			throw new RuntimeException(ex);
 		} finally {
 			if (baos != null) {
 				try {
 					baos.close();
-				} catch (IOException e) {
+				} catch (IOException ignored) {
 				}
 			}
 		}
@@ -89,7 +88,6 @@ public class ZlibUtils {
 			dos.finish();
 			dos.flush();
 		} catch (IOException ex) {
-
 			throw new RuntimeException(ex);
 		} finally {
 			IOUtils.closeQuietly(dos);
@@ -104,7 +102,7 @@ public class ZlibUtils {
 	 * @return byte[] 解压缩后的数据
 	 */
 	public static byte[] uncompress(byte[] data) {
-		byte[] output = null;
+		byte[] output;
 		Inflater decompresser = new Inflater();
 		decompresser.reset();
 		decompresser.setInput(data);
@@ -119,13 +117,12 @@ public class ZlibUtils {
 			output = baos.toByteArray();
 			decompresser.end();
 		} catch (Exception ex) {
-
 			throw new RuntimeException(ex);
 		} finally {
 			if (baos != null) {
 				try {
 					baos.close();
-				} catch (IOException e) {
+				} catch (IOException ignored) {
 				}
 			}
 		}
@@ -140,7 +137,7 @@ public class ZlibUtils {
 	 * @return byte[] 解压缩后的数据
 	 */
 	public static byte[] uncompress(InputStream inputStream) {
-		byte[] bytes = null;
+		byte[] bytes;
 		InflaterInputStream iis = null;
 		ByteArrayOutputStream baos = null;
 		try {
@@ -153,7 +150,6 @@ public class ZlibUtils {
 			}
 			bytes = baos.toByteArray();
 		} catch (IOException ex) {
-
 			throw new RuntimeException(ex);
 		} finally {
 			IOUtils.closeQuietly(iis);

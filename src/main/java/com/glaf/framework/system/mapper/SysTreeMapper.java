@@ -18,12 +18,11 @@
 
 package com.glaf.framework.system.mapper;
 
-import java.util.List;
-
-import org.springframework.stereotype.Component;
-
 import com.glaf.framework.system.domain.SysTree;
 import com.glaf.framework.system.query.SysTreeQuery;
+import org.springframework.stereotype.Component;
+
+import java.util.List;
 
 @Component
 public interface SysTreeMapper {

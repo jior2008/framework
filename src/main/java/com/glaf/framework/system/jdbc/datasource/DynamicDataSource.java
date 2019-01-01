@@ -18,38 +18,36 @@
 
 package com.glaf.framework.system.jdbc.datasource;
 
-import java.util.Properties;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.springframework.jdbc.datasource.lookup.AbstractRoutingDataSource;
-
 import com.glaf.core.config.Environment;
 import com.glaf.core.config.SystemProperties;
- 
 import com.glaf.core.util.Constants;
 import com.glaf.core.util.PropertiesUtils;
 import com.glaf.framework.system.jdbc.connection.ConnectionProvider;
 import com.glaf.framework.system.jdbc.connection.ConnectionProviderFactory;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.springframework.jdbc.datasource.lookup.AbstractRoutingDataSource;
 
-public class DynamicDataSource extends AbstractRoutingDataSource {
-	protected final static Log logger = LogFactory
+import java.util.Properties;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
+
+class DynamicDataSource extends AbstractRoutingDataSource {
+	private final static Log logger = LogFactory
 			.getLog(DynamicDataSource.class);
 
-	private static ConcurrentMap<Object, Object> targetDataSources = new ConcurrentHashMap<Object, Object>();
+	private static final ConcurrentMap<Object, Object> targetDataSources = new ConcurrentHashMap<Object, Object>();
 
 	private static Object defaultTargetDataSource;
 
-	public DynamicDataSource() {
+	private DynamicDataSource() {
 
 	}
 
 	@Override
 	public void afterPropertiesSet() {
 		try {
-			String path = null;
+			String path;
 			String deploymentSystemName = SystemProperties
 					.getDeploymentSystemName();
 			if (deploymentSystemName != null

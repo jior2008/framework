@@ -17,7 +17,7 @@ public class SecurityException extends RuntimeException {
 
 	private static final long serialVersionUID = 1L;
 
-	protected Throwable cause;
+	private Throwable cause;
 
 	public SecurityException(Throwable cause) {
 		this.cause = cause;

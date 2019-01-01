@@ -18,15 +18,15 @@
 
 package com.glaf.core.util;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
-public class ByteBlockChopper {
+class ByteBlockChopper {
 
 	private static final Log log = LogFactory.getLog(ByteBlockChopper.class);
 
@@ -68,12 +68,12 @@ public class ByteBlockChopper {
 
 				byteArray = new byte[byteCount];
 				int offset = 0;
-				for (int i = 0, n = blockCount; i < n; i++) {
+				for (int i = 0; i < blockCount; i++) {
 					byte[] block = (byte[]) byteBlocks.get(i);
 					int length = block.length;
 					System.arraycopy(block, 0, byteArray, offset, length);
 					log.debug("glued " + length + " bytes beggining at " + offset);
-					if (length < blockSize && i < n - 1) {
+					if (length < blockSize && i < blockCount - 1) {
 						Arrays.fill(byteArray, offset + length, offset + blockSize, (byte) 0);
 						log.debug("zero filled " + (blockSize - length) + " trailing bytes");
 						offset += blockSize;

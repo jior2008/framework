@@ -18,8 +18,6 @@
 
 package com.glaf.core.factory;
 
-import java.util.List;
-
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -29,6 +27,8 @@ import com.glaf.core.model.ColumnDefinition;
 import com.glaf.core.model.TableDefinition;
 import com.glaf.core.util.DateUtils;
 import com.glaf.core.util.RequestUtils;
+
+import java.util.List;
 
 public class TableDefinitionJsonFactory {
 
