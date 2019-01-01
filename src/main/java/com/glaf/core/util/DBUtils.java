@@ -1952,7 +1952,7 @@ public class DBUtils {
 			return false;
 		}
 		char[] sourceChrs = columnName.toCharArray();
-		Character chr = sourceChrs[0];
+		char chr = sourceChrs[0];
 		if (!((chr == 95) || (65 <= chr && chr <= 90)
 				|| (97 <= chr && chr <= 122))) {
 			return false;
@@ -1973,7 +1973,7 @@ public class DBUtils {
 			return false;
 		}
 		char[] sourceChrs = sourceString.toCharArray();
-		Character chr = sourceChrs[0];
+		char chr = sourceChrs[0];
 		if (!((chr == 95) || (65 <= chr && chr <= 90)
 				|| (97 <= chr && chr <= 122))) {
 			return false;

@@ -87,10 +87,6 @@ public class DataQuery extends BaseQuery {
 		return objectValue;
 	}
 
-	public boolean getOnlyDataModels() {
-		return true;
-	}
-
 	public Long getParentId() {
 		return parentId;
 	}

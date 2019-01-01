@@ -86,8 +86,6 @@ public interface Agent extends Serializable {
 
 	void setTaskName(String taskName);
 
-	void setValid(boolean valid);
-
 	JSONObject toJsonObject();
 
 }

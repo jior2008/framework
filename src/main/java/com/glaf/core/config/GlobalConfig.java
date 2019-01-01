@@ -43,7 +43,7 @@ public class GlobalConfig {
 	public static Properties getConfigProperties(String filename) {
 		String path = "/conf/" + filename;
 		logger.info("load classpath properties file:" + path);
-		Resource resource = null;
+		Resource resource;
 		InputStream inputStream = null;
 		try {
 			resource = new ClassPathResource(path);

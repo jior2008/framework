@@ -81,14 +81,14 @@ public class TreeRepository implements Serializable {
 		List<TreeComponent> menuList = this.getTopTrees();
 		TreeComponent[] menus = new TreeComponent[menuList.size()];
 		for (int i = 0, len = menuList.size(); i < len; i++) {
-			menus[i] = (TreeComponent) menuList.get(i);
+			menus[i] = menuList.get(i);
 		}
 
 		return menus;
 	}
 
 	public TreeComponent getTree(String id) {
-		return (TreeComponent) treesMap.get(id);
+		return treesMap.get(id);
 	}
 
 	public Set<String> getTreeIds() {

@@ -269,14 +269,14 @@ final class StringHelper {
 	 */
 	private static String collapseQualifier(String qualifier, boolean includeDots) {
 		StringTokenizer tokenizer = new StringTokenizer(qualifier, ".");
-		String collapsed = Character.toString(tokenizer.nextToken().charAt(0));
+		StringBuilder collapsed = new StringBuilder(Character.toString(tokenizer.nextToken().charAt(0)));
 		while (tokenizer.hasMoreTokens()) {
 			if (includeDots) {
-				collapsed += '.';
+				collapsed.append('.');
 			}
-			collapsed += tokenizer.nextToken().charAt(0);
+			collapsed.append(tokenizer.nextToken().charAt(0));
 		}
-		return collapsed;
+		return collapsed.toString();
 	}
 
 	/**
@@ -343,8 +343,7 @@ final class StringHelper {
 
 	public static String unroot(String qualifiedName) {
 		int loc = qualifiedName.indexOf(".");
-		return (loc < 0) ? qualifiedName : qualifiedName.substring(loc + 1,
-				qualifiedName.length());
+		return (loc < 0) ? qualifiedName : qualifiedName.substring(loc + 1);
 	}
 
 	public static boolean booleanValue(String tfString) {

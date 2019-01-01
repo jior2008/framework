@@ -377,19 +377,17 @@ public class ResponseUtils {
 
 	private static byte[] responseXmlResult(boolean success) {
 		if (success) {
-			StringBuilder buffer = new StringBuilder(500);
-			buffer.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
-			buffer.append("<response>");
-			buffer.append("\n    <statusCode>200</statusCode>");
-			buffer.append("\n</response>");
-            return buffer.toString().getBytes(StandardCharsets.UTF_8);
+			String buffer = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
+					"<response>" +
+					"\n    <statusCode>200</statusCode>" +
+					"\n</response>";
+			return buffer.getBytes(StandardCharsets.UTF_8);
         } else {
-			StringBuilder buffer = new StringBuilder(500);
-			buffer.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
-			buffer.append("<response>");
-			buffer.append("\n    <statusCode>500</statusCode>");
-			buffer.append("\n</response>");
-            return buffer.toString().getBytes(StandardCharsets.UTF_8);
+			String buffer = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
+					"<response>" +
+					"\n    <statusCode>500</statusCode>" +
+					"\n</response>";
+			return buffer.getBytes(StandardCharsets.UTF_8);
         }
 	}
 
@@ -425,21 +423,19 @@ public class ResponseUtils {
 
 	public static byte[] responseXmlResult(boolean success, String message) {
 		if (success) {
-			StringBuilder buffer = new StringBuilder(500);
-			buffer.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
-			buffer.append("<response>");
-			buffer.append("\n    <statusCode>200</statusCode>");
-			buffer.append("\n    <message>").append(message).append("</message>");
-			buffer.append("\n</response>");
-            return buffer.toString().getBytes(StandardCharsets.UTF_8);
+			String buffer = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
+					"<response>" +
+					"\n    <statusCode>200</statusCode>" +
+					"\n    <message>" + message + "</message>" +
+					"\n</response>";
+			return buffer.getBytes(StandardCharsets.UTF_8);
         } else {
-			StringBuilder buffer = new StringBuilder(500);
-			buffer.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
-			buffer.append("<response>");
-			buffer.append("\n    <statusCode>500</statusCode>");
-			buffer.append("\n    <message>").append(message).append("</message>");
-			buffer.append("\n</response>");
-            return buffer.toString().getBytes(StandardCharsets.UTF_8);
+			String buffer = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
+					"<response>" +
+					"\n    <statusCode>500</statusCode>" +
+					"\n    <message>" + message + "</message>" +
+					"\n</response>";
+			return buffer.getBytes(StandardCharsets.UTF_8);
         }
 	}
 

@@ -316,11 +316,11 @@ public class FileUtils {
 		int pos;
 		pos = filePathName.lastIndexOf(47);
 		if (pos != -1) {
-			return filePathName.substring(pos + 1, filePathName.length());
+			return filePathName.substring(pos + 1);
 		}
 		pos = filePathName.lastIndexOf(92);
 		if (pos != -1) {
-			return filePathName.substring(pos + 1, filePathName.length());
+			return filePathName.substring(pos + 1);
 		} else {
 			return filePathName;
 		}

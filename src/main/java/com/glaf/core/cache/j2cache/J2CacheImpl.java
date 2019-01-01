@@ -53,8 +53,7 @@ public class J2CacheImpl implements Cache {
 		}
 		if (object != null) {
 			logger.debug("get object from j2cache.");
-			CacheObject cacheObject = object;
-			Object value = cacheObject.getValue();
+			Object value = object.getValue();
 			if (value != null) {
 				// logger.debug("value class:" + value.getClass().getName());
 				if (value instanceof String) {
@@ -64,11 +63,11 @@ public class J2CacheImpl implements Cache {
 					byte[] bytes = (byte[]) value;
 					return new String(bytes, StandardCharsets.UTF_8);
 				} else {
-					return cacheObject.asString();
+					return object.asString();
 				}
 			} else {
 				logger.debug("value is null.");
-				return cacheObject.asString();
+				return object.asString();
 			}
 		}
 		return null;

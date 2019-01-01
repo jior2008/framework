@@ -260,7 +260,7 @@ public final class PropertiesHelper {
 		while (itr.hasNext()) {
 			final Map.Entry entry = (Map.Entry) itr.next();
 			final Object value = entry.getValue();
-			if (String.class.isInstance(value)) {
+			if (value instanceof String) {
 				final String resolved = resolvePlaceHolder((String) value);
 				if (!value.equals(resolved)) {
 					if (resolved == null) {
@@ -291,10 +291,10 @@ public final class PropertiesHelper {
 				// peek ahead
 				if (chars[pos + 1] == '{') {
 					// we have a placeholder, spin forward till we find the end
-					String systemPropertyName = "";
+					StringBuilder systemPropertyName = new StringBuilder();
 					int x = pos + 2;
 					for (; x < chars.length && chars[x] != '}'; x++) {
-						systemPropertyName += chars[x];
+						systemPropertyName.append(chars[x]);
 						// if we reach the end of the string w/o finding the
 						// matching end, that is an exception
 						if (x == chars.length - 1) {
@@ -303,7 +303,7 @@ public final class PropertiesHelper {
 											+ "]");
 						}
 					}
-					String systemProperty = extractFromSystem(systemPropertyName);
+					String systemProperty = extractFromSystem(systemPropertyName.toString());
 					buff.append(systemProperty == null ? "" : systemProperty);
 					pos = x + 1;
 					// make sure spinning forward did not put us past the end of

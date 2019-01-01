@@ -28,27 +28,28 @@ import java.util.List;
 
 public class BaseQuery extends AbstractQuery<Object> {
 	private static final long serialVersionUID = 1L;
-	private String actorId;
-	private String tenantId;
-	private List<String> actorIds = new java.util.ArrayList<String>();
-	private List<String> businessKeys = new java.util.ArrayList<String>();
+	protected String actorId;
+	protected String tenantId;
+	protected List<String> actorIds = new java.util.ArrayList<String>();
+	protected List<String> businessKeys = new java.util.ArrayList<String>();
 	protected String createBy;
-	Date createDate;
-	boolean isFilterPermission = true;
-	private boolean isInitialized = false;
-	private boolean isOwner = false;
+	protected Date createDate;
+	protected boolean isFilterPermission = true;
+	protected boolean isInitialized = false;
+	protected boolean isOwner = false;
 	protected Integer locked;
-	private Integer deleteFlag;
-	private LoginContext loginContext;
+	protected Integer deleteFlag;
+	protected LoginContext loginContext;
 	protected String orderBy;
-	private int pageNo;
-	private Object parameter;
-	private String serviceKey;
+	protected int pageNo;
+	protected int pageSize;
+	protected Object parameter;
+	protected String serviceKey;
 	protected String sortColumn;
-	private String sortField;
+	protected String sortField;
 	protected String sortOrder;
-	private Date afterCreateDate;
-	private Date beforeCreateDate;
+	protected Date afterCreateDate;
+	protected Date beforeCreateDate;
 
 	BaseQuery() {
 
@@ -94,7 +95,6 @@ public class BaseQuery extends AbstractQuery<Object> {
 		return this;
 	}
 
-
 	public BaseQuery createDate(Date createDate) {
 		if (createDate == null) {
 			throw new RuntimeException("createDate is null");
@@ -102,7 +102,6 @@ public class BaseQuery extends AbstractQuery<Object> {
 		this.createDate = createDate;
 		return this;
 	}
-
 
 	void ensureInitialized() {
 		if (isInitialized) {
@@ -224,7 +223,6 @@ public class BaseQuery extends AbstractQuery<Object> {
 		return isOwner;
 	}
 
-
 	public BaseQuery serviceKey(String serviceKey) {
 		if (serviceKey == null) {
 			throw new RuntimeException("serviceKey  is null");
@@ -282,6 +280,7 @@ public class BaseQuery extends AbstractQuery<Object> {
 	}
 
 	public void setPageSize(int pageSize) {
+		this.pageSize = pageSize;
 	}
 
 	public void setParameter(Object parameter) {

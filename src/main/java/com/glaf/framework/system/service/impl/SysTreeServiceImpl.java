@@ -460,17 +460,16 @@ public class SysTreeServiceImpl implements SysTreeService {
 				List<SysTree> list = this.list(query);
 				List<SysTree> nodes = this.getAvailableSysTrees(list);
 				if (nodes != null && !nodes.isEmpty()) {
-					for (SysTree bean : nodes) {
+					for (SysTree bean : nodes)
 						if (bean.getId() != parentId) {
 							String treeId = bean.getTreeId();
-							String tmp = treeId.substring(root.getTreeId().length(), treeId.length());
+							String tmp = treeId.substring(root.getTreeId().length());
 							StringTokenizer token = new StringTokenizer(tmp, "|");
 							bean.setLevel(token.countTokens());
 							treeList.add(bean);// 加入到数组
 							// logger.debug("organization level:" +
 							// bean.getDeep());
 						}
-					}
 				}
 			} else {
 				SysTreeQuery query = new SysTreeQuery();

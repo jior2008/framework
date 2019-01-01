@@ -29,7 +29,7 @@ public class LowerLinkedMap extends LinkedHashMap<String, Object> {
 	private final Locale locale;
 
 	public LowerLinkedMap() {
-		this(((Locale) (null)));
+		this(null);
 	}
 
 	public LowerLinkedMap(int initialCapacity) {

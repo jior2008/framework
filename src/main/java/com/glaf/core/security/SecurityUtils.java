@@ -269,7 +269,7 @@ public class SecurityUtils {
 		try {
 			KeyStore ks = KeyStore.getInstance("JKS", "BC");
 			ks.load(ksInputStream, password.toCharArray());
-            return (PrivateKey) ks.getKey(alias, password.toCharArray());
+            return ks.getKey(alias, password.toCharArray());
 		} catch (Exception ex) {
 			throw new SecurityException(ex);
 		}

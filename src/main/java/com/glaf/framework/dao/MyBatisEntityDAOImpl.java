@@ -93,8 +93,7 @@ public class MyBatisEntityDAOImpl implements EntityDAO {
 		}
 
 		if (object instanceof Integer) {
-			int iCount = (int) object;
-			totalCount = iCount;
+			totalCount = (int) object;
 		} else if (object instanceof Long) {
 			Long iCount = (Long) object;
 			totalCount = iCount.intValue();
@@ -156,7 +155,7 @@ public class MyBatisEntityDAOImpl implements EntityDAO {
 
 		String str = getSqlSession().selectOne("getTableUserMaxId", params);
 		if (StringUtils.isNotEmpty(str) && StringUtils.contains(str, "-")) {
-			str = str.substring(str.lastIndexOf("-") + 1, str.length());
+			str = str.substring(str.lastIndexOf("-") + 1);
 			str = str.trim();
 			if (StringUtils.isNumeric(str)) {
 				return Integer.parseInt(str) + 1;
@@ -182,7 +181,7 @@ public class MyBatisEntityDAOImpl implements EntityDAO {
 	 * @return
 	 */
 	public IdBlock nextDbidBlock() {
-		Dbid dbid = (Dbid) getSqlSession().selectOne("getNextDbId", "next.dbid");
+		Dbid dbid = getSqlSession().selectOne("getNextDbId", "next.dbid");
 		if (dbid == null) {
 			dbid = new Dbid();
 			dbid.setTitle("系统内置主键");
@@ -190,7 +189,7 @@ public class MyBatisEntityDAOImpl implements EntityDAO {
 			dbid.setValue("10001");
 			dbid.setVersion(1);
 			getSqlSession().insert("inertNextDbId", dbid);
-			dbid = (Dbid) getSqlSession().selectOne("getNextDbId", "next.dbid");
+			dbid = getSqlSession().selectOne("getNextDbId", "next.dbid");
 		}
 		long oldValue = Long.parseLong(dbid.getValue());
 		long newValue = oldValue + conf.getInt("dbid_step", 1000);
@@ -208,7 +207,7 @@ public class MyBatisEntityDAOImpl implements EntityDAO {
 	 * @return
 	 */
 	public synchronized IdBlock nextDbidBlock(String name) {
-		Dbid dbid = (Dbid) getSqlSession().selectOne("getNextDbId", name);
+		Dbid dbid = getSqlSession().selectOne("getNextDbId", name);
 		if (dbid == null) {
 			dbid = new Dbid();
 			dbid.setTitle("系统内置主键");
@@ -216,7 +215,7 @@ public class MyBatisEntityDAOImpl implements EntityDAO {
 			dbid.setValue("1");
 			dbid.setVersion(1);
 			getSqlSession().insert("inertNextDbId", dbid);
-			dbid = (Dbid) getSqlSession().selectOne("getNextDbId", name);
+			dbid = getSqlSession().selectOne("getNextDbId", name);
 		}
 		int setup = 100;
 		if (StringUtils.equalsIgnoreCase(name, "useradd") || StringUtils.equalsIgnoreCase(name, "sys_tenant")

@@ -155,7 +155,7 @@ class FtpUtils {
 				for (int i = 0; i < dirs.size() - 1; i++) {
 					ftpClient.changeWorkingDirectory(dirs.get(i));
 				}
-				String dir = remotePath.substring(remotePath.lastIndexOf("/") + 1, remotePath.length());
+				String dir = remotePath.substring(remotePath.lastIndexOf("/") + 1);
 				logger.debug("rm " + dir);
 				ftpClient.deleteFile(dir);
 			} else {
@@ -184,7 +184,7 @@ class FtpUtils {
 		try {
 			if (remoteFile.startsWith("/") && remoteFile.indexOf("/") > 0) {
 				changeToDirectory(ftpClient, remoteFile);
-				remoteFile = remoteFile.substring(remoteFile.lastIndexOf("/") + 1, remoteFile.length());
+				remoteFile = remoteFile.substring(remoteFile.lastIndexOf("/") + 1);
 			}
 			// 设置被动模式
 			ftpClient.enterLocalPassiveMode();
@@ -235,14 +235,14 @@ class FtpUtils {
 	 *            FTP文件，必须以"/"开头
 	 */
 	public static byte[] getBytes(FTPClient ftpClient, String remoteFile) {
-		byte[] bytes = null;
+		byte[] bytes;
 		InputStream in = null;
 		ByteArrayOutputStream out = null;
-		BufferedOutputStream bos = null;
+		BufferedOutputStream bos;
 		try {
 			if (remoteFile.startsWith("/") && remoteFile.indexOf("/") > 0) {
 				changeToDirectory(ftpClient, remoteFile);
-				remoteFile = remoteFile.substring(remoteFile.lastIndexOf("/") + 1, remoteFile.length());
+				remoteFile = remoteFile.substring(remoteFile.lastIndexOf("/") + 1);
 			}
 			// 设置被动模式
 			ftpClient.enterLocalPassiveMode();
@@ -344,7 +344,7 @@ class FtpUtils {
 				for (int i = 0; i < dirs.size() - 1; i++) {
 					ftpClient.changeWorkingDirectory(dirs.get(i));
 				}
-				String dir = remotePath.substring(remotePath.lastIndexOf("/") + 1, remotePath.length());
+				String dir = remotePath.substring(remotePath.lastIndexOf("/") + 1);
 				logger.debug("rm " + dir);
 				ftpClient.removeDirectory(dir);
 			} else {
@@ -378,7 +378,7 @@ class FtpUtils {
 
 			if (remoteFile.startsWith("/") && remoteFile.indexOf("/") > 0) {
 				changeToDirectory(ftpClient, remoteFile);
-				remoteFile = remoteFile.substring(remoteFile.lastIndexOf("/") + 1, remoteFile.length());
+				remoteFile = remoteFile.substring(remoteFile.lastIndexOf("/") + 1);
 			}
 
 			ftpClient.setFileType(FTP.BINARY_FILE_TYPE);
@@ -423,7 +423,7 @@ class FtpUtils {
 
 			if (remoteFile.startsWith("/") && remoteFile.indexOf("/") > 0) {
 				changeToDirectory(ftpClient, remoteFile);
-				remoteFile = remoteFile.substring(remoteFile.lastIndexOf("/") + 1, remoteFile.length());
+				remoteFile = remoteFile.substring(remoteFile.lastIndexOf("/") + 1);
 			}
 			ftpClient.setFileType(FTP.BINARY_FILE_TYPE);
 			ftpClient.enterLocalPassiveMode();
@@ -462,7 +462,7 @@ class FtpUtils {
 
 			if (remoteFile.startsWith("/") && remoteFile.indexOf("/") > 0) {
 				changeToDirectory(ftpClient, remoteFile);
-				remoteFile = remoteFile.substring(remoteFile.lastIndexOf("/") + 1, remoteFile.length());
+				remoteFile = remoteFile.substring(remoteFile.lastIndexOf("/") + 1);
 			}
 
 			ftpClient.setFileType(FTP.BINARY_FILE_TYPE);

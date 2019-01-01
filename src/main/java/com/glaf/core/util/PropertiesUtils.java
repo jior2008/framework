@@ -204,8 +204,7 @@ public class PropertiesUtils {
 							if (whiteSpaceChars.indexOf(nextLine
 									.charAt(startIndex)) == -1)
 								break;
-						nextLine = nextLine.substring(startIndex,
-								nextLine.length());
+						nextLine = nextLine.substring(startIndex);
 						line = loppedLine + nextLine;
 						len = line.length();
 					}
@@ -355,8 +354,7 @@ public class PropertiesUtils {
 							if (whiteSpaceChars.indexOf(nextLine
 									.charAt(startIndex)) == -1)
 								break;
-						nextLine = nextLine.substring(startIndex,
-								nextLine.length());
+						nextLine = nextLine.substring(startIndex);
 						line = loppedLine + nextLine;
 						len = line.length();
 					}

@@ -175,7 +175,7 @@ public class ReflectUtils {
 	public static Constructor<?> findConstructor(Class<?> clazz, Class<?> paramType) throws NoSuchMethodException {
 		Constructor<?> targetConstructor;
 		try {
-			targetConstructor = clazz.getConstructor(new Class<?>[] { paramType });
+			targetConstructor = clazz.getConstructor(paramType);
 		} catch (NoSuchMethodException e) {
 			targetConstructor = null;
 			Constructor<?>[] constructors = clazz.getConstructors();
@@ -720,7 +720,7 @@ public class ReflectUtils {
 	 */
 	public static Method getSetter(String fieldName, Class<?> clazz, Class<?> fieldType) {
 		String setterName = "set" + Character.toTitleCase(fieldName.charAt(0))
-				+ fieldName.substring(1, fieldName.length());
+				+ fieldName.substring(1);
 		try {
 			// Using getMathods(), getMathod(...) expects exact parameter type
 			// matching and ignores inheritance-tree.

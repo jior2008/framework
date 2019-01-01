@@ -64,7 +64,7 @@ public class RequestUtils {
 	}
 
 	private static StringBuilder createQueryStringFromMap(Map<String, Object> m, String ampersand) {
-		StringBuilder aReturn = new StringBuilder("");
+		StringBuilder aReturn = new StringBuilder();
 		Set<Entry<String, Object>> entrySet = m.entrySet();
 		for (Entry<String, Object> entry : entrySet) {
 			String key = entry.getKey();
@@ -155,7 +155,7 @@ public class RequestUtils {
 			}
 			if (jsonObject != null) {
 				for (Entry<String, Object> entry : jsonObject.entrySet()) {
-					String key = (String) entry.getKey();
+					String key = entry.getKey();
 					Object val = entry.getValue();
 					if (val != null) {
 						cookieMap.put(key, val.toString());
@@ -500,7 +500,7 @@ public class RequestUtils {
 		if (StringUtils.isNotEmpty(paramValue) && StringUtils.isNumeric(paramValue)) {
 			return Integer.parseInt(paramValue);
 		} else if (StringUtils.isNotEmpty(paramValue)
-				&& StringUtils.isNumeric(paramValue.substring(1, paramValue.length()))) {
+				&& StringUtils.isNumeric(paramValue.substring(1))) {
 			return Integer.parseInt(paramValue);
 		} else {
 			if (StringUtils.isNotEmpty(paramValue)) {
@@ -537,7 +537,7 @@ public class RequestUtils {
 		if (StringUtils.isNotEmpty(paramValue) && StringUtils.isNumeric(paramValue)) {
 			return Integer.parseInt(paramValue);
 		} else if (StringUtils.isNotEmpty(paramValue)
-				&& StringUtils.isNumeric(paramValue.substring(1, paramValue.length()))) {
+				&& StringUtils.isNumeric(paramValue.substring(1))) {
 			return Integer.parseInt(paramValue);
 		} else {
 			if (StringUtils.isNotEmpty(paramValue)) {
@@ -570,7 +570,7 @@ public class RequestUtils {
 			} catch (Exception ignored) {
 			}
 			return num;
-		} else if (StringUtils.isNumeric(temp) && StringUtils.isNumeric(temp.substring(1, temp.length()))) {
+		} else if (StringUtils.isNumeric(temp) && StringUtils.isNumeric(temp.substring(1))) {
 			int num = defaultNum;
 			try {
 				num = Integer.parseInt(temp);
@@ -686,7 +686,7 @@ public class RequestUtils {
 		if (StringUtils.isNotEmpty(paramValue) && StringUtils.isNumeric(paramValue)) {
 			return Long.parseLong(paramValue);
 		} else if (StringUtils.isNotEmpty(paramValue)
-				&& StringUtils.isNumeric(paramValue.substring(1, paramValue.length()))) {
+				&& StringUtils.isNumeric(paramValue.substring(1))) {
 			return Long.parseLong(paramValue);
 		} else {
 			if (StringUtils.isNotEmpty(paramValue)) {
@@ -716,7 +716,7 @@ public class RequestUtils {
 			} catch (Exception ignored) {
 			}
 			return num;
-		} else if (StringUtils.isNotEmpty(temp) && StringUtils.isNumeric(temp.substring(1, temp.length()))) {
+		} else if (StringUtils.isNotEmpty(temp) && StringUtils.isNumeric(temp.substring(1))) {
 			long num = defaultNum;
 			try {
 				num = Long.parseLong(temp);
@@ -936,15 +936,17 @@ public class RequestUtils {
 			actualServlet = actualServlet.substring(1);
 		}
 		int i = actualServlet.indexOf("/");
+		StringBuilder urlBuilder = new StringBuilder(url);
 		while (i != -1) {
-			if (url.startsWith(actualServlet.substring(0, i))) {
-				url = url.replace(actualServlet.substring(0, i + 1), "");
+			if (urlBuilder.toString().startsWith(actualServlet.substring(0, i))) {
+				urlBuilder = new StringBuilder(urlBuilder.toString().replace(actualServlet.substring(0, i + 1), ""));
 			} else {
-				url = "../" + url;
+				urlBuilder.insert(0, "../");
 			}
 			actualServlet = actualServlet.substring(i + 1);
 			i = actualServlet.indexOf("/");
 		}
+		url = urlBuilder.toString();
 		return url;
 	}
 

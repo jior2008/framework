@@ -58,18 +58,18 @@ class ByteBlockChopper {
 			case 0:
 				break;
 			case 1:
-				byteArray = (byte[]) byteBlocks.get(0);
+				byteArray = byteBlocks.get(0);
 				log.debug("no need to glue " + byteArray.length + " bytes");
 				break;
 			default:
-				byte[] lastBlock = (byte[]) byteBlocks.get(blockCount - 1);
+				byte[] lastBlock = byteBlocks.get(blockCount - 1);
 				int byteCount = blockSize * (blockCount - 1) + lastBlock.length;
 				log.debug("gluing " + byteCount + " bytes");
 
 				byteArray = new byte[byteCount];
 				int offset = 0;
 				for (int i = 0; i < blockCount; i++) {
-					byte[] block = (byte[]) byteBlocks.get(i);
+					byte[] block = byteBlocks.get(i);
 					int length = block.length;
 					System.arraycopy(block, 0, byteArray, offset, length);
 					log.debug("glued " + length + " bytes beggining at " + offset);

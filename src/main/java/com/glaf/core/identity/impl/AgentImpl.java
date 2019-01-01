@@ -258,10 +258,7 @@ public class AgentImpl implements Agent {
 		this.taskName = taskName;
 	}
 
-	public void setValid(boolean valid) {
-	}
-
-	public JSONObject toJsonObject() {
+    public JSONObject toJsonObject() {
 		return AgentJsonFactory.toJsonObject(this);
 	}
 

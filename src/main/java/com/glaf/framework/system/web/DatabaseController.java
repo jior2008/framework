@@ -87,10 +87,10 @@ public class DatabaseController {
 					}
 				}
 				request.setAttribute("selected", selected);
-				request.setAttribute("unselected", databases);
+				request.setAttribute("unselected", unselected);
 			} else {
 				request.setAttribute("selected", selected);
-				request.setAttribute("unselected", databases);
+				request.setAttribute("unselected", unselected);
 			}
 			request.setAttribute("databases", databases);
 

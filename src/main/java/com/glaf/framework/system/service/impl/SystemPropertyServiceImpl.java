@@ -187,7 +187,6 @@ public class SystemPropertyServiceImpl implements ISystemPropertyService {
 			Map<String, String> dataMap = new TreeMap<String, String>();
 			for (SystemProperty p : props) {
 				dataMap.put(p.getName(), p.getValue());
-
 				if (propertyMap.get(p.getName()) != null) {
 					SystemProperty model = propertyMap.get(p.getName());
 					model.setDescription(p.getDescription());

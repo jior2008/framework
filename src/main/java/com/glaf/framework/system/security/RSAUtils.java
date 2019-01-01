@@ -154,7 +154,7 @@ public final class RSAUtils {
 		KeyPair keyPair = getKeyPair();
 		try {
 			byte[] en_data = Hex.decodeHex(encrypttext.toCharArray());
-			byte[] data = decrypt((RSAPrivateKey) keyPair.getPrivate(), en_data);
+			byte[] data = decrypt(keyPair.getPrivate(), en_data);
 			return new String(data);
 		} catch (Exception ex) {
 			LOGGER.error(String.format("\"%s\" Decryption failed. Cause: %s", encrypttext, ex.getMessage()));
@@ -181,7 +181,7 @@ public final class RSAUtils {
 			// LOGGER.debug("encrypttext:" + encrypttext);
 			byte[] en_data = Base64.decodeBase64(encrypttext);
 			// LOGGER.debug("encrypttext:" + new String(en_data));
-			byte[] data = decrypt((RSAPrivateKey) keyPair.getPrivate(), en_data);
+			byte[] data = decrypt(keyPair.getPrivate(), en_data);
 			return new String(data, StandardCharsets.UTF_8);
 		} catch (Exception ex) {
 			ex.printStackTrace();
@@ -209,7 +209,7 @@ public final class RSAUtils {
 			// LOGGER.debug("encrypttext:" + encrypttext);
 			byte[] en_data = Base64.decodeBase64(encrypttext);
 			// LOGGER.debug("encrypttext:" + new String(en_data));
-			byte[] data = decrypt((RSAPrivateKey) keyPair.getPrivate(), algorithom, en_data);
+			byte[] data = decrypt(keyPair.getPrivate(), algorithom, en_data);
 			return new String(data, StandardCharsets.UTF_8);
 		} catch (Exception ex) {
 			ex.printStackTrace();
@@ -232,7 +232,7 @@ public final class RSAUtils {
 		KeyPair keyPair = getKeyPair();
 		try {
 			// LOGGER.debug("encrypttext:" + encrypttext);
-			byte[] data = decrypt((RSAPrivateKey) keyPair.getPrivate(), en_data);
+			byte[] data = decrypt(keyPair.getPrivate(), en_data);
 			return new String(data);
 		} catch (Exception ex) {
 			LOGGER.error(String.format(" Decryption failed. Cause: %s", ex.getMessage()));
@@ -312,7 +312,7 @@ public final class RSAUtils {
 		byte[] data = plaintext.getBytes();
 		KeyPair keyPair = getKeyPair();
 		try {
-			byte[] en_data = encrypt((RSAPublicKey) keyPair.getPublic(), data);
+			byte[] en_data = encrypt(keyPair.getPublic(), data);
 			return new String(Hex.encodeHex(en_data));
 		} catch (Exception ex) {
 			ex.printStackTrace();

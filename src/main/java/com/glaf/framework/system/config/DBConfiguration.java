@@ -276,7 +276,7 @@ public class DBConfiguration {
 	public static List<ConnectionDefinition> getConnectionDefinitions() {
 		List<ConnectionDefinition> rows = new java.util.ArrayList<ConnectionDefinition>();
 		for (Entry<String, ConnectionDefinition> entry : dataSourceProperties.entrySet()) {
-			String name = (String) entry.getKey();
+			String name = entry.getKey();
 			ConnectionDefinition model = getConnectionDefinition(name);
 			if (model != null && model.getName() != null) {
 				rows.add(model);
@@ -361,7 +361,7 @@ public class DBConfiguration {
 		logger.debug("dataSourceProperties:" + dataSourceProperties);
 		if (!dataSourceProperties.isEmpty()) {
 			for (Entry<String, ConnectionDefinition> entry : dataSourceProperties.entrySet()) {
-				String key = (String) entry.getKey();
+				String key = entry.getKey();
 				ConnectionDefinition conn = entry.getValue();
 				String url = conn.getUrl();
 				String dbType = getDatabaseType(url);
@@ -426,7 +426,7 @@ public class DBConfiguration {
 		Map<String, Properties> dsMap = new HashMap<String, Properties>();
 		if (!dataSourceProperties.isEmpty()) {
 			for (Entry<String, ConnectionDefinition> entry : dataSourceProperties.entrySet()) {
-				String name = (String) entry.getKey();
+				String name = entry.getKey();
 				ConnectionDefinition conn = entry.getValue();
 				dsMap.put(name, toProperties(conn));
 			}
@@ -583,7 +583,7 @@ public class DBConfiguration {
 	}
 
 	public static String isolationLevelToString(int isolation) {
-		return (String) ISOLATION_LEVELS.get(isolation);
+		return ISOLATION_LEVELS.get(isolation);
 	}
 
 	private static void reloadDS() {
@@ -595,7 +595,7 @@ public class DBConfiguration {
 				 * 判断运行环境是否为docker
 				 */
 				if (!StringUtils.equals(sysEnv.get("PRD_RUN_ENV"), "docker")) {
-					String path = null;
+					String path;
 					String deploymentSystemName = SystemProperties.getDeploymentSystemName();
 					if (deploymentSystemName != null && deploymentSystemName.length() > 0) {
 						path = SystemProperties.getConfigRootPath() + Constants.DEPLOYMENT_JDBC_PATH

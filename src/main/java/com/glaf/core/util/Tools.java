@@ -43,7 +43,7 @@ public class Tools {
 				String key = entry.getKey();
 				Object value = entry.getValue();
 				if (key != null && value != null) {
-					dataMap.put(key.toString(), value);
+					dataMap.put(key, value);
 				}
 			}
 		} else {
@@ -89,7 +89,7 @@ public class Tools {
 				|| propertyValue.trim().length() == 0) {
 			return null;
 		}
-		Object value = null;
+		Object value;
 		try {
 			if (type == String.class) {
 				value = propertyValue;
@@ -145,7 +145,7 @@ public class Tools {
 			return false;
 		}
 		char[] sourceChrs = sourceString.toCharArray();
-		Character chr = sourceChrs[0];
+		char chr = sourceChrs[0];
 		if (!((chr == 95)
 				|| (65 <= chr && chr <= 90) || (97 <= chr && chr <= 122))) {
 			return false;
@@ -162,15 +162,14 @@ public class Tools {
 	}
 
 	public static String javaColorToCSSColor(Color paramColor) {
-		StringBuilder localStringBuilder = new StringBuilder(30);
-		localStringBuilder.append("rgb(");
-		localStringBuilder.append(paramColor.getRed());
-		localStringBuilder.append(',');
-		localStringBuilder.append(paramColor.getGreen());
-		localStringBuilder.append(',');
-		localStringBuilder.append(paramColor.getBlue());
-		localStringBuilder.append(')');
-		return localStringBuilder.toString();
+		String localStringBuilder = "rgb(" +
+				paramColor.getRed() +
+				',' +
+				paramColor.getGreen() +
+				',' +
+				paramColor.getBlue() +
+				')';
+		return localStringBuilder;
 	}
 
 	@SuppressWarnings("unchecked")
@@ -195,7 +194,7 @@ public class Tools {
 				String value = null;
 				Object val;
 				Object object = dataMap.get(propertyName);
-				if (object != null && object instanceof String) {
+				if (object instanceof String) {
 					value = (String) object;
 				}
 				try {

@@ -83,14 +83,14 @@ class LoginContextUtils {
 		if (jsonObject.containsKey("user")) {
 			JSONObject json = jsonObject.getJSONObject("user");
 			User user = new UserImpl();
-			user = (User) user.jsonToObject(json);
+			user = user.jsonToObject(json);
 			loginContext.setUser(user);
 		}
 
 		if (jsonObject.containsKey("tenant")) {
 			JSONObject json = jsonObject.getJSONObject("tenant");
 			Tenant tenant = new TenantImpl();
-			tenant = (Tenant) tenant.jsonToObject(json);
+			tenant = tenant.jsonToObject(json);
 			loginContext.setTenant(tenant);
 		}
 

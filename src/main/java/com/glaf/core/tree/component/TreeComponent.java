@@ -89,7 +89,7 @@ public class TreeComponent extends TreeBase implements Serializable, Component {
 	}
 
 	public TreeComponent[] getTreeComponents() {
-		return (TreeComponent[]) components.toArray(_treeComponent);
+		return components.toArray(_treeComponent);
 	}
 
 	/**
@@ -146,7 +146,7 @@ public class TreeComponent extends TreeBase implements Serializable, Component {
 	 */
 	public void removeChildren() {
 		for (Iterator<TreeComponent> iterator = this.getComponents().iterator(); iterator.hasNext();) {
-			TreeComponent child = (TreeComponent) iterator.next();
+			TreeComponent child = iterator.next();
 			child.setParent(null);
 			iterator.remove();
 		}

@@ -45,7 +45,7 @@ public class ParamUtils {
 	public static Boolean getBoolean(Map<String, Object> dataMap, String key) {
 		Boolean result = null;
 		if (dataMap == null || key == null) {
-			return null;
+			return false;
 		}
 		Object value = dataMap.get(key);
 		if (value == null) {
@@ -374,7 +374,7 @@ public class ParamUtils {
 			Object obj = paramMap.get(name);
 			if (obj instanceof Collection<?>) {
 				Collection<?> rows = (Collection<?>) obj;
-                return rows.size() > 0;
+				return rows.size() > 0;
 			}
 		}
 		return false;

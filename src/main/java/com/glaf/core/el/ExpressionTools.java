@@ -36,7 +36,7 @@ public class ExpressionTools {
 		boolean flag = false;
 		for (int i = 0; i < expression.length(); i++) {
 			if (expression.charAt(i) == '#' && expression.charAt(i + 1) == '{') {
-				sb.append(expression.substring(end, i));
+				sb.append(expression, end, i);
 				begin = i + 2;
 				flag = true;
 			}
@@ -56,13 +56,12 @@ public class ExpressionTools {
 					end = i + 1;
 					flag = false;
 				} else {
-					sb.append("");
 					end = i + 1;
 					flag = false;
 				}
 			}
 			if (i == expression.length() - 1) {
-				sb.append(expression.substring(end, i + 1));
+				sb.append(expression, end, i + 1);
 			}
 		}
 		return sb.toString();

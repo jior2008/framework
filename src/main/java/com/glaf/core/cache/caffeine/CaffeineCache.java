@@ -63,8 +63,7 @@ public class CaffeineCache implements com.glaf.core.cache.Cache {
 	}
 
 	public Object get(String key) {
-		Object value = getCache().getIfPresent(key);
-		return value;
+		return getCache().getIfPresent(key);
 	}
 
 	@Override

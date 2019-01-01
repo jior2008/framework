@@ -210,7 +210,7 @@ public final class StringTools {
 				case ' ':
 					if (isEncodeSpace) {
 						if (last < i) {
-							ret.append(text.substring(last, i));
+							ret.append(text, last, i);
 						}
 						last = i + 1;
 						ret.append("&#160;");
@@ -221,7 +221,7 @@ public final class StringTools {
 					break;
 				case '&':
 					if (last < i) {
-						ret.append(text.substring(last, i));
+						ret.append(text, last, i);
 					}
 					last = i + 1;
 					ret.append("&#38;");
@@ -229,7 +229,7 @@ public final class StringTools {
 					break;
 				case '>':
 					if (last < i) {
-						ret.append(text.substring(last, i));
+						ret.append(text, last, i);
 					}
 					last = i + 1;
 					ret.append("&#62;");
@@ -237,7 +237,7 @@ public final class StringTools {
 					break;
 				case '<':
 					if (last < i) {
-						ret.append(text.substring(last, i));
+						ret.append(text, last, i);
 					}
 					last = i + 1;
 					ret.append("&#60;");
@@ -245,7 +245,7 @@ public final class StringTools {
 					break;
 				case '\"':
 					if (last < i) {
-						ret.append(text.substring(last, i));
+						ret.append(text, last, i);
 					}
 					last = i + 1;
 					ret.append("&#34;");
@@ -253,7 +253,7 @@ public final class StringTools {
 					break;
 				case '\n':
 					if (last < i) {
-						ret.append(text.substring(last, i));
+						ret.append(text, last, i);
 					}
 					last = i + 1;
 					ret.append("<br/>");
@@ -828,13 +828,13 @@ public final class StringTools {
 		int x = Math.abs(random.nextInt(bits));
 		int a = String.valueOf(x).length();
 		int b = String.valueOf(bits).length();
-		String xx = "";
+		StringBuilder xx = new StringBuilder();
 		if (a < b) {
 			for (int i = 0; i < (b - a); i++) {
-				xx = "0" + xx;
+				xx.insert(0, "0");
 			}
 		}
-		xx = xx + x;
+		xx.append(x);
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmss");
 		return formatter.format(new Date()) + xx;
 	}

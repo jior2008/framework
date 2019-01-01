@@ -120,8 +120,7 @@ class FieldType {
 		}
 		typeName = typeName.trim().toUpperCase();
 		if (dataMap.containsKey(typeName)) {
-			int value = dataMap.get(typeName);
-			return value;
+			return dataMap.get(typeName);
 		}
 		return 0;
 	}
