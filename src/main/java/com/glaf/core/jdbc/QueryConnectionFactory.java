@@ -129,7 +129,7 @@ public class QueryConnectionFactory {
 			info.setConnection(connection);
 			info.setStartTime(System.currentTimeMillis());
 			if (Authentication.getAuthenticatedActorId() != null) {
-				info.setActorId(Authentication.getAuthenticatedActorId());
+				//info.setActorId(Authentication.getAuthenticatedActorId());
 			}
 			connectionMap.put(id, info);
 		}

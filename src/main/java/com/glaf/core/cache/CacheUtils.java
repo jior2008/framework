@@ -22,8 +22,7 @@ class CacheUtils {
 
 	/**
 	 * 清除目录树缓存
-	 * 
-	 * @param treeId
+	 *
 	 */
 	public static void clearTreeCache(String treeId) {
 		String cacheKey = CacheConstants.TREE_PREFIX + treeId;
@@ -44,8 +43,7 @@ class CacheUtils {
 
 	/**
 	 * 清除用户缓存
-	 * 
-	 * @param actorId
+	 *
 	 */
 	public static void clearUserCache(String actorId) {
 		String cacheKey = CacheConstants.SECURITYCONTEXT_PREFIX + actorId;

@@ -26,15 +26,9 @@ class ConnectionInfo {
 
 	private String id;
 
-	private String actorId;
-
 	private long startTime;
 
 	private Connection connection;
-
-	public ConnectionInfo() {
-
-	}
 
 	@Override
 	public boolean equals(Object obj) {
@@ -49,10 +43,6 @@ class ConnectionInfo {
             return other.id == null;
 		} else return id.equals(other.id);
     }
-
-	public String getActorId() {
-		return actorId;
-	}
 
 	public Connection getConnection() {
 		return connection;
@@ -74,9 +64,7 @@ class ConnectionInfo {
 		return result;
 	}
 
-	public void setActorId(String actorId) {
-		this.actorId = actorId;
-	}
+
 
 	public void setConnection(Connection connection) {
 		this.connection = connection;

@@ -19,7 +19,6 @@ package com.glaf.core.jdbc;
 
 import com.glaf.core.model.ColumnDefinition;
 import com.glaf.core.model.TableDefinition;
-import com.glaf.core.security.LoginContext;
 import com.glaf.core.util.*;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -34,81 +33,77 @@ import java.util.Map;
 
 class BulkInsertBean {
 
-	private final Logger logger = LoggerFactory.getLogger(getClass());
+    private final Logger logger = LoggerFactory.getLogger(getClass());
 
-	/**
-	 * 批量插入数据
-	 * 
-	 * @param conn
-	 * @param tableDefinition
-	 * @param dataList
-	 */
-	public void bulkInsert(LoginContext loginContext, Connection conn, TableDefinition tableDefinition,
-			List<Map<String, Object>> dataList) {
-		List<ColumnDefinition> columns = tableDefinition.getColumns();
-		if (columns == null || columns.isEmpty()) {
-			throw new RuntimeException("table columns is null");
-		}
-		String dbType = DBConnectionFactory.getDatabaseType(conn);
-		List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
-		int len = columns.size();
-		int batchSize = 1000 / len;
+    /**
+     * 批量插入数据
+     */
+    public void bulkInsert(Connection conn, TableDefinition tableDefinition,
+                           List<Map<String, Object>> dataList) {
+        List<ColumnDefinition> columns = tableDefinition.getColumns();
+        if (columns == null || columns.isEmpty()) {
+            throw new RuntimeException("table columns is null");
+        }
+        String dbType = DBConnectionFactory.getDatabaseType(conn);
+        List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
+        int len = columns.size();
+        int batchSize = 1000 / len;
         for (Map<String, Object> stringObjectMap : dataList) {
             list.add(stringObjectMap);
             if (list.size() > 0 && list.size() % batchSize == 0) {
                 if (StringUtils.equals(dbType, DBUtils.ORACLE)) {
                     this.insertInner(conn, tableDefinition, list);
                 } else {
-                    this.bulkInsertInner(loginContext, conn, tableDefinition, list);
+                    this.bulkInsertInner(conn, tableDefinition, list);
                 }
                 list.clear();
             }
         }
-		if (list.size() > 0) {
-			if (StringUtils.equals(dbType, DBUtils.ORACLE)) {
-				this.insertInner(conn, tableDefinition, list);
-			} else {
-				this.bulkInsertInner(loginContext, conn, tableDefinition, list);
-			}
-			list.clear();
-		}
-	}
+        if (list.size() > 0) {
+            if (StringUtils.equals(dbType, DBUtils.ORACLE)) {
+                this.insertInner(conn, tableDefinition, list);
+            } else {
+                this.bulkInsertInner(conn, tableDefinition, list);
+            }
+            list.clear();
+        }
+    }
 
-	private void bulkInsertInner(LoginContext loginContext, Connection conn, TableDefinition tableDefinition,
-								 List<Map<String, Object>> dataList) {
-		List<ColumnDefinition> columns = tableDefinition.getColumns();
-		StringBuilder insertBuffer = new StringBuilder(500);
-		insertBuffer.append(" insert into ").append(tableDefinition.getTableName()).append(" (");
-		for (ColumnDefinition column : columns) {
-			insertBuffer.append(column.getColumnName()).append(", ");
-		}
-		insertBuffer.delete(insertBuffer.length() - 2, insertBuffer.length());
-		insertBuffer.append(" ) values ");
-		for (int k = 0, l = dataList.size(); k < l; k++) {
-			if (k > 0) {
-				insertBuffer.append(", ");
-			}
-			insertBuffer.append(" ( ");
-			for (int i = 0, len = columns.size(); i < len; i++) {
-				insertBuffer.append("? ");
-				if (i < len - 1) {
-					insertBuffer.append(",");
-				}
-			}
-			insertBuffer.append(" ) ");
-		}
-		int index = 1;
-		String columnName;
-		String javaType;
-		Map<String, Object> rowMap;
-		LowerLinkedMap dataMap;
-		PreparedStatement psmt = null;
-		ByteArrayInputStream bais = null;
-		BufferedInputStream bis = null;
-		InputStream is = null;
-		try {
-			String dbType = DBConnectionFactory.getDatabaseType(conn);
-			psmt = conn.prepareStatement(insertBuffer.toString());
+    private void bulkInsertInner(Connection conn, TableDefinition tableDefinition,
+                                 List<Map<String, Object>> dataList) {
+        List<ColumnDefinition> columns = tableDefinition.getColumns();
+        StringBuilder insertBuffer = new StringBuilder(500);
+        insertBuffer.append(" insert into ").append(tableDefinition.getTableName()).append(" (");
+        for (ColumnDefinition column : columns) {
+            insertBuffer.append(column.getColumnName()).append(", ");
+        }
+        insertBuffer.delete(insertBuffer.length() - 2, insertBuffer.length());
+        insertBuffer.append(" ) values ");
+        for (int k = 0, l = dataList.size(); k < l; k++) {
+            if (k > 0) {
+                insertBuffer.append(", ");
+            }
+            insertBuffer.append(" ( ");
+            for (int i = 0, len = columns.size(); i < len; i++) {
+                insertBuffer.append("? ");
+                if (i < len - 1) {
+                    insertBuffer.append(",");
+                }
+            }
+            insertBuffer.append(" ) ");
+        }
+        int index = 1;
+        String columnName;
+        String javaType;
+        Map<String, Object> rowMap;
+        LowerLinkedMap dataMap;
+        PreparedStatement psmt = null;
+        ByteArrayInputStream bais = null;
+        BufferedInputStream bis = null;
+        InputStream is = null;
+        try {
+            String dbType = DBConnectionFactory.getDatabaseType(conn);
+            psmt = conn.prepareStatement(insertBuffer.toString());
             for (Map<String, Object> stringObjectMap : dataList) {
                 // Map<String, Object> dataMap = dataList.get(k);
                 rowMap = stringObjectMap;
@@ -230,49 +225,49 @@ class BulkInsertBean {
                     }
                 }
             }
-			psmt.executeUpdate();
-			psmt.close();
-		} catch (SQLException ex) {
-			throw new RuntimeException(ex);
-		} finally {
-			IOUtils.closeQuietly(is);
-			IOUtils.closeQuietly(bais);
-			IOUtils.closeQuietly(bis);
-			JdbcUtils.close(psmt);
-		}
-	}
+            psmt.executeUpdate();
+            psmt.close();
+        } catch (SQLException ex) {
+            throw new RuntimeException(ex);
+        } finally {
+            IOUtils.closeQuietly(is);
+            IOUtils.closeQuietly(bais);
+            IOUtils.closeQuietly(bis);
+            JdbcUtils.close(psmt);
+        }
+    }
 
-	private void insertInner(Connection conn, TableDefinition tableDefinition, List<Map<String, Object>> dataList) {
-		List<ColumnDefinition> columns = tableDefinition.getColumns();
-		StringBuilder insertBuffer = new StringBuilder(500);
+    private void insertInner(Connection conn, TableDefinition tableDefinition, List<Map<String, Object>> dataList) {
+        List<ColumnDefinition> columns = tableDefinition.getColumns();
+        StringBuilder insertBuffer = new StringBuilder(500);
 
-		insertBuffer.append(" insert into ").append(tableDefinition.getTableName()).append(" (");
-		for (ColumnDefinition column : columns) {
-			insertBuffer.append(column.getColumnName()).append(", ");
-		}
-		insertBuffer.delete(insertBuffer.length() - 2, insertBuffer.length());
-		insertBuffer.append(" ) values ( ");
-		for (int k = 0, l = columns.size(); k < l; k++) {
-			insertBuffer.append("? ");
-			if (k < l - 1) {
-				insertBuffer.append(", ");
-			}
-		}
-		insertBuffer.append(" ) ");
+        insertBuffer.append(" insert into ").append(tableDefinition.getTableName()).append(" (");
+        for (ColumnDefinition column : columns) {
+            insertBuffer.append(column.getColumnName()).append(", ");
+        }
+        insertBuffer.delete(insertBuffer.length() - 2, insertBuffer.length());
+        insertBuffer.append(" ) values ( ");
+        for (int k = 0, l = columns.size(); k < l; k++) {
+            insertBuffer.append("? ");
+            if (k < l - 1) {
+                insertBuffer.append(", ");
+            }
+        }
+        insertBuffer.append(" ) ");
 
-		logger.debug(insertBuffer.toString());
-		int index;
-		String columnName;
-		String javaType;
-		Map<String, Object> rowMap;
-		LowerLinkedMap dataMap;
-		PreparedStatement psmt = null;
-		ByteArrayInputStream bais = null;
-		BufferedInputStream bis = null;
-		InputStream is = null;
-		try {
-			String dbType = DBConnectionFactory.getDatabaseType(conn);
-			psmt = conn.prepareStatement(insertBuffer.toString());
+        logger.debug(insertBuffer.toString());
+        int index;
+        String columnName;
+        String javaType;
+        Map<String, Object> rowMap;
+        LowerLinkedMap dataMap;
+        PreparedStatement psmt = null;
+        ByteArrayInputStream bais = null;
+        BufferedInputStream bis = null;
+        InputStream is = null;
+        try {
+            String dbType = DBConnectionFactory.getDatabaseType(conn);
+            psmt = conn.prepareStatement(insertBuffer.toString());
             for (Map<String, Object> stringObjectMap : dataList) {
                 index = 1;
                 // Map<String, Object> dataMap = dataList.get(k);
@@ -396,16 +391,16 @@ class BulkInsertBean {
                 }
                 psmt.addBatch();
             }
-			psmt.executeBatch();
-			psmt.close();
-		} catch (SQLException ex) {
-			throw new RuntimeException(ex);
-		} finally {
-			IOUtils.closeQuietly(is);
-			IOUtils.closeQuietly(bais);
-			IOUtils.closeQuietly(bis);
-			JdbcUtils.close(psmt);
-		}
-	}
+            psmt.executeBatch();
+            psmt.close();
+        } catch (SQLException ex) {
+            throw new RuntimeException(ex);
+        } finally {
+            IOUtils.closeQuietly(is);
+            IOUtils.closeQuietly(bais);
+            IOUtils.closeQuietly(bis);
+            JdbcUtils.close(psmt);
+        }
+    }
 
 }

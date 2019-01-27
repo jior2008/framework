@@ -20,7 +20,6 @@ package com.glaf.core.jdbc;
 
 import com.glaf.core.model.ColumnDefinition;
 import com.glaf.core.model.TableDefinition;
-import com.glaf.core.security.LoginContext;
 import com.glaf.core.util.FileUtils;
 import com.glaf.core.util.JdbcUtils;
 import com.glaf.core.util.LowerLinkedMap;
@@ -36,42 +35,38 @@ import java.util.List;
 import java.util.Map;
 
 class BatchUpdateBean {
-	private final Logger logger = LoggerFactory.getLogger(getClass());
+    private final Logger logger = LoggerFactory.getLogger(getClass());
 
-	/**
-	 * 批量更新数据
-	 * 
-	 * @param conn
-	 * @param tableDefinition
-	 * @param dataList
-	 */
-	public void dynamicUpdate(LoginContext loginContext, Connection conn, TableDefinition tableDefinition,
-			List<Map<String, Object>> dataList) {
-		StringBuilder buffer = new StringBuilder();
-		ColumnDefinition idColumn = tableDefinition.getIdColumn();
-		List<ColumnDefinition> columns = tableDefinition.getColumns();
-		List<ColumnDefinition> cols = new ArrayList<ColumnDefinition>();
-		for (ColumnDefinition col : columns) {
-			if (col.isPrimaryKey()) {
-				if (idColumn == null) {
-					idColumn = col;
-				}
-			} else {
-				cols.add(col);
-			}
-		}
+    /**
+     * 批量更新数据
+     */
+    public void dynamicUpdate(Connection conn, TableDefinition tableDefinition,
+                              List<Map<String, Object>> dataList) {
+        StringBuilder buffer = new StringBuilder();
+        ColumnDefinition idColumn = tableDefinition.getIdColumn();
+        List<ColumnDefinition> columns = tableDefinition.getColumns();
+        List<ColumnDefinition> cols = new ArrayList<ColumnDefinition>();
+        for (ColumnDefinition col : columns) {
+            if (col.isPrimaryKey()) {
+                if (idColumn == null) {
+                    idColumn = col;
+                }
+            } else {
+                cols.add(col);
+            }
+        }
 
-		int index;
-		String columnName;
-		String javaType;
-		LowerLinkedMap dataMap;
-		Map<String, Object> rowMap;
-		PreparedStatement psmt = null;
-		ByteArrayInputStream bais = null;
-		BufferedInputStream bis = null;
-		InputStream is = null;
-		try {
-			String dbType = DBConnectionFactory.getDatabaseType(conn);
+        int index;
+        String columnName;
+        String javaType;
+        LowerLinkedMap dataMap;
+        Map<String, Object> rowMap;
+        PreparedStatement psmt = null;
+        ByteArrayInputStream bais = null;
+        BufferedInputStream bis = null;
+        InputStream is = null;
+        try {
+            String dbType = DBConnectionFactory.getDatabaseType(conn);
             for (Map<String, Object> stringObjectMap : dataList) {
                 index = 1;
                 buffer.delete(0, buffer.length());
@@ -226,62 +221,59 @@ class BatchUpdateBean {
                 psmt.executeUpdate();
                 JdbcUtils.close(psmt);
             }
-		} catch (SQLException ex) {
-			throw new RuntimeException(ex);
-		} finally {
-			IOUtils.closeQuietly(is);
-			IOUtils.closeQuietly(bais);
-			IOUtils.closeQuietly(bis);
-			JdbcUtils.close(psmt);
-		}
-	}
+        } catch (SQLException ex) {
+            throw new RuntimeException(ex);
+        } finally {
+            IOUtils.closeQuietly(is);
+            IOUtils.closeQuietly(bais);
+            IOUtils.closeQuietly(bis);
+            JdbcUtils.close(psmt);
+        }
+    }
 
-	/**
-	 * 批量更新数据
-	 * 
-	 * @param conn
-	 * @param tableDefinition
-	 * @param dataList
-	 */
-	public void executeBatch(LoginContext loginContext, Connection conn, TableDefinition tableDefinition,
-			List<Map<String, Object>> dataList) {
-		StringBuilder buffer = new StringBuilder();
-		ColumnDefinition idColumn = tableDefinition.getIdColumn();
-		List<ColumnDefinition> columns = tableDefinition.getColumns();
-		List<ColumnDefinition> cols = new ArrayList<ColumnDefinition>();
-		for (ColumnDefinition col : columns) {
-			if (col.isPrimaryKey()) {
-				if (idColumn == null) {
-					idColumn = col;
-				}
-			} else {
-				cols.add(col);
-			}
-		}
+    /**
+     * 批量更新数据
+     *
+     */
+    public void executeBatch(Connection conn, TableDefinition tableDefinition,
+                             List<Map<String, Object>> dataList) {
+        StringBuilder buffer = new StringBuilder();
+        ColumnDefinition idColumn = tableDefinition.getIdColumn();
+        List<ColumnDefinition> columns = tableDefinition.getColumns();
+        List<ColumnDefinition> cols = new ArrayList<ColumnDefinition>();
+        for (ColumnDefinition col : columns) {
+            if (col.isPrimaryKey()) {
+                if (idColumn == null) {
+                    idColumn = col;
+                }
+            } else {
+                cols.add(col);
+            }
+        }
 
-		buffer.append(" update ").append(tableDefinition.getTableName()).append(" set ");
-		for (ColumnDefinition column : cols) {
-			buffer.append(column.getColumnName()).append(" = ?, ");
-		}
+        buffer.append(" update ").append(tableDefinition.getTableName()).append(" set ");
+        for (ColumnDefinition column : cols) {
+            buffer.append(column.getColumnName()).append(" = ?, ");
+        }
 
-		buffer.delete(buffer.length() - 2, buffer.length());
-		buffer.append(" where ").append(idColumn.getColumnName()).append(" = ? ");
+        buffer.delete(buffer.length() - 2, buffer.length());
+        buffer.append(" where ").append(idColumn.getColumnName()).append(" = ? ");
 
-		cols.add(idColumn);
+        cols.add(idColumn);
 
-		logger.debug(buffer.toString());
+        logger.debug(buffer.toString());
 
-		int index;
-		String columnName;
-		String javaType;
-		Map<String, Object> dataMap;
-		PreparedStatement psmt = null;
-		ByteArrayInputStream bais = null;
-		BufferedInputStream bis = null;
-		InputStream is = null;
-		try {
-			String dbType = DBConnectionFactory.getDatabaseType(conn);
-			psmt = conn.prepareStatement(buffer.toString());
+        int index;
+        String columnName;
+        String javaType;
+        Map<String, Object> dataMap;
+        PreparedStatement psmt = null;
+        ByteArrayInputStream bais = null;
+        BufferedInputStream bis = null;
+        InputStream is = null;
+        try {
+            String dbType = DBConnectionFactory.getDatabaseType(conn);
+            psmt = conn.prepareStatement(buffer.toString());
             for (Map<String, Object> stringObjectMap : dataList) {
                 index = 1;
                 dataMap = stringObjectMap;
@@ -401,15 +393,15 @@ class BatchUpdateBean {
                 }
                 psmt.addBatch();
             }
-			psmt.executeBatch();
-			psmt.close();
-		} catch (SQLException ex) {
-			throw new RuntimeException(ex);
-		} finally {
-			IOUtils.closeQuietly(is);
-			IOUtils.closeQuietly(bais);
-			IOUtils.closeQuietly(bis);
-			JdbcUtils.close(psmt);
-		}
-	}
+            psmt.executeBatch();
+            psmt.close();
+        } catch (SQLException ex) {
+            throw new RuntimeException(ex);
+        } finally {
+            IOUtils.closeQuietly(is);
+            IOUtils.closeQuietly(bais);
+            IOUtils.closeQuietly(bis);
+            JdbcUtils.close(psmt);
+        }
+    }
 }
