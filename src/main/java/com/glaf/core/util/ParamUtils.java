@@ -57,8 +57,6 @@ public class ParamUtils {
 		if (value != null) {
 			if (value instanceof Boolean) {
 				result = (Boolean) value;
-			} else if (value instanceof String) {
-				result = Boolean.valueOf(value.toString());
 			} else {
 				result = Boolean.valueOf(value.toString());
 			}

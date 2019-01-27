@@ -34,7 +34,7 @@ import java.util.StringTokenizer;
  * 本对象包含用户基本信息，角色信息，权限点信息，用户下属信息 <br/>
  * 用户登录系统时已经放到HTTP会话中
  */
-public class LoginContext implements java.io.Serializable, Cloneable, JSONable {
+public class LoginContext implements java.io.Serializable, JSONable {
 
 	public static final String CURRENT_USER = "CURRENT_USER";
 
@@ -227,10 +227,10 @@ public class LoginContext implements java.io.Serializable, Cloneable, JSONable {
 	}
 
 	public LoginContext copy() {
-		return clone(this);
+		return copy(this);
 	}
 
-	private LoginContext clone(LoginContext loginContext) {
+	private LoginContext copy(LoginContext loginContext) {
 		return LoginContextUtils.clone(loginContext);
 	}
 

@@ -148,7 +148,7 @@ class FieldType {
 	 */
 	public static String getType(int dataType) {
 		for (String typeName : dataMap.keySet()) {
-			Integer type = dataMap.get(typeName);
+			int type = dataMap.get(typeName);
 			if (type == dataType) {
 				return typeName;
 			}

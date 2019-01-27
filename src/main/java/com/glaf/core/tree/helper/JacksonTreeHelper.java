@@ -476,7 +476,7 @@ class JacksonTreeHelper {
 		if (treeModels != null && treeModels.size() > 0) {
 			TreeRepository repository = this.build(treeModels);
 			List<?> topTrees = repository.getTopTrees();
-			logger.debug("topTrees:" + (topTrees != null ? topTrees.size() : 0));
+			//logger.debug("topTrees:" + (topTrees != null ? topTrees.size() : 0));
 			if (topTrees != null && topTrees.size() > 0) {
 				for (Object topTree : topTrees) {
 					TreeComponent component = (TreeComponent) topTree;

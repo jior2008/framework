@@ -33,7 +33,7 @@ import java.util.Date;
 import java.util.concurrent.*;
 
 public class QueryConnectionFactory {
-	class CheckConnectionTask implements Runnable {
+	static class CheckConnectionTask implements Runnable {
 		public void run() {
 			if (!connectionMap.isEmpty()) {
 				logger.debug("检测数据库查询......");

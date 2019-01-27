@@ -405,7 +405,7 @@ public class FileUtils {
 	public static String readFile(InputStream inputStream) {
 		if (inputStream != null) {
 			byte[] bytes = getBytes(inputStream);
-			return new String(bytes);
+			return new String(bytes, StandardCharsets.UTF_8);
 		}
 		return null;
 	}
@@ -413,7 +413,7 @@ public class FileUtils {
 	public static String readFile(String filename) {
 		if (filename != null) {
 			byte[] bytes = getBytes(filename);
-			return new String(bytes);
+			return new String(bytes, StandardCharsets.UTF_8);
 		}
 		return null;
 	}
