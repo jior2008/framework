@@ -18,16 +18,19 @@
 
 package com.glaf.core.cache;
 
-import com.glaf.core.config.SystemProperties;
-import com.glaf.core.util.ReflectUtils;
+import java.nio.charset.StandardCharsets;
+import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.CopyOnWriteArrayList;
+
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import java.nio.charset.StandardCharsets;
-import java.util.List;
-import java.util.concurrent.*;
+import com.glaf.core.config.SystemProperties;
+import com.glaf.core.util.ReflectUtils;
 
 public class CacheFactory {
     private static final Log logger = LogFactory.getLog(CacheFactory.class);
@@ -35,9 +38,7 @@ public class CacheFactory {
     private static final ConcurrentMap<String, Cache> cacheMap = new ConcurrentHashMap<String, Cache>();
     private static final List<CacheItem> items = new CopyOnWriteArrayList<CacheItem>();
     private static final List<String> regions = new CopyOnWriteArrayList<String>();
-
-    private static final ExecutorService pool = Executors.newFixedThreadPool(50);
-
+ 
     public static void clear(final String region) {
         Cache cache = getCache();
         if (cache != null) {

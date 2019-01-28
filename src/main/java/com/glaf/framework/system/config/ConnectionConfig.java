@@ -22,7 +22,7 @@ import com.glaf.core.base.ConnectionDefinition;
 
 import java.util.List;
 
-interface ConnectionConfig {
+public interface ConnectionConfig {
 
 	List<ConnectionDefinition> getConnectionDefinitions();
 

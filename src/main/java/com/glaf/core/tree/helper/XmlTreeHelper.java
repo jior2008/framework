@@ -30,7 +30,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-class XmlTreeHelper {
+public class XmlTreeHelper {
 
 	/**
 	 * 附加XML数据节点

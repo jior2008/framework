@@ -22,7 +22,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 
 import java.sql.Connection;
 
-class ConnectionInfo {
+public class ConnectionInfo {
 
 	private String id;
 

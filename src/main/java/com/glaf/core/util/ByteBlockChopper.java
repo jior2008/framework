@@ -26,7 +26,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-class ByteBlockChopper {
+public class ByteBlockChopper {
 
 	private static final Log log = LogFactory.getLog(ByteBlockChopper.class);
 

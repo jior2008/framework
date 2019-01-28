@@ -31,7 +31,7 @@ import org.apache.commons.logging.LogFactory;
 import java.util.*;
 import java.util.Map.Entry;
 
-class TreeHelper {
+public class TreeHelper {
 	protected final static Log logger = LogFactory.getLog(TreeHelper.class);
 
 	private TreeHelper() {

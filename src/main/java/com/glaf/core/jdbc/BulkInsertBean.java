@@ -31,7 +31,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-class BulkInsertBean {
+public class BulkInsertBean {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 

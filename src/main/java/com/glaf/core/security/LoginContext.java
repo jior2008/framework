@@ -247,9 +247,10 @@ public class LoginContext implements java.io.Serializable, JSONable {
 		}
 		LoginContext other = (LoginContext) obj;
 		if (user == null) {
-            return other.getUser() == null;
-		} else return user.equals(other.getUser());
-    }
+			return other.getUser() == null;
+		} else
+			return user.equals(other.getUser());
+	}
 
 	public String getActorId() {
 		if (user != null) {

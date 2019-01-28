@@ -33,7 +33,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
 
-class FtpUtils {
+public class FtpUtils {
 
 	private final static Logger logger = LoggerFactory.getLogger(FtpUtils.class);
 

@@ -18,7 +18,7 @@
 
 package com.glaf.core.tree.util;
 
-class TreeType {
+public class TreeType {
 
 	public final static String SYS_NODE = "99";
 

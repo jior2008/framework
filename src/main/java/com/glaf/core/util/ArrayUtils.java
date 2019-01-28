@@ -21,7 +21,7 @@ package com.glaf.core.util;
 import java.text.DateFormat;
 import java.util.*;
 
-class ArrayUtils {
+public class ArrayUtils {
 
 	public static boolean[] append(boolean[]... arrays) {
 		int length = 0;

@@ -20,7 +20,7 @@ package com.glaf.core.util;
 
 import java.nio.charset.Charset;
 
-class StringPool {
+public class StringPool {
 
 	public static final String AMPERSAND = "&";
 

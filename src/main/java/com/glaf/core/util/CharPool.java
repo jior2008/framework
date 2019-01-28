@@ -18,7 +18,7 @@
 
 package com.glaf.core.util;
 
-class CharPool {
+public class CharPool {
 
 	public static final char AMPERSAND = '&';
 

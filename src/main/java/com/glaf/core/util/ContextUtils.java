@@ -29,7 +29,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
-class ContextUtils {
+public class ContextUtils {
 	protected static final Log logger = LogFactory.getLog(ContextUtils.class);
 
 	private static final ConcurrentMap<String, AtomicInteger> accessCounter = new ConcurrentHashMap<String, AtomicInteger>();

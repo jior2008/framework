@@ -63,7 +63,7 @@ import java.util.Arrays;
  * }
  * 
  */
-class ByteBufferUtils {
+public class ByteBufferUtils {
 	private static final ByteBuffer EMPTY_BYTE_BUFFER = ByteBuffer
 			.wrap(ArrayUtils.EMPTY_BYTE_ARRAY);
 

@@ -21,7 +21,7 @@ package com.glaf.core.base;
 import java.util.List;
 import java.util.Map;
 
-class TablePage {
+public class TablePage {
 
 	private String tableName;
 

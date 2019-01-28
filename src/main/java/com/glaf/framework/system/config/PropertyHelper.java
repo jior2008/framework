@@ -30,7 +30,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-class PropertyHelper {
+public class PropertyHelper {
 	private final Logger logger = LoggerFactory.getLogger(getClass());
 
 	/**

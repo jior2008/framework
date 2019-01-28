@@ -13,7 +13,7 @@
 
 package com.glaf.core.security;
 
-class SecurityContext {
+public class SecurityContext {
 
 	private String jceProvider = "BC"; // JCE提供者
 

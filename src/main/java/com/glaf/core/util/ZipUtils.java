@@ -40,7 +40,7 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarOutputStream;
 import java.util.zip.*;
 
-class ZipUtils {
+public class ZipUtils {
 	private static final Logger logger = LoggerFactory.getLogger(ZipUtils.class);
 
 	protected static Configuration conf = BaseConfiguration.create();

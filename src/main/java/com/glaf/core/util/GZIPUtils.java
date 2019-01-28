@@ -27,7 +27,7 @@ import java.util.zip.GZIPOutputStream;
 /**
  * A collection of utility methods for working on GZIPed data.
  */
-class GZIPUtils {
+public class GZIPUtils {
 
 	private static final int EXPECTED_COMPRESSION_RATIO = 5;
 	private static final int BUF_SIZE = 65536;

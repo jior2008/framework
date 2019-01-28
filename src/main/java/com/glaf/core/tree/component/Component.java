@@ -18,7 +18,7 @@
 
 package com.glaf.core.tree.component;
 
-interface Component {
+public interface Component {
 
 	String getId();
 

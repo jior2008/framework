@@ -18,7 +18,7 @@
 
 package com.glaf.core.cache;
 
-class CacheUtils {
+public class CacheUtils {
 
 	/**
 	 * 清除目录树缓存

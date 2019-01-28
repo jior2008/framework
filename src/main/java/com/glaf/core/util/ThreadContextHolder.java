@@ -26,7 +26,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.HashMap;
 import java.util.Map;
 
-class ThreadContextHolder {
+public class ThreadContextHolder {
 
 	private static final FastThreadLocal<ServletContext> servletContextThreadLocalHolder = new FastThreadLocal<ServletContext>();
 	

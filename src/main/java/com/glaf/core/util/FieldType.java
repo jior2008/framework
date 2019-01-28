@@ -22,7 +22,7 @@ import java.sql.Types;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
-class FieldType {
+public class FieldType {
 	private final static ConcurrentMap<String, Integer> dataMap = new ConcurrentHashMap<String, Integer>();
 
 	private final static ConcurrentMap<Integer, String> nameMap = new ConcurrentHashMap<Integer, String>();

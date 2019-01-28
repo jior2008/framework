@@ -25,7 +25,7 @@ import org.mvel2.MVEL;
 
 import java.util.Map;
 
-class Mvel2ExpressionEvaluator {
+public class Mvel2ExpressionEvaluator {
 	private final static Log logger = LogFactory.getLog(Mvel2ExpressionEvaluator.class);
 
 	public static Object evaluate(String expression, Map<String, Object> context) {

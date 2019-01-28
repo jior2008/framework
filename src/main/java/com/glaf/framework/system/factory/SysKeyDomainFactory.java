@@ -31,7 +31,7 @@ import java.util.concurrent.ConcurrentMap;
  * 实体数据工厂类
  *
  */
-class SysKeyDomainFactory {
+public class SysKeyDomainFactory {
 
 	private static final String TABLENAME = "SYS_KEY";
 

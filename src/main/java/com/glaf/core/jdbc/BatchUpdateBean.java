@@ -34,7 +34,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-class BatchUpdateBean {
+public class BatchUpdateBean {
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
     /**

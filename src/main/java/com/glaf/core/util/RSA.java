@@ -30,7 +30,7 @@ import java.util.Map;
 /**
  * RSA 加解密工具类
  */
-class RSA {
+public class RSA {
 	/**
 	 * 定义加密方式
 	 */

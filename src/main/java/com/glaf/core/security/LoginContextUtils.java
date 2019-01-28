@@ -9,7 +9,7 @@ import com.glaf.core.identity.impl.UserImpl;
 
 import java.util.Collection;
 
-class LoginContextUtils {
+public class LoginContextUtils {
 
 	public static LoginContext clone(LoginContext loginContext) {
 		LoginContext m = new LoginContext();

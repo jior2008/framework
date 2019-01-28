@@ -27,7 +27,7 @@ import java.util.Locale;
 /**
  * Utilities for encoding and decoding binary data to and from different forms.
  */
-class BinaryUtils {
+public class BinaryUtils {
 	/**
 	 * Converts byte data to a Hex-encoded string.
 	 *

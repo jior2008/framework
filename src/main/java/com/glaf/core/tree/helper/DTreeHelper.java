@@ -26,7 +26,7 @@ import org.apache.commons.lang3.StringUtils;
 import java.util.Collections;
 import java.util.List;
 
-class DTreeHelper {
+public class DTreeHelper {
 
 	private final static String newline = System.getProperty("line.separator");
 

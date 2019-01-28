@@ -21,7 +21,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-class LongIdStartup {
+public class LongIdStartup {
 
 	public static void init() {
 		Connection con = null;

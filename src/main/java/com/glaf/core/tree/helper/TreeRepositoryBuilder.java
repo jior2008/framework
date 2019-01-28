@@ -30,7 +30,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-class TreeRepositoryBuilder {
+public class TreeRepositoryBuilder {
 
 	protected static Log logger = LogFactory.getLog(TreeRepositoryBuilder.class);
 

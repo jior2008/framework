@@ -38,7 +38,7 @@ import java.io.StringWriter;
 import java.util.Iterator;
 import java.util.List;
 
-class XmlUtils {
+public class XmlUtils {
 
 	public static Element element(Element element) {
 		NodeList nodeList = element.getChildNodes();

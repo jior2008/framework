@@ -32,7 +32,7 @@ import java.util.concurrent.ConcurrentMap;
  * 数据表实体工厂类
  *
  */
-class TableDomainFactory {
+public class TableDomainFactory {
 
 	private static final ConcurrentMap<String, String> columnMap = new ConcurrentHashMap<String, String>();
 

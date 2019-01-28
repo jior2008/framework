@@ -24,7 +24,7 @@ import java.util.Enumeration;
 import java.util.Properties;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-class CacheProperties {
+public class CacheProperties {
     private static final Properties properties = new Properties();
 
     private static final AtomicBoolean loading = new AtomicBoolean(false);

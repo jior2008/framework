@@ -30,7 +30,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.*;
 
-class TreeUpdateBean {
+public class TreeUpdateBean {
 	private static final Log logger = LogFactory.getLog(TreeUpdateBean.class);
 
 	private String getTreeId(Map<Long, TreeModel> dataMap, TreeModel tree) {

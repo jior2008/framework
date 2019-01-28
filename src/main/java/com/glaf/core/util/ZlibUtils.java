@@ -32,7 +32,7 @@ import java.util.zip.InflaterInputStream;
  * ZLib压缩工具
  * 
  */
-class ZlibUtils {
+public class ZlibUtils {
 	private static final int BUFFER = 8192;
 
 	/**
