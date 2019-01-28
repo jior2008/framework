@@ -260,6 +260,8 @@
 				<artifactId>spring-boot-maven-plugin</artifactId>
 				<configuration>
 					<jvmArguments>-Dfile.encoding=UTF-8</jvmArguments>
+					<mainClass>com.glaf.MyApplication</mainClass>
+					<layout>JAR</layout>
 				</configuration>
 			</plugin>
 			<!-- Docker maven plugin -->
