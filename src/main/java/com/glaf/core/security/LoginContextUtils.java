@@ -51,12 +51,6 @@ public class LoginContextUtils {
 			}
 		}
 
-		if (loginContext.getGradeIds() != null) {
-			for (String x : loginContext.getGradeIds()) {
-				m.addGradeId(x);
-			}
-		}
-
 		if (loginContext.getManagedTenantIds() != null) {
 			for (String x : loginContext.getManagedTenantIds()) {
 				m.addManagedTenantId(x);
@@ -116,74 +110,66 @@ public class LoginContextUtils {
 
 		if (jsonObject.containsKey("roles")) {
 			JSONArray jsonArray = jsonObject.getJSONArray("roles");
-            for (Object o : jsonArray) {
-                String role = (String) o;
-                loginContext.addRole(role);
-            }
-		}
-
-		if (jsonObject.containsKey("gradeIds")) {
-			JSONArray jsonArray = jsonObject.getJSONArray("gradeIds");
-            for (Object o : jsonArray) {
-                String gradeId = (String) o;
-                loginContext.addGradeId(gradeId);
-            }
+			for (Object o : jsonArray) {
+				String role = (String) o;
+				loginContext.addRole(role);
+			}
 		}
 
 		if (jsonObject.containsKey("managedTenantIds")) {
 			JSONArray jsonArray = jsonObject.getJSONArray("managedTenantIds");
-            for (Object o : jsonArray) {
-                String tenantId = (String) o;
-                loginContext.addManagedTenantId(tenantId);
-            }
+			for (Object o : jsonArray) {
+				String tenantId = (String) o;
+				loginContext.addManagedTenantId(tenantId);
+			}
 		}
 
 		if (jsonObject.containsKey("subOrganizationIds")) {
 			JSONArray jsonArray = jsonObject.getJSONArray("subOrganizationIds");
-            for (Object o : jsonArray) {
-                String subOrganizationId = (String) o;
-                loginContext.addSubOrganizationId(Long.parseLong(subOrganizationId));
-            }
+			for (Object o : jsonArray) {
+				String subOrganizationId = (String) o;
+				loginContext.addSubOrganizationId(Long.parseLong(subOrganizationId));
+			}
 		}
 
 		if (jsonObject.containsKey("databaseIds")) {
 			JSONArray jsonArray = jsonObject.getJSONArray("databaseIds");
-            for (Object o : jsonArray) {
-                String databaseId = (String) o;
-                loginContext.addDatabaseId(Long.parseLong(databaseId));
-            }
+			for (Object o : jsonArray) {
+				String databaseId = (String) o;
+				loginContext.addDatabaseId(Long.parseLong(databaseId));
+			}
 		}
 
 		if (jsonObject.containsKey("agents")) {
 			JSONArray jsonArray = jsonObject.getJSONArray("agents");
-            for (Object o : jsonArray) {
-                String agent = (String) o;
-                loginContext.addAgent(agent);
-            }
+			for (Object o : jsonArray) {
+				String agent = (String) o;
+				loginContext.addAgent(agent);
+			}
 		}
 
 		if (jsonObject.containsKey("functions")) {
 			JSONArray jsonArray = jsonObject.getJSONArray("functions");
-            for (Object o : jsonArray) {
-                String function = (String) o;
-                loginContext.addFunction(function);
-            }
+			for (Object o : jsonArray) {
+				String function = (String) o;
+				loginContext.addFunction(function);
+			}
 		}
 
 		if (jsonObject.containsKey("permissions")) {
 			JSONArray jsonArray = jsonObject.getJSONArray("permissions");
-            for (Object o : jsonArray) {
-                String permission = (String) o;
-                loginContext.addPermission(permission);
-            }
+			for (Object o : jsonArray) {
+				String permission = (String) o;
+				loginContext.addPermission(permission);
+			}
 		}
 
 		if (jsonObject.containsKey("observers")) {
 			JSONArray jsonArray = jsonObject.getJSONArray("observers");
-            for (Object o : jsonArray) {
-                String observer = (String) o;
-                loginContext.addObserver(observer);
-            }
+			for (Object o : jsonArray) {
+				String observer = (String) o;
+				loginContext.addObserver(observer);
+			}
 		}
 
 		return loginContext;
@@ -213,15 +199,6 @@ public class LoginContextUtils {
 				jsonArray.add(role);
 			}
 			jsonObject.put("roles", jsonArray);
-		}
-
-		Collection<String> gradeIds = loginContext.getGradeIds();
-		if (gradeIds != null && !gradeIds.isEmpty()) {
-			JSONArray jsonArray = new JSONArray();
-			for (String gradeId : gradeIds) {
-				jsonArray.add(gradeId);
-			}
-			jsonObject.put("gradeIds", jsonArray);
 		}
 
 		Collection<String> managedTenantIds = loginContext.getManagedTenantIds();

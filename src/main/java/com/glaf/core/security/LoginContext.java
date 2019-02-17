@@ -84,11 +84,6 @@ public class LoginContext implements java.io.Serializable, JSONable {
 	private Collection<String> roles = new HashSet<String>();
 
 	/**
-	 * 班级集合
-	 */
-	private Collection<String> gradeIds = new HashSet<String>();
-
-	/**
 	 * 管理的租户集合
 	 */
 	private Collection<String> managedTenantIds = new HashSet<String>();
@@ -168,15 +163,6 @@ public class LoginContext implements java.io.Serializable, JSONable {
 		}
 		if (!functions.contains(function)) {
 			functions.add(function);
-		}
-	}
-
-	public void addGradeId(String gradeId) {
-		if (gradeIds == null) {
-			gradeIds = new HashSet<String>();
-		}
-		if (!gradeIds.contains(gradeId)) {
-			gradeIds.add(gradeId);
 		}
 	}
 
@@ -284,16 +270,6 @@ public class LoginContext implements java.io.Serializable, JSONable {
 
 	public Collection<String> getFunctions() {
 		return functions;
-	}
-
-	public Collection<String> getGradeIds() {
-		if (gradeIds == null) {
-			gradeIds = new HashSet<String>();
-		}
-		if (gradeIds.isEmpty()) {
-			gradeIds.add("-1");
-		}
-		return gradeIds;
 	}
 
 	public String getIndexUrl() {
@@ -481,10 +457,6 @@ public class LoginContext implements java.io.Serializable, JSONable {
 
 	public void setFunctions(Collection<String> functions) {
 		this.functions = functions;
-	}
-
-	public void setGradeIds(Collection<String> gradeIds) {
-		this.gradeIds = gradeIds;
 	}
 
 	public void setIndexUrl(String indexUrl) {
