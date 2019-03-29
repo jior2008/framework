@@ -18,17 +18,19 @@
 package com.glaf.framework.system.config;
 
 
-import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.glaf.framework.system.domain.SysKey;
 import com.glaf.core.jdbc.DBConnectionFactory;
 import com.glaf.core.util.DateUtils;
 import com.glaf.core.util.JdbcUtils;
+import com.glaf.framework.system.domain.SysKey;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class KeyHelper {
 	protected final Logger logger = LoggerFactory.getLogger(getClass());

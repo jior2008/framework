@@ -18,19 +18,18 @@
 
 package com.glaf.core.cache;
 
-import java.nio.charset.StandardCharsets;
-import java.util.List;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
-import java.util.concurrent.CopyOnWriteArrayList;
-
+import com.glaf.core.config.SystemProperties;
+import com.glaf.core.util.ReflectUtils;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import com.glaf.core.config.SystemProperties;
-import com.glaf.core.util.ReflectUtils;
+import java.nio.charset.StandardCharsets;
+import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 public class CacheFactory {
     private static final Log logger = LogFactory.getLog(CacheFactory.class);

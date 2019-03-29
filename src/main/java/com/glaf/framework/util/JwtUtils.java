@@ -18,28 +18,24 @@
 
 package com.glaf.framework.util;
 
-import java.security.Key;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.Set;
-import java.util.Map.Entry;
-
-import javax.crypto.spec.SecretKeySpec;
-
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-
+import com.glaf.core.config.Environment;
+import com.glaf.core.util.UUID32;
+import com.glaf.framework.system.config.KeyHelper;
+import com.glaf.framework.system.domain.SysKey;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtBuilder;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import net.iharder.Base64;
 
-import com.glaf.core.config.Environment;
-import com.glaf.core.util.UUID32;
-
-import com.glaf.framework.system.config.KeyHelper;
-import com.glaf.framework.system.domain.SysKey;
+import javax.crypto.spec.SecretKeySpec;
+import java.security.Key;
+import java.util.Date;
+import java.util.Iterator;
+import java.util.Map.Entry;
+import java.util.Set;
 
 
 public class JwtUtils {

@@ -17,9 +17,10 @@
  */
 package com.glaf.security.shiro.realm;
 
-import java.util.HashSet;
-import java.util.Set;
-
+import com.glaf.core.security.IdentityFactory;
+import com.glaf.core.security.LoginContext;
+import com.glaf.security.shiro.model.JWTToken;
+import com.glaf.security.shiro.util.JWTUtil;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.authc.AuthenticationToken;
@@ -30,13 +31,10 @@ import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import org.springframework.stereotype.Component;
 
-import com.glaf.core.security.IdentityFactory;
-import com.glaf.core.security.LoginContext;
-import com.glaf.security.shiro.model.JWTToken;
-import com.glaf.security.shiro.util.JWTUtil;
+import java.util.HashSet;
+import java.util.Set;
 
 @Component
 public class CustomRealm extends AuthorizingRealm {
