@@ -70,6 +70,7 @@ public class DBConnectionFactory {
 		return null;
 	}
 
+
 	public static String getDatabaseType(String url) {
 		String dbType = null;
 		if (StringUtils.contains(url, "jdbc:mysql:")) {
