@@ -144,7 +144,7 @@ public class HikariCPConnectionProvider implements ConnectionProvider {
 			if (isolationLevel == null) {
 				isolation = null;
 			} else {
-				isolation = new Integer(isolationLevel);
+				isolation = Integer.valueOf(isolationLevel);
 				log.info("JDBC isolation level: " + DBConfiguration.isolationLevelToString(isolation));
 			}
 

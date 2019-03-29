@@ -187,7 +187,7 @@ public class DruidConnectionProvider implements ConnectionProvider {
 		if (i == null) {
 			isolation = null;
 		} else {
-			isolation = new Integer(i);
+			isolation = Integer.valueOf(i);
 		}
 
 	}

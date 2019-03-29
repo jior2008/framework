@@ -32,7 +32,7 @@ import java.util.concurrent.atomic.AtomicLong;
 @Service("idGenerator")
 @Transactional
 public class MyBatisDbIdGenerator implements IdGenerator {
-	class RefreshTask implements Runnable {
+	static class RefreshTask implements Runnable {
 
 		public void run() {
 			try {
