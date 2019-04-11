@@ -18,31 +18,39 @@
 
 package com.glaf.framework.util;
 
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
-import com.glaf.core.config.Environment;
-import com.glaf.core.util.UUID32;
-import com.glaf.framework.system.config.KeyHelper;
-import com.glaf.framework.system.domain.SysKey;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.JwtBuilder;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
-import net.iharder.Base64;
-
-import javax.crypto.spec.SecretKeySpec;
 import java.security.Key;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import javax.crypto.spec.SecretKeySpec;
+
+import org.apache.commons.lang.StringUtils;
+
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
+import com.glaf.core.config.Environment;
+import com.glaf.core.util.UUID32;
+import com.glaf.framework.system.config.KeyHelper;
+import com.glaf.framework.system.domain.SysKey;
+
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.JwtBuilder;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
+import net.iharder.Base64;
 
 public class JwtUtils {
 
 	private static volatile byte[] SECRET = null;
 
 	private final static int expiresSeconds = 7200;
+
+	public static String createJWT(JSONObject jsonObject) {
+		byte[] secret = getSecret();
+		return createJWT(secret, null, jsonObject);
+	}
 
 	public static String createJWT(String userId, JSONObject jsonObject) {
 		byte[] secret = getSecret();
@@ -61,7 +69,9 @@ public class JwtUtils {
 
 		// 添加构成JWT的参数
 		JwtBuilder builder = Jwts.builder().setHeaderParam("typ", "JWT");
-		builder.claim("userId", userId);
+		if (StringUtils.isNotEmpty(userId)) {
+			builder.claim("userId", userId);
+		}
 		Iterator<Entry<String, Object>> iterator = jsonObject.entrySet().iterator();
 		while (iterator.hasNext()) {
 			Entry<String, Object> entry = iterator.next();
@@ -92,7 +102,7 @@ public class JwtUtils {
 		if (property != null && property.getData() != null) {
 			SECRET = property.getData();
 		} else {
-			SECRET = Base64.encodeBytesToBytes((UUID32.getUUID()+UUID32.getUUID()).getBytes());
+			SECRET = Base64.encodeBytesToBytes((UUID32.getUUID() + UUID32.generateShortUuid()).getBytes());
 			property = new SysKey();
 			property.setId("JWT_SECRET");
 			property.setType("SYS");
@@ -104,39 +114,6 @@ public class JwtUtils {
 			keyHelper.save(Environment.DEFAULT_SYSTEM_NAME, property);
 		}
 		return SECRET;
-	}
-
-	public static JSONObject parseJSON(String jsonWebToken) {
-		byte[] secret = getSecret();
-		return parseJSON(secret, jsonWebToken);
-	}
-
-	public static JSONObject parseJSON(byte[] secret, String jsonWebToken) {
-		try {
-			Claims claims = Jwts.parser().setSigningKey(secret).parseClaimsJws(jsonWebToken).getBody();
-			JSONObject jsonObject = new JSONObject();
-			Set<String> set = claims.keySet();
-			for (String key : set) {
-				jsonObject.put(key, claims.get(key));
-			}
-			return jsonObject;
-		} catch (Exception ex) {
-			return null;
-		}
-	}
-
-	public static Claims parseJWT(String jsonWebToken) {
-		byte[] secret = getSecret();
-		return parseJWT(secret, jsonWebToken);
-	}
-
-	public static Claims parseJWT(byte[] secret, String jsonWebToken) {
-		try {
-			Claims claims = Jwts.parser().setSigningKey(secret).parseClaimsJws(jsonWebToken).getBody();
-			return claims;
-		} catch (Exception ex) {
-			return null;
-		}
 	}
 
 	public static void main(String[] args) throws Exception {
@@ -161,6 +138,39 @@ public class JwtUtils {
 
 		JSONObject json = JwtUtils.parseJSON(secret, str);
 		System.out.println(json.toJSONString());
+	}
+
+	public static JSONObject parseJSON(byte[] secret, String jsonWebToken) {
+		try {
+			Claims claims = Jwts.parser().setSigningKey(secret).parseClaimsJws(jsonWebToken).getBody();
+			JSONObject jsonObject = new JSONObject();
+			Set<String> set = claims.keySet();
+			for (String key : set) {
+				jsonObject.put(key, claims.get(key));
+			}
+			return jsonObject;
+		} catch (Exception ex) {
+			return null;
+		}
+	}
+
+	public static JSONObject parseJSON(String jsonWebToken) {
+		byte[] secret = getSecret();
+		return parseJSON(secret, jsonWebToken);
+	}
+
+	public static Claims parseJWT(byte[] secret, String jsonWebToken) {
+		try {
+			Claims claims = Jwts.parser().setSigningKey(secret).parseClaimsJws(jsonWebToken).getBody();
+			return claims;
+		} catch (Exception ex) {
+			return null;
+		}
+	}
+
+	public static Claims parseJWT(String jsonWebToken) {
+		byte[] secret = getSecret();
+		return parseJWT(secret, jsonWebToken);
 	}
 
 }
