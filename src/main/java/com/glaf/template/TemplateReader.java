@@ -49,7 +49,6 @@ public class TemplateReader {
 		return root;
 	}
 
-	@SuppressWarnings("unchecked")
 	public Map<String, Template> getTemplates(InputStream inputStream) {
 		Map<String, Template> dataMap = new java.util.HashMap<String, Template>();
 		Element root = this.getRootElement(inputStream);
@@ -147,7 +146,6 @@ public class TemplateReader {
 		return dataMap;
 	}
 
-	@SuppressWarnings("unchecked")
 	public List<Template> readTemplates(InputStream inputStream) {
 		List<Template> templates = new java.util.ArrayList<Template>();
 		Element root = this.getRootElement(inputStream);
