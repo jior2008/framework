@@ -64,7 +64,7 @@ public class ResponseUtils {
 		}
 	}
 
-	private static void download(HttpServletRequest request, HttpServletResponse response, InputStream inputStream,
+	public static void download(HttpServletRequest request, HttpServletResponse response, InputStream inputStream,
 								 String filename) {
 		output(request, response, inputStream, filename, null);
 	}

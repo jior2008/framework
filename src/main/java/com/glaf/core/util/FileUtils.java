@@ -201,7 +201,6 @@ public class FileUtils {
 			output.flush();
 			return output.toByteArray();
 		} catch (IOException ex) {
-
 			throw new RuntimeException(ex);
 		} finally {
 			if (output != null) {
@@ -238,7 +237,7 @@ public class FileUtils {
 	 * @param filename
 	 * @return
 	 */
-	private static byte[] getBytes(String filename) {
+	public static byte[] getBytes(String filename) {
 		filename = getJavaFileSystemPath(filename);
 		File file = new File(filename);
 		return getBytes(file);

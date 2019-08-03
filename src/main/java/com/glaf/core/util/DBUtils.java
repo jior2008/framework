@@ -34,11 +34,17 @@ public class DBUtils {
 
 	private final static Log logger = LogFactory.getLog(DBUtils.class);
 
-	private final static String newline = System.getProperty("line.separator");
+	public final static String newline = System.getProperty("line.separator");
 
-	private static final String POSTGRESQL = "postgresql";
+	public static final String MYSQL = "mysql";
 
 	public static final String ORACLE = "oracle";
+
+	public static final String SQLITE = "sqlite";
+
+	public static final String SQLSERVER = "sqlserver";
+
+	public static final String POSTGRESQL = "postgresql";
 
 	public static void alterTable(Connection connection, TableDefinition tableDefinition) {
 		List<String> cloumns = new java.util.ArrayList<String>();
@@ -82,7 +88,7 @@ public class DBUtils {
 		}
 	}
 
-	public static void alterTable(  String tableName, List<ColumnDefinition> columns) {
+	public static void alterTable(String tableName, List<ColumnDefinition> columns) {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		ResultSetMetaData rsmd;
@@ -422,7 +428,7 @@ public class DBUtils {
 		}
 	}
 
-	public static void createIndex( String tableName, String columnName, String indexName) {
+	public static void createIndex(String tableName, String columnName, String indexName) {
 		Connection connection = null;
 		DatabaseMetaData dbmd;
 		Statement stmt = null;
@@ -461,10 +467,8 @@ public class DBUtils {
 	/**
 	 * 创建数据库表，如果已经存在，则不重建
 	 * 
-	 * @param connection
-	 *            JDBC连接
-	 * @param tableDefinition
-	 *            表定义
+	 * @param connection      JDBC连接
+	 * @param tableDefinition 表定义
 	 */
 	public static String createTable(Connection connection, TableDefinition tableDefinition) {
 		Statement statement = null;
@@ -492,8 +496,6 @@ public class DBUtils {
 			JdbcUtils.close(statement);
 		}
 	}
-
-	
 
 	public static String createTable(TableDefinition tableDefinition) {
 		Connection connection = null;
@@ -523,10 +525,8 @@ public class DBUtils {
 	/**
 	 * 创建数据库表，如果已经存在，则删除重建
 	 * 
-	 * @param connection
-	 *            JDBC连接
-	 * @param tableDefinition
-	 *            表定义
+	 * @param connection      JDBC连接
+	 * @param tableDefinition 表定义
 	 */
 	public static void dropAndCreateTable(Connection connection, TableDefinition tableDefinition) {
 		String tableName = tableDefinition.getTableName();
@@ -541,12 +541,10 @@ public class DBUtils {
 	/**
 	 * 如果已经存在，则删除
 	 * 
-	 * @param connection
-	 *            JDBC连接
-	 * @param tableName
-	 *            表名称
+	 * @param connection JDBC连接
+	 * @param tableName  表名称
 	 */
-	private static void dropTable(Connection connection, String tableName) {
+	public static void dropTable(Connection connection, String tableName) {
 		Statement statement = null;
 		try {
 			String dbType = DBConnectionFactory.getDatabaseType(connection);
@@ -573,8 +571,7 @@ public class DBUtils {
 	/**
 	 * 如果已经存在，则删除
 	 *
-	 * @param tableName
-	 *            表名称
+	 * @param tableName 表名称
 	 */
 	public static void dropTable(String tableName) {
 		Connection connection = null;
@@ -657,8 +654,6 @@ public class DBUtils {
 		}
 	}
 
-	
-
 	public static void executeBatchSchemaResourceIgnoreException(Connection conn, String ddlStatements) {
 		Statement statement = null;
 		String sqlStatement = null;
@@ -685,7 +680,7 @@ public class DBUtils {
 		}
 	}
 
-	private static void executeSchemaResource(Connection conn, String ddlStatements) {
+	public static void executeSchemaResource(Connection conn, String ddlStatements) {
 		Exception exception = null;
 		Statement statement = null;
 		String sqlStatement = null;
@@ -724,9 +719,6 @@ public class DBUtils {
 		}
 	}
 
-
-	
-
 	public static void executeSchemaResourceIgnoreException(Connection conn, String ddlStatements) {
 		Statement statement = null;
 		String sqlStatement = null;
@@ -753,7 +745,7 @@ public class DBUtils {
 		}
 	}
 
-	public static String executeSchemaResourceIgnoreException( String ddlStatements) {
+	public static String executeSchemaResourceIgnoreException(String ddlStatements) {
 		StringBuilder buffer = new StringBuilder();
 		Connection connection = null;
 		Statement statement = null;
@@ -789,7 +781,7 @@ public class DBUtils {
 		}
 	}
 
-	private static String getAddColumnSql(String dbType, String tableName, ColumnDefinition field) {
+	public static String getAddColumnSql(String dbType, String tableName, ColumnDefinition field) {
 		StringBuilder buffer = new StringBuilder();
 		buffer.append(" alter table ").append(tableName);
 		buffer.append(" add ").append(field.getColumnName());
@@ -1114,7 +1106,7 @@ public class DBUtils {
 		}
 	}
 
-	private static List<ColumnDefinition> getColumnDefinitions(String tableName) {
+	public static List<ColumnDefinition> getColumnDefinitions(String tableName) {
 		List<ColumnDefinition> columns = new java.util.ArrayList<ColumnDefinition>();
 		Connection conn = null;
 		ResultSet rs = null;
@@ -1198,8 +1190,7 @@ public class DBUtils {
 		}
 	}
 
-	 
-	private static String getColumnScript(String dbType, ColumnDefinition column) {
+	public static String getColumnScript(String dbType, ColumnDefinition column) {
 		StringBuilder buffer = new StringBuilder(500);
 		buffer.append(newline);
 		buffer.append("    ").append(column.getColumnName().toUpperCase());
@@ -1455,7 +1446,7 @@ public class DBUtils {
 		return buffer.toString();
 	}
 
-	private static String getCreateTableScript(String dbType, TableDefinition tableDefinition) {
+	public static String getCreateTableScript(String dbType, TableDefinition tableDefinition) {
 		StringBuilder buffer = new StringBuilder(4000);
 		Collection<ColumnDefinition> columns = tableDefinition.getColumns();
 		buffer.append(" create table ").append(tableDefinition.getTableName().toUpperCase());
@@ -1498,7 +1489,8 @@ public class DBUtils {
 				buffer.append(") ");
 			} else if (tableDefinition.getIdColumn() != null) {
 				buffer.append(newline);
-				buffer.append("  primary key (").append(tableDefinition.getIdColumn().getColumnName().toUpperCase()).append(") ");
+				buffer.append("  primary key (").append(tableDefinition.getIdColumn().getColumnName().toUpperCase())
+						.append(") ");
 			}
 		}
 
@@ -1518,7 +1510,7 @@ public class DBUtils {
 		return buffer.toString();
 	}
 
-	private static List<String> getPrimaryKeys(Connection connection, String tableName) {
+	public static List<String> getPrimaryKeys(Connection connection, String tableName) {
 		ResultSet rs = null;
 		List<String> primaryKeys = new java.util.ArrayList<String>();
 		try {
@@ -1551,7 +1543,7 @@ public class DBUtils {
 		return primaryKeys;
 	}
 
-	private static List<String> getPrimaryKeys(String tableName) {
+	public static List<String> getPrimaryKeys(String tableName) {
 		List<String> primaryKeys = new java.util.ArrayList<String>();
 		Connection connection = null;
 		ResultSet rs = null;
@@ -1588,8 +1580,7 @@ public class DBUtils {
 		return primaryKeys;
 	}
 
-
-	private static String getPrimaryKeyScript(String dbType, ColumnDefinition idField) {
+	public static String getPrimaryKeyScript(String dbType, ColumnDefinition idField) {
 		StringBuilder buffer = new StringBuilder(500);
 
 		buffer.append(newline);
@@ -1779,7 +1770,7 @@ public class DBUtils {
 		return -1;
 	}
 
-	private static List<String> getTables() {
+	public static List<String> getTables() {
 		List<String> tables = new java.util.ArrayList<String>();
 		String[] types = { "TABLE" };
 		Connection connection = null;
@@ -1817,7 +1808,6 @@ public class DBUtils {
 		}
 		return tables;
 	}
-
 
 	/**
 	 * 获取保密表
@@ -1903,7 +1893,7 @@ public class DBUtils {
 		return isLegal;
 	}
 
-	private static boolean isAllowedTable(String tableName) {
+	public static boolean isAllowedTable(String tableName) {
 		if (StringUtils.equalsIgnoreCase(tableName, "USERINFO")) {
 			return false;
 		} else if (StringUtils.equalsIgnoreCase(tableName, "SYS_USER")) {
@@ -1914,7 +1904,8 @@ public class DBUtils {
 			return false;
 		} else if (StringUtils.equalsIgnoreCase(tableName, "SYS_KEY")) {
 			return false;
-		} else return !StringUtils.equalsIgnoreCase(tableName, "SYS_IDENTITY_TOKEN");
+		} else
+			return !StringUtils.equalsIgnoreCase(tableName, "SYS_IDENTITY_TOKEN");
 	}
 
 	public static boolean isLegalQuerySql(String sql) {
@@ -1953,15 +1944,12 @@ public class DBUtils {
 		}
 		char[] sourceChrs = columnName.toCharArray();
 		char chr = sourceChrs[0];
-		if (!((chr == 95) || (65 <= chr && chr <= 90)
-				|| (97 <= chr && chr <= 122))) {
+		if (!((chr == 95) || (65 <= chr && chr <= 90) || (97 <= chr && chr <= 122))) {
 			return false;
 		}
 		for (int i = 1; i < sourceChrs.length; i++) {
 			chr = sourceChrs[i];
-			if (!((chr == 95) || (47 <= chr && chr <= 57)
-					|| (65 <= chr && chr <= 90)
-					|| (97 <= chr && chr <= 122))) {
+			if (!((chr == 95) || (47 <= chr && chr <= 57) || (65 <= chr && chr <= 90) || (97 <= chr && chr <= 122))) {
 				return false;
 			}
 		}
@@ -1974,15 +1962,12 @@ public class DBUtils {
 		}
 		char[] sourceChrs = sourceString.toCharArray();
 		char chr = sourceChrs[0];
-		if (!((chr == 95) || (65 <= chr && chr <= 90)
-				|| (97 <= chr && chr <= 122))) {
+		if (!((chr == 95) || (65 <= chr && chr <= 90) || (97 <= chr && chr <= 122))) {
 			return false;
 		}
 		for (int i = 1; i < sourceChrs.length; i++) {
 			chr = sourceChrs[i];
-			if (!((chr == 95) || (47 <= chr && chr <= 57)
-					|| (65 <= chr && chr <= 90)
-					|| (97 <= chr && chr <= 122))) {
+			if (!((chr == 95) || (47 <= chr && chr <= 57) || (65 <= chr && chr <= 90) || (97 <= chr && chr <= 122))) {
 				return false;
 			}
 		}
@@ -2073,7 +2058,12 @@ public class DBUtils {
 		return tableName.contains("=");
 	}
 
-  
+	public static String parseSQL(String sql) {
+		sql = sql.replaceAll(".*([';]+|(--)+).*", " ");
+		sql = StringTools.replace(sql, "$$QUOTE$$", "'");
+		return sql;
+	}
+
 	public static String removeOrders(String sql) {
 		Pattern pattern = Pattern.compile("order\\s*by[\\w|\\W|\\s|\\S]*", Pattern.CASE_INSENSITIVE);
 		Matcher matcher = pattern.matcher(sql);
@@ -2085,7 +2075,7 @@ public class DBUtils {
 		return buf.toString();
 	}
 
-	private static boolean renameTable(Connection connection, String sourceTable, String targetTable) {
+	public static boolean renameTable(Connection connection, String sourceTable, String targetTable) {
 		if (DBUtils.isAllowedTable(sourceTable) && DBUtils.isAllowedTable(targetTable)) {
 			try {
 				String sql = "";
@@ -2112,7 +2102,7 @@ public class DBUtils {
 		return false;
 	}
 
-	public static boolean renameTable( String sourceTable, String targetTable) {
+	public static boolean renameTable(String sourceTable, String targetTable) {
 		Connection connection = null;
 		try {
 			connection = DBConnectionFactory.getConnection();
@@ -2126,7 +2116,6 @@ public class DBUtils {
 		}
 	}
 
-
 	public static boolean tableExists(Connection connection, String tableName) {
 		DatabaseMetaData dbmd;
 		ResultSet rs = null;
@@ -2136,7 +2125,7 @@ public class DBUtils {
 			rs = dbmd.getTables(null, null, null, new String[] { "TABLE" });
 			while (rs.next()) {
 				String table = rs.getString("TABLE_NAME");
-				//logger.debug("table:"+table);
+				// logger.debug("table:"+table);
 				if (StringUtils.equalsIgnoreCase(tableName, table)) {
 					exists = true;
 				}
@@ -2166,6 +2155,5 @@ public class DBUtils {
 			JdbcUtils.close(conn);
 		}
 	}
-
 
 }

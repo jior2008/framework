@@ -18,24 +18,37 @@
 
 package com.glaf.framework.system.factory;
 
-import com.glaf.core.jdbc.DBConnectionFactory;
-import com.glaf.core.model.TableDefinition;
-import com.glaf.core.util.DBUtils;
-import com.glaf.core.util.JdbcUtils;
-import com.glaf.framework.system.config.ConnectionTask;
-import com.glaf.framework.system.config.DatabaseConnectionConfig;
-import com.glaf.framework.system.domain.Database;
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.concurrent.*;
+import java.util.Properties;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.ForkJoinPool;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.glaf.core.jdbc.ConnectionThreadHolder;
+import com.glaf.core.jdbc.DBConnectionFactory;
+import com.glaf.core.model.TableDefinition;
+import com.glaf.core.util.DBUtils;
+import com.glaf.core.util.JdbcUtils;
+
+import com.glaf.framework.system.config.ConnectionTask;
+import com.glaf.framework.system.config.DBConfiguration;
+import com.glaf.framework.system.config.DatabaseConnectionConfig;
+import com.glaf.framework.system.domain.Database;
+import com.glaf.framework.system.jdbc.connection.ConnectionProvider;
+import com.glaf.framework.system.jdbc.connection.ConnectionProviderFactory;
+ 
 
 public class DatabaseFactory {
 	private static class DatabaseHolder {
@@ -88,6 +101,33 @@ public class DatabaseFactory {
 		databaseNames.clear();
 		fileDatabaseIds.clear();
 		activeDatabases.clear();
+	}
+
+	public static Connection getConnection(String systemName) {
+		if (systemName == null) {
+			throw new RuntimeException("systemName is required.");
+		}
+		Connection connection = null;
+		try {
+			Properties props = DBConfiguration.getDataSourcePropertiesByName(systemName);
+			if (props != null) {
+
+				ConnectionProvider provider = ConnectionProviderFactory.createProvider(systemName);
+				if (provider != null) {
+					connection = provider.getConnection();
+				}
+
+			} else {
+				// DataSource ds = ContextFactory.getBean("dataSource");
+				// connection = ds.getConnection();
+			}
+			if (connection != null) {
+				ConnectionThreadHolder.addConnection(connection);
+			}
+			return connection;
+		} catch (Exception ex) {
+			throw new RuntimeException(ex);
+		}
 	}
 
 	private synchronized List<Database> getDatabases() {

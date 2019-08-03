@@ -184,7 +184,7 @@ public class DateUtils {
 	 * @param date
 	 * @return
 	 */
-	private static String getDateTime(String pattern, java.util.Date date) {
+	public static String getDateTime(String pattern, java.util.Date date) {
 		if (date == null) {
 			return "";
 		}

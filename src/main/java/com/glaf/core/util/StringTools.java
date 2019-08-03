@@ -1106,7 +1106,7 @@ public final class StringTools {
 	}
 
 	@SuppressWarnings("unchecked")
-	private static List<String> splitLowerCase(String text, String delimiter) {
+	public static List<String> splitLowerCase(String text, String delimiter) {
 		if (delimiter == null) {
 			throw new RuntimeException("delimiter is null");
 		}

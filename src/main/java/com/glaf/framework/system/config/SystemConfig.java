@@ -381,7 +381,7 @@ public class SystemConfig {
 		return getString("serviceUrl");
 	}
 
-	private static String getString(String key) {
+	public static String getString(String key) {
 		String ret = null;
 		SystemProperty prop = getProperty(key);
 		if (prop != null) {

@@ -51,7 +51,7 @@ public class BaseQuery extends AbstractQuery<Object> {
 	protected Date afterCreateDate;
 	protected Date beforeCreateDate;
 
-	BaseQuery() {
+	public BaseQuery() {
 
 	}
 
@@ -95,11 +95,27 @@ public class BaseQuery extends AbstractQuery<Object> {
 		return this;
 	}
 
+	public BaseQuery createBy(String createBy) {
+		if (createBy == null) {
+			throw new RuntimeException("createBy is null");
+		}
+		this.createBy = createBy;
+		return this;
+	}
+
 	public BaseQuery createDate(Date createDate) {
 		if (createDate == null) {
 			throw new RuntimeException("createDate is null");
 		}
 		this.createDate = createDate;
+		return this;
+	}
+
+	public BaseQuery deleteFlag(Integer deleteFlag) {
+		if (deleteFlag == null) {
+			throw new RuntimeException("deleteFlag is null");
+		}
+		this.deleteFlag = deleteFlag;
 		return this;
 	}
 
@@ -221,6 +237,14 @@ public class BaseQuery extends AbstractQuery<Object> {
 
 	public boolean isOwner() {
 		return isOwner;
+	}
+
+	public BaseQuery locked(Integer locked) {
+		if (locked == null) {
+			throw new RuntimeException("locked is null");
+		}
+		this.locked = locked;
+		return this;
 	}
 
 	public BaseQuery serviceKey(String serviceKey) {

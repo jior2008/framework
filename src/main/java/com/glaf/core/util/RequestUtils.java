@@ -20,6 +20,7 @@ package com.glaf.core.util;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.glaf.core.identity.User;
 import com.glaf.core.security.IdentityFactory;
 import com.glaf.core.security.LoginContext;
 import com.glaf.framework.system.config.SystemConfig;
@@ -238,7 +239,7 @@ public class RequestUtils {
 		return text;
 	}
 
-	private static String getActorId(HttpServletRequest request) {
+	public static String getActorId(HttpServletRequest request) {
 		String actorId = null;
 		String ip = getIPAddress(request);
 		ip = DigestUtils.md5Hex(ip + SystemConfig.getIntToken());
@@ -310,7 +311,7 @@ public class RequestUtils {
 			if ("true".equalsIgnoreCase(paramValue)) {
 				return true;
 			}
-            return "1".equalsIgnoreCase(paramValue);
+			return "1".equalsIgnoreCase(paramValue);
 		}
 		return false;
 	}
@@ -318,18 +319,15 @@ public class RequestUtils {
 	/**
 	 * 获取字段值
 	 * 
-	 * @param request
-	 *            HttpServletRequest request对象
-	 * @param param
-	 *            String 参数
-	 * @param value
-	 *            String 比较值
+	 * @param request HttpServletRequest request对象
+	 * @param param   String 参数
+	 * @param value   String 比较值
 	 * @return boolean 和比较值相同则返回true，否则返回false
 	 */
 	public static boolean getBooleanParameter(HttpServletRequest request, String param, String value) {
 		String temp = getParameter(request, param);
-        return temp != null && temp.equals(value);
-    }
+		return temp != null && temp.equals(value);
+	}
 
 	public static String getCookieValue(HttpServletRequest request, String name) {
 		String value = null;
@@ -344,7 +342,7 @@ public class RequestUtils {
 		return value;
 	}
 
-	private static String getCurrentSystem(HttpServletRequest request) {
+	public static String getCurrentSystem(HttpServletRequest request) {
 		String currentSystem = null;
 		String paramValue = request.getParameter(Constants.SYSTEM_NAME);
 		if (StringUtils.isNotEmpty(paramValue)) {
@@ -422,7 +420,7 @@ public class RequestUtils {
 	 * @param defaultValue
 	 * @return
 	 */
-	private static double getDouble(HttpServletRequest request, String paramName, double defaultValue) {
+	public static double getDouble(HttpServletRequest request, String paramName, double defaultValue) {
 		String paramValue = request.getParameter(paramName);
 		if (StringUtils.isNotEmpty(paramValue) && StringUtils.isNumeric(paramValue)) {
 			return Double.parseDouble(paramValue);
@@ -495,12 +493,11 @@ public class RequestUtils {
 	 * @param defaultValue
 	 * @return
 	 */
-	private static int getInt(HttpServletRequest request, String paramName, int defaultValue) {
+	public static int getInt(HttpServletRequest request, String paramName, int defaultValue) {
 		String paramValue = request.getParameter(paramName);
 		if (StringUtils.isNotEmpty(paramValue) && StringUtils.isNumeric(paramValue)) {
 			return Integer.parseInt(paramValue);
-		} else if (StringUtils.isNotEmpty(paramValue)
-				&& StringUtils.isNumeric(paramValue.substring(1))) {
+		} else if (StringUtils.isNotEmpty(paramValue) && StringUtils.isNumeric(paramValue.substring(1))) {
 			return Integer.parseInt(paramValue);
 		} else {
 			if (StringUtils.isNotEmpty(paramValue)) {
@@ -532,12 +529,11 @@ public class RequestUtils {
 	 * @param defaultValue
 	 * @return
 	 */
-	private static Integer getInteger(HttpServletRequest request, String paramName, Integer defaultValue) {
+	public static Integer getInteger(HttpServletRequest request, String paramName, Integer defaultValue) {
 		String paramValue = request.getParameter(paramName);
 		if (StringUtils.isNotEmpty(paramValue) && StringUtils.isNumeric(paramValue)) {
 			return Integer.parseInt(paramValue);
-		} else if (StringUtils.isNotEmpty(paramValue)
-				&& StringUtils.isNumeric(paramValue.substring(1))) {
+		} else if (StringUtils.isNotEmpty(paramValue) && StringUtils.isNumeric(paramValue.substring(1))) {
 			return Integer.parseInt(paramValue);
 		} else {
 			if (StringUtils.isNotEmpty(paramValue)) {
@@ -553,12 +549,9 @@ public class RequestUtils {
 	/**
 	 * 获取int型字段值
 	 * 
-	 * @param request
-	 *            HttpServletRequest request对象
-	 * @param param
-	 *            String 参数
-	 * @param defaultNum
-	 *            int 缺省值
+	 * @param request    HttpServletRequest request对象
+	 * @param param      String 参数
+	 * @param defaultNum int 缺省值
 	 * @return int 返回值
 	 */
 	public static int getIntParameter(HttpServletRequest request, String param, int defaultNum) {
@@ -592,7 +585,7 @@ public class RequestUtils {
 	// proxy_set_header host $host;
 	// proxy_set_header x-real-ip $remote_addr;
 	// proxy_set_header x-forwarded-for $proxy_add_x_forwarded_for;
-	private static String getIPAddress(HttpServletRequest request) {
+	public static String getIPAddress(HttpServletRequest request) {
 		String ipAddress = request.getHeader("x-real-ip");
 		if (StringUtils.isEmpty(ipAddress) || "unknown".equalsIgnoreCase(ipAddress)) {
 			ipAddress = request.getHeader("x-forwarded-for");
@@ -643,7 +636,7 @@ public class RequestUtils {
 		return getLocalHostAddress(request, false);
 	}
 
-	private static String getLocalHostAddress(HttpServletRequest request, boolean includePort) {
+	public static String getLocalHostAddress(HttpServletRequest request, boolean includePort) {
 		String scheme = request.getScheme();
 		String serverName = request.getServerName();
 		String port = "";
@@ -681,12 +674,11 @@ public class RequestUtils {
 	 * @param defaultValue
 	 * @return
 	 */
-	private static long getLong(HttpServletRequest request, String paramName, long defaultValue) {
+	public static long getLong(HttpServletRequest request, String paramName, long defaultValue) {
 		String paramValue = request.getParameter(paramName);
 		if (StringUtils.isNotEmpty(paramValue) && StringUtils.isNumeric(paramValue)) {
 			return Long.parseLong(paramValue);
-		} else if (StringUtils.isNotEmpty(paramValue)
-				&& StringUtils.isNumeric(paramValue.substring(1))) {
+		} else if (StringUtils.isNotEmpty(paramValue) && StringUtils.isNumeric(paramValue.substring(1))) {
 			return Long.parseLong(paramValue);
 		} else {
 			if (StringUtils.isNotEmpty(paramValue)) {
@@ -730,10 +722,8 @@ public class RequestUtils {
 	/**
 	 * 从request中封装一个对象
 	 * 
-	 * @param request
-	 *            request对象
-	 * @param object
-	 *            封装对象的类
+	 * @param request request对象
+	 * @param object  封装对象的类
 	 * @return 超类
 	 * @throws ServletException
 	 */
@@ -772,7 +762,7 @@ public class RequestUtils {
 	 * @param name
 	 * @return
 	 */
-	private static String getParameter(HttpServletRequest request, String name) {
+	public static String getParameter(HttpServletRequest request, String name) {
 		String value = request.getParameter(name);
 		if (StringUtils.isEmpty(value)) {
 			String[] values = request.getParameterValues(name);
@@ -800,12 +790,9 @@ public class RequestUtils {
 	/**
 	 * 获取字段值
 	 * 
-	 * @param request
-	 *            HttpServletRequest request对象
-	 * @param param
-	 *            String 参数
-	 * @param defaultValue
-	 *            String 缺省值
+	 * @param request      HttpServletRequest request对象
+	 * @param param        String 参数
+	 * @param defaultValue String 缺省值
 	 * @return String 返回值，缺省为空
 	 */
 	public static String getParameter(HttpServletRequest request, String param, String defaultValue) {
@@ -1068,6 +1055,14 @@ public class RequestUtils {
 			theme = request.getParameter("theme");
 		}
 		return theme;
+	}
+	
+	public static User getUser(HttpServletRequest request) {
+		String actorId = getActorId(request);
+		if (StringUtils.isNotEmpty(actorId)) {
+			return IdentityFactory.getUser(actorId);
+		}
+		return null;
 	}
 
 	public static boolean isMobile(HttpServletRequest request) {

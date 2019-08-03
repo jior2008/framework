@@ -22,10 +22,16 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.glaf.core.cache.CacheFactory;
 import com.glaf.core.context.ContextFactory;
+import com.glaf.core.identity.Role;
 import com.glaf.core.identity.User;
 import com.glaf.core.identity.util.UserJsonFactory;
 import com.glaf.core.service.EntityService;
 import com.glaf.core.util.Constants;
+import com.glaf.core.util.hash.JenkinsHash;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -70,13 +76,41 @@ public class IdentityFactory {
 		return null;
 	}
 
+	public static List<Role> getRoles() {
+		List<Role> roles = new ArrayList<Role>();
+		List<Object> list = getEntityService().getList("getRoles", null);
+		if (list != null && !list.isEmpty()) {
+			for (Object object : list) {
+				if (object instanceof Role) {
+					Role role = (Role) object;
+					roles.add(role);
+				}
+			}
+		}
+		return roles;
+	}
+
+	/**
+	 * 通过租户编号获取租户Hash码
+	 * 
+	 * @param tenantId
+	 * @return
+	 */
+	public static int getTenantHash(String tenantId) {
+		if (tenantId != null) {
+			return Math.abs(JenkinsHash.getInstance().hash(tenantId.getBytes()))
+					% com.glaf.core.util.Constants.TABLE_PARTITION;
+		}
+		return 0;
+	}
+
 	/**
 	 * 根据用户名获取用户对象
 	 * 
 	 * @param userId
 	 * @return
 	 */
-	private static User getUser(String userId) {
+	public static User getUser(String userId) {
 		String cacheKey = Constants.CACHE_USER_KEY + userId;
 		String text = CacheFactory.getString(Constants.CACHE_USER_REGION, cacheKey);
 		if (text != null) {
@@ -91,6 +125,20 @@ public class IdentityFactory {
 			CacheFactory.put(Constants.CACHE_USER_REGION, cacheKey, user.toJsonObject().toJSONString());
 		}
 		return user;
+	}
+
+	public static List<User> getUsers() {
+		List<User> users = new ArrayList<User>();
+		List<Object> list = getEntityService().getList("getUsers", null);
+		if (list != null && !list.isEmpty()) {
+			for (Object object : list) {
+				if (object instanceof User) {
+					User u = (User) object;
+					users.add(u);
+				}
+			}
+		}
+		return users;
 	}
 
 	public static void setEntityService(EntityService entityService) {
