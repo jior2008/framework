@@ -33,6 +33,8 @@ import org.springframework.core.io.support.ResourcePatternResolver;
 
 import javax.sql.DataSource;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 @Configuration
 @AutoConfigureAfter(DruidConfig.class)
@@ -49,18 +51,35 @@ public class MyBatisConfig {
 		ResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
 		Resource mybatisConfigXml = resolver.getResource("classpath:mybatis/mybatis-config.xml");
 		sqlSessionFactoryBean.setConfigLocation(mybatisConfigXml);
+		List<Resource> resouresList = new ArrayList<Resource>();
 		// 扫描mapper文件
 		Resource[] resoures = null;
+		Resource[] resoures2 = null;
 		try {
 			resoures = resolver.getResources("classpath:mybatis/mapper/*.xml");
-			logger.info("resoures size:" + resoures.length);
+			logger.info("mybatis/mapper resoures size:" + resoures.length);
 			for (Resource resoure : resoures) {
 				logger.info("Load XML Mapper:" + resoure.getFilename());
+				resouresList.add(resoure);
 			}
+
+			resoures2 = resolver.getResources("classpath:com/glaf/**/mapper/*.xml");
+			logger.info("com/glaf resoures size:" + resoures2.length);
+			for (Resource resoure : resoures2) {
+				logger.info("Load XML Mapper:" + resoure.getFilename());
+				resouresList.add(resoure);
+			}
+
 		} catch (IOException ex) {
-			ex.printStackTrace();
+			// ex.printStackTrace();
+			logger.error(ex.getMessage());
 		}
 		// Resource[] resoures=new Resource[]{mybatisMapperXml};
+		resoures = new Resource[resouresList.size()];
+		int index = 0;
+		for (Resource resoure : resouresList) {
+			resoures[index++] = resoure;
+		}
 		sqlSessionFactoryBean.setMapperLocations(resoures);
 		logger.info("MyBatisConfig装配完成.");
 		return sqlSessionFactoryBean;
