@@ -33,8 +33,8 @@ import org.springframework.core.io.support.ResourcePatternResolver;
 
 import javax.sql.DataSource;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Collection;
+import java.util.LinkedHashSet;
 
 @Configuration
 @AutoConfigureAfter(DruidConfig.class)
@@ -51,7 +51,7 @@ public class MyBatisConfig {
 		ResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
 		Resource mybatisConfigXml = resolver.getResource("classpath:mybatis/mybatis-config.xml");
 		sqlSessionFactoryBean.setConfigLocation(mybatisConfigXml);
-		List<Resource> resouresList = new ArrayList<Resource>();
+		Collection<Resource> resouresList = new LinkedHashSet<Resource>();
 		// 扫描mapper文件
 		Resource[] resoures = null;
 		Resource[] resoures2 = null;
