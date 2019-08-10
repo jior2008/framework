@@ -16,39 +16,40 @@
  * limitations under the License.
  */
 
-package com.glaf.framework.system.query;
-
-import com.glaf.core.query.DataQuery;
+package com.glaf.core.query;
 
 import java.util.List;
 
-public class SysTreeQuery extends DataQuery {
+public class DictoryQuery extends DataQuery {
 	private static final long serialVersionUID = 1L;
-	private List<Long> nodeIds;
 	private String code;
 	private String codeLike;
 	private List<String> codes;
-	private Integer departmentStatus;
 	private String descLike;
-	private String discriminator;
 	private String name;
 	private String nameLike;
 	private List<String> names;
-	private String relationColumn;
-	private String relationTable;
+	private Long nodeId;
+	private List<Long> nodeIds;
 	private Integer sortGreaterThan;
 	private Integer sortGreaterThanOrEqual;
 	private Integer sortLessThan;
 	private Integer sortLessThanOrEqual;
-	private String treeIdLeftLike;
-	private String treeIdRightLike;
-	private String urlLike;
+	private Long idNotEqual;
 
-	public SysTreeQuery() {
+	public Long getIdNotEqual() {
+		return idNotEqual;
+	}
+
+	public void setIdNotEqual(Long idNotEqual) {
+		this.idNotEqual = idNotEqual;
+	}
+
+	public DictoryQuery() {
 
 	}
 
-	public SysTreeQuery code(String code) {
+	public DictoryQuery code(String code) {
 		if (code == null) {
 			throw new RuntimeException("code is null");
 		}
@@ -56,7 +57,7 @@ public class SysTreeQuery extends DataQuery {
 		return this;
 	}
 
-	public SysTreeQuery codeLike(String codeLike) {
+	public DictoryQuery codeLike(String codeLike) {
 		if (codeLike == null) {
 			throw new RuntimeException("code is null");
 		}
@@ -64,7 +65,7 @@ public class SysTreeQuery extends DataQuery {
 		return this;
 	}
 
-	public SysTreeQuery codes(List<String> codes) {
+	public DictoryQuery codes(List<String> codes) {
 		if (codes == null) {
 			throw new RuntimeException("codes is empty ");
 		}
@@ -72,7 +73,7 @@ public class SysTreeQuery extends DataQuery {
 		return this;
 	}
 
-	public SysTreeQuery descLike(String descLike) {
+	public DictoryQuery descLike(String descLike) {
 		if (descLike == null) {
 			throw new RuntimeException("desc is null");
 		}
@@ -86,9 +87,6 @@ public class SysTreeQuery extends DataQuery {
 
 	public String getCodeLike() {
 		if (codeLike != null && codeLike.trim().length() > 0) {
-			if (!codeLike.startsWith("%")) {
-				codeLike = "%" + codeLike;
-			}
 			if (!codeLike.endsWith("%")) {
 				codeLike = codeLike + "%";
 			}
@@ -98,10 +96,6 @@ public class SysTreeQuery extends DataQuery {
 
 	public List<String> getCodes() {
 		return codes;
-	}
-
-	public Integer getDepartmentStatus() {
-		return departmentStatus;
 	}
 
 	public String getDescLike() {
@@ -114,14 +108,6 @@ public class SysTreeQuery extends DataQuery {
 			}
 		}
 		return descLike;
-	}
-
-	public String getDiscriminator() {
-		return discriminator;
-	}
-
-	public Integer getLocked() {
-		return locked;
 	}
 
 	public String getName() {
@@ -144,6 +130,10 @@ public class SysTreeQuery extends DataQuery {
 		return names;
 	}
 
+	public Long getNodeId() {
+		return nodeId;
+	}
+
 	public List<Long> getNodeIds() {
 		return nodeIds;
 	}
@@ -155,8 +145,8 @@ public class SysTreeQuery extends DataQuery {
 				a_x = sortOrder;
 			}
 
-			if ("parent".equals(sortColumn)) {
-				orderBy = "E.PARENT" + a_x;
+			if ("typeId".equals(sortColumn)) {
+				orderBy = "E.TYPEID" + a_x;
 			}
 
 			if ("name".equals(sortColumn)) {
@@ -164,43 +154,47 @@ public class SysTreeQuery extends DataQuery {
 			}
 
 			if ("desc".equals(sortColumn)) {
-				orderBy = "E.NODEDESC" + a_x;
-			}
-
-			if ("sort".equals(sortColumn)) {
-				orderBy = "E.SORTNO" + a_x;
+				orderBy = "E.DICTDESC" + a_x;
 			}
 
 			if ("code".equals(sortColumn)) {
 				orderBy = "E.CODE" + a_x;
 			}
 
-			if ("icon".equals(sortColumn)) {
-				orderBy = "E.icon" + a_x;
+			if ("sort".equals(sortColumn)) {
+				orderBy = "E.SORTNO" + a_x;
 			}
 
-			if ("iconCls".equals(sortColumn)) {
-				orderBy = "E.iconCls" + a_x;
+			if ("blocked".equals(sortColumn)) {
+				orderBy = "E.LOCKED" + a_x;
 			}
 
-			if ("url".equals(sortColumn)) {
-				orderBy = "E.url" + a_x;
+			if ("ext1".equals(sortColumn)) {
+				orderBy = "E.EXT1" + a_x;
 			}
 
-			if ("locked".equals(sortColumn)) {
-				orderBy = "E.locked" + a_x;
+			if ("ext2".equals(sortColumn)) {
+				orderBy = "E.EXT2" + a_x;
+			}
+
+			if ("ext3".equals(sortColumn)) {
+				orderBy = "E.EXT3" + a_x;
+			}
+
+			if ("ext4".equals(sortColumn)) {
+				orderBy = "E.EXT4" + a_x;
+			}
+
+			if ("ext5".equals(sortColumn)) {
+				orderBy = "E.EXT5" + a_x;
+			}
+
+			if ("ext6".equals(sortColumn)) {
+				orderBy = "E.EXT6" + a_x;
 			}
 
 		}
 		return orderBy;
-	}
-
-	public String getRelationColumn() {
-		return relationColumn;
-	}
-
-	public String getRelationTable() {
-		return relationTable;
 	}
 
 	public Integer getSortGreaterThan() {
@@ -219,62 +213,25 @@ public class SysTreeQuery extends DataQuery {
 		return sortLessThanOrEqual;
 	}
 
-	public String getTreeIdLeftLike() {
-		if (treeIdLeftLike != null && treeIdLeftLike.trim().length() > 0) {
-			if (!treeIdLeftLike.endsWith("%")) {
-				treeIdLeftLike = treeIdLeftLike + "%";
-			}
-		}
-
-		return treeIdLeftLike;
-	}
-
-	public String getTreeIdRightLike() {
-		if (treeIdRightLike != null && treeIdRightLike.trim().length() > 0) {
-			if (!treeIdRightLike.startsWith("%")) {
-				treeIdRightLike = "%" + treeIdRightLike;
-			}
-		}
-
-		return treeIdRightLike;
-	}
-
-	public String getUrlLike() {
-		if (urlLike != null && urlLike.trim().length() > 0) {
-			if (!urlLike.startsWith("%")) {
-				urlLike = "%" + urlLike;
-			}
-			if (!urlLike.endsWith("%")) {
-				urlLike = urlLike + "%";
-			}
-		}
-		return urlLike;
-	}
-
 	@Override
 	public void initQueryColumns() {
 		super.initQueryColumns();
 		addColumn("id", "ID");
-		addColumn("parent", "PARENT");
+		addColumn("nodeId", "TYPEID");
 		addColumn("name", "NAME");
-		addColumn("desc", "NODEDESC");
-		addColumn("sort", "SORTNO");
+		addColumn("desc", "DICTDESC");
 		addColumn("code", "CODE");
-		addColumn("icon", "icon");
-		addColumn("iconCls", "iconCls");
-		addColumn("url", "url");
-		addColumn("locked", "locked");
+		addColumn("sort", "SORTNO");
+		addColumn("locked", "LOCKED");
+		addColumn("ext1", "EXT1");
+		addColumn("ext2", "EXT2");
+		addColumn("ext3", "EXT3");
+		addColumn("ext4", "EXT4");
+		addColumn("ext5", "EXT5");
+		addColumn("ext6", "EXT6");
 	}
 
-	public SysTreeQuery locked(Integer locked) {
-		if (locked == null) {
-			throw new RuntimeException("locked is null");
-		}
-		this.locked = locked;
-		return this;
-	}
-
-	public SysTreeQuery name(String name) {
+	public DictoryQuery name(String name) {
 		if (name == null) {
 			throw new RuntimeException("name is null");
 		}
@@ -282,7 +239,7 @@ public class SysTreeQuery extends DataQuery {
 		return this;
 	}
 
-	public SysTreeQuery nameLike(String nameLike) {
+	public DictoryQuery nameLike(String nameLike) {
 		if (nameLike == null) {
 			throw new RuntimeException("name is null");
 		}
@@ -290,7 +247,7 @@ public class SysTreeQuery extends DataQuery {
 		return this;
 	}
 
-	public SysTreeQuery names(List<String> names) {
+	public DictoryQuery names(List<String> names) {
 		if (names == null) {
 			throw new RuntimeException("names is empty ");
 		}
@@ -298,11 +255,11 @@ public class SysTreeQuery extends DataQuery {
 		return this;
 	}
 
-	public SysTreeQuery nodeIds(List<Long> nodeIds) {
-		if (nodeIds == null) {
-			throw new RuntimeException("nodeIds is empty ");
+	public DictoryQuery nodeId(Long nodeId) {
+		if (nodeId == null) {
+			throw new RuntimeException("nodeId is null");
 		}
-		this.nodeIds = nodeIds;
+		this.nodeId = nodeId;
 		return this;
 	}
 
@@ -318,20 +275,8 @@ public class SysTreeQuery extends DataQuery {
 		this.codes = codes;
 	}
 
-	public void setDepartmentStatus(Integer departmentStatus) {
-		this.departmentStatus = departmentStatus;
-	}
-
 	public void setDescLike(String descLike) {
 		this.descLike = descLike;
-	}
-
-	public void setDiscriminator(String discriminator) {
-		this.discriminator = discriminator;
-	}
-
-	public void setLocked(Integer locked) {
-		this.locked = locked;
 	}
 
 	public void setName(String name) {
@@ -346,16 +291,12 @@ public class SysTreeQuery extends DataQuery {
 		this.names = names;
 	}
 
+	public void setNodeId(Long nodeId) {
+		this.nodeId = nodeId;
+	}
+
 	public void setNodeIds(List<Long> nodeIds) {
 		this.nodeIds = nodeIds;
-	}
-
-	public void setRelationColumn(String relationColumn) {
-		this.relationColumn = relationColumn;
-	}
-
-	public void setRelationTable(String relationTable) {
-		this.relationTable = relationTable;
 	}
 
 	public void setSortGreaterThan(Integer sortGreaterThan) {
@@ -374,19 +315,7 @@ public class SysTreeQuery extends DataQuery {
 		this.sortLessThanOrEqual = sortLessThanOrEqual;
 	}
 
-	public void setTreeIdLeftLike(String treeIdLeftLike) {
-		this.treeIdLeftLike = treeIdLeftLike;
-	}
-
-	public void setTreeIdRightLike(String treeIdRightLike) {
-		this.treeIdRightLike = treeIdRightLike;
-	}
-
-	public void setUrlLike(String urlLike) {
-		this.urlLike = urlLike;
-	}
-
-	public SysTreeQuery sortGreaterThanOrEqual(Integer sortGreaterThanOrEqual) {
+	public DictoryQuery sortGreaterThanOrEqual(Integer sortGreaterThanOrEqual) {
 		if (sortGreaterThanOrEqual == null) {
 			throw new RuntimeException("sort is null");
 		}
@@ -394,19 +323,11 @@ public class SysTreeQuery extends DataQuery {
 		return this;
 	}
 
-	public SysTreeQuery sortLessThanOrEqual(Integer sortLessThanOrEqual) {
+	public DictoryQuery sortLessThanOrEqual(Integer sortLessThanOrEqual) {
 		if (sortLessThanOrEqual == null) {
 			throw new RuntimeException("sort is null");
 		}
 		this.sortLessThanOrEqual = sortLessThanOrEqual;
-		return this;
-	}
-
-	public SysTreeQuery urlLike(String urlLike) {
-		if (urlLike == null) {
-			throw new RuntimeException("url is null");
-		}
-		this.urlLike = urlLike;
 		return this;
 	}
 

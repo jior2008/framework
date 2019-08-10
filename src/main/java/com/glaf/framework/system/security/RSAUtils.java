@@ -19,9 +19,10 @@
 package com.glaf.framework.system.security;
 
 import com.glaf.core.context.ContextFactory;
+import com.glaf.core.domain.SysKey;
+import com.glaf.core.service.SysKeyService;
 import com.glaf.core.util.UUID32;
-import com.glaf.framework.system.domain.SysKey;
-import com.glaf.framework.system.service.SysKeyService;
+
 import org.apache.commons.codec.DecoderException;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.codec.binary.Hex;

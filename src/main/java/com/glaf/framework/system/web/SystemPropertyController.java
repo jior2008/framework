@@ -22,12 +22,13 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.glaf.core.config.SystemProperties;
+import com.glaf.core.domain.SystemProperty;
+import com.glaf.core.service.ISystemPropertyService;
 import com.glaf.core.util.FileUtils;
 import com.glaf.core.util.RequestUtils;
 import com.glaf.core.util.ResponseUtils;
 import com.glaf.framework.system.config.SystemConfig;
-import com.glaf.framework.system.domain.SystemProperty;
-import com.glaf.framework.system.service.ISystemPropertyService;
+
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;

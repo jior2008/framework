@@ -16,8 +16,10 @@
  * limitations under the License.
  */
 
-package com.glaf.matrix.export.sql;
+package com.glaf.matrix.export.jdbc;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
@@ -36,26 +38,31 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.poi.util.IOUtils;
+
 import org.jxls.common.JxlsException;
 import org.jxls.jdbc.CaseInsensitiveHashMap;
 
+import com.glaf.core.config.SystemProperties;
 import com.glaf.core.context.ContextFactory;
+import com.glaf.core.domain.Database;
 import com.glaf.core.entity.SqlExecutor;
 import com.glaf.core.jdbc.QueryConnectionFactory;
+import com.glaf.core.service.IDatabaseService;
 import com.glaf.core.util.DBUtils;
 import com.glaf.core.util.FileUtils;
 import com.glaf.core.util.JdbcUtils;
 import com.glaf.core.util.ParamUtils;
 import com.glaf.core.util.QueryUtils;
-
-import com.glaf.framework.system.domain.Database;
+import com.glaf.core.util.StringTools;
 import com.glaf.framework.system.factory.DatabaseFactory;
-import com.glaf.framework.system.service.IDatabaseService;
 import com.glaf.jxls.ext.JxlsImage;
 import com.glaf.jxls.ext.JxlsUtil;
+import com.glaf.matrix.export.util.Constants;
 
 public class QueryHelper {
 	protected final static Log logger = LogFactory.getLog(QueryHelper.class);
+
+	public final static String newline = System.getProperty("line.separator");
 
 	protected final static int MAX_ROW_SIZE = 100000;
 
@@ -95,6 +102,7 @@ public class QueryHelper {
 		try {
 			result = runner.query(conn, sql, handler, params);
 			if (result != null && !result.isEmpty()) {
+				Map<String, Object> rowMap = new CaseInsensitiveHashMap();
 				Set<Entry<String, Object>> entrySet = result.entrySet();
 				for (Entry<String, Object> entry : entrySet) {
 					String key = entry.getKey();
@@ -105,8 +113,15 @@ public class QueryHelper {
 							String str = this.clobToString(clob);
 							result.put(key, str);
 						}
+						if (StringUtils.endsWith(key, "_newline")) {
+							String str = value.toString();
+							str = StringTools.replace(str, Constants.LINE_SP, newline);
+							rowMap.put(key, str);
+							rowMap.put(key.substring(0, key.length() - 8) + "_orig", str);
+						}
 					}
 				}
+				result.putAll(rowMap);
 			}
 		} catch (SQLException e) {
 			throw new JxlsException("Failed to execute sql", e);
@@ -236,6 +251,7 @@ public class QueryHelper {
 			result = runner.query(connection, sql, handler, params);
 			if (result != null && !result.isEmpty()) {
 				for (Map<String, Object> dataMap : result) {
+					Map<String, Object> rowMap = new CaseInsensitiveHashMap();
 					Set<Entry<String, Object>> entrySet = dataMap.entrySet();
 					for (Entry<String, Object> entry : entrySet) {
 						String key = entry.getKey();
@@ -246,8 +262,15 @@ public class QueryHelper {
 								String str = this.clobToString(clob);
 								dataMap.put(key, str);
 							}
+							if (StringUtils.endsWith(key, "_newline")) {
+								String str = value.toString();
+								str = StringTools.replace(str, Constants.LINE_SP, newline);
+								rowMap.put(key, str);
+								rowMap.put(key.substring(0, key.length() - 8) + "_orig", str);
+							}
 						}
 					}
+					dataMap.putAll(rowMap);
 				}
 			}
 		} catch (SQLException e) {
@@ -320,30 +343,36 @@ public class QueryHelper {
 		QueryRunner runner = new QueryRunner();
 		try {
 			result = runner.query(connection, sql, handler, params);
-		} catch (SQLException e) {
-			throw new JxlsException("Failed to execute sql", e);
+		} catch (SQLException ex) {
+			throw new JxlsException("Failed to execute sql", ex);
 		}
 
 		if (result != null && !result.isEmpty()) {
+			// int index2 = 0;
 			for (Map<String, Object> dataMap : result) {
-				String imageName = ParamUtils.getString(dataMap, "filename");
-				if (StringUtils.isNotEmpty(imageName)) {
-					Map<String, Object> imageMap = new CaseInsensitiveHashMap();
-					Set<Entry<String, Object>> entrySet = dataMap.entrySet();
-					for (Entry<String, Object> entry : entrySet) {
-						String key = entry.getKey();
-						Object value = entry.getValue();
-						if (value != null) {
+				// if (index2 % 10 == 0) {
+				// logger.debug(dataMap);
+				// }
+				// index2++;
+				FileInputStream fin = null;
+				Map<String, Object> newDataMap = new CaseInsensitiveHashMap();
+				Set<Entry<String, Object>> entrySet = dataMap.entrySet();
+				for (Entry<String, Object> entry : entrySet) {
+					String key = entry.getKey();
+					Object value = entry.getValue();
+					if (value != null) {
+						String imageName = ParamUtils.getString(dataMap, "filename");
+						if (StringUtils.isNotEmpty(imageName)) {
 							if (value instanceof java.sql.Clob) {
 								java.sql.Clob clob = (java.sql.Clob) value;
 								String str = this.clobToString(clob);
-								imageMap.put(key, str);
+								newDataMap.put(key, str);
 							} else if (value instanceof java.sql.Blob) {
 								java.sql.Blob blob = (java.sql.Blob) value;
 								byte[] data = this.blobToBytes(blob);
 								try {
 									JxlsImage jxlsImage = JxlsUtil.me().getJxlsImage(data, imageName);
-									imageMap.put(key + "_img", jxlsImage);
+									newDataMap.put(key + "_img", jxlsImage);
 								} catch (IOException ex) {
 								}
 							} else if (value instanceof java.io.InputStream) {
@@ -351,22 +380,48 @@ public class QueryHelper {
 								byte[] data = FileUtils.getBytes(inStream);
 								try {
 									JxlsImage jxlsImage = JxlsUtil.me().getJxlsImage(data, imageName);
-									imageMap.put(key + "_img", jxlsImage);
+									newDataMap.put(key + "_img", jxlsImage);
 								} catch (IOException ex) {
 								}
 							} else if (value instanceof byte[]) {
 								byte[] data = (byte[]) value;
 								try {
 									JxlsImage jxlsImage = JxlsUtil.me().getJxlsImage(data, imageName);
-									imageMap.put(key + "_img", jxlsImage);
+									newDataMap.put(key + "_img", jxlsImage);
 								} catch (IOException ex) {
 								}
 							}
 						}
+						if (StringUtils.startsWith(key, "image_path")) {
+							imageName = value.toString();
+							String full_path = SystemProperties.getAppPath() + value.toString();
+							logger.debug("读取图片:" + full_path);
+							try {
+								File file = new File(full_path);
+								if (file.exists() && file.isFile()) {
+									fin = new FileInputStream(file);
+									byte[] data = FileUtils.getBytes(fin);
+									JxlsImage jxlsImage = JxlsUtil.me().getJxlsImage(data, imageName);
+									newDataMap.put(key + "_img", jxlsImage);
+								}
+							} catch (IOException ex) {
+								logger.error("读取图片错误:" + ex.getMessage());
+							} finally {
+								IOUtils.closeQuietly(fin);
+							}
+						}
+
+						if (StringUtils.endsWith(key, "_newline")) {
+							String str = value.toString();
+							str = StringTools.replace(str, Constants.LINE_SP, newline);
+							newDataMap.put(key, str);
+							newDataMap.put(key.substring(0, key.length() - 8) + "_orig", str);
+						}
+
 					}
-					if (imageMap.size() > 0) {
-						dataMap.putAll(imageMap);
-					}
+				}
+				if (newDataMap.size() > 0) {
+					dataMap.putAll(newDataMap);
 				}
 			}
 		}

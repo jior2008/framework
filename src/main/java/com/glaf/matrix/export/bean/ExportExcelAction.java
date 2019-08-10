@@ -20,27 +20,21 @@ import org.apache.poi.openxml4j.util.ZipSecureFile;
 import org.apache.poi.ss.usermodel.Workbook;
 
 import com.glaf.core.context.ContextFactory;
- 
+import com.glaf.core.domain.Database;
 import com.glaf.core.jdbc.DBConnectionFactory;
 import com.glaf.core.jdbc.QueryConnectionFactory;
 import com.glaf.core.security.LoginContext;
- 
+import com.glaf.core.service.IDatabaseService;
 import com.glaf.core.util.DateUtils;
- 
 import com.glaf.core.util.JdbcUtils;
 import com.glaf.core.util.Paging;
 import com.glaf.core.util.ParamUtils;
-import com.glaf.framework.system.domain.Database;
 import com.glaf.framework.system.factory.DatabaseFactory;
-import com.glaf.framework.system.service.IDatabaseService;
 import com.glaf.jxls.ext.JxlsBuilder;
 import com.glaf.matrix.export.domain.ExportApp;
 import com.glaf.matrix.export.domain.ExportFileHistory;
 import com.glaf.matrix.export.handler.WorkbookFactory;
-import com.glaf.matrix.export.sql.EntityHelper;
-import com.glaf.matrix.export.sql.JdbcHelper;
-import com.glaf.matrix.export.sql.MyBatisHelper;
-import com.glaf.matrix.export.sql.QueryHelper;
+import com.glaf.matrix.export.jdbc.ContextHelperFactory;
 import com.glaf.template.Template;
 
 public class ExportExcelAction extends RecursiveAction {
@@ -217,15 +211,9 @@ public class ExportExcelAction extends RecursiveAction {
 				}
 				if (conn != null) {
 					QueryConnectionFactory.getInstance().register(ts, conn);
-					JdbcHelper jdbcHelper = new JdbcHelper(conn, parameter);
-					QueryHelper queryHelper = new QueryHelper(conn, parameter);
-					MyBatisHelper myBatisHelper = new MyBatisHelper(conn, parameter);
-					EntityHelper entityHelper = new EntityHelper(database, parameter);
 
-					parameter.put("jdbc", jdbcHelper);
-					parameter.put("entity", entityHelper);
-					parameter.put("dbutils", queryHelper);
-					parameter.put("mybatis", myBatisHelper);
+					ContextHelperFactory.put(exportApp, database, conn, parameter);
+
 				}
 			}
 

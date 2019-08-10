@@ -18,8 +18,9 @@
 
 package com.glaf.framework.system.mapper;
 
-import com.glaf.framework.system.domain.Database;
-import com.glaf.framework.system.query.DatabaseQuery;
+import com.glaf.core.domain.Database;
+import com.glaf.core.query.DatabaseQuery;
+
 import org.springframework.stereotype.Component;
 
 import java.util.List;

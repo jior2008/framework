@@ -18,8 +18,9 @@
 
 package com.glaf.framework.system.mapper;
 
-import com.glaf.framework.system.domain.SysTree;
-import com.glaf.framework.system.query.SysTreeQuery;
+import com.glaf.core.domain.SysTree;
+import com.glaf.core.query.SysTreeQuery;
+
 import org.springframework.stereotype.Component;
 
 import java.util.List;

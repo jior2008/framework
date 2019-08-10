@@ -18,8 +18,9 @@
 
 package com.glaf.framework.system.mapper;
 
-import com.glaf.framework.system.domain.SystemProperty;
-import com.glaf.framework.system.query.SystemPropertyQuery;
+import com.glaf.core.domain.SystemProperty;
+import com.glaf.core.query.SystemPropertyQuery;
+
 import org.springframework.stereotype.Component;
 
 import java.util.List;

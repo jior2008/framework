@@ -16,11 +16,12 @@
  * limitations under the License.
  */
 
-package com.glaf.framework.system.service;
+package com.glaf.core.service;
 
+import com.glaf.core.domain.Dictory;
+import com.glaf.core.query.DictoryQuery;
 import com.glaf.core.util.PageResult;
-import com.glaf.framework.system.domain.Dictory;
-import com.glaf.framework.system.query.DictoryQuery;
+
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;

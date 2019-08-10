@@ -19,11 +19,12 @@
 package com.glaf.framework.system.service.impl;
 
 import com.glaf.core.config.Environment;
+import com.glaf.core.domain.SysKey;
+import com.glaf.core.query.SysKeyQuery;
+import com.glaf.core.service.SysKeyService;
 import com.glaf.core.util.UUID32;
-import com.glaf.framework.system.domain.SysKey;
 import com.glaf.framework.system.mapper.SysKeyMapper;
-import com.glaf.framework.system.query.SysKeyQuery;
-import com.glaf.framework.system.service.SysKeyService;
+
 import org.apache.commons.lang3.StringUtils;
 import org.apache.ibatis.session.RowBounds;
 import org.mybatis.spring.SqlSessionTemplate;

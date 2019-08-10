@@ -16,8 +16,10 @@
  * limitations under the License.
  */
 
-package com.glaf.matrix.export.sql;
+package com.glaf.matrix.export.jdbc;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
@@ -32,8 +34,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
@@ -42,27 +44,30 @@ import org.apache.poi.util.IOUtils;
 import org.jxls.common.JxlsException;
 import org.jxls.jdbc.CaseInsensitiveHashMap;
 
+import com.glaf.core.config.SystemProperties;
 import com.glaf.core.context.ContextFactory;
- 
+import com.glaf.core.domain.Database;
 import com.glaf.core.entity.SqlExecutor;
 import com.glaf.core.jdbc.QueryConnectionFactory;
+import com.glaf.core.service.IDatabaseService;
 import com.glaf.core.util.DBUtils;
 import com.glaf.core.util.FileUtils;
 import com.glaf.core.util.JdbcUtils;
 import com.glaf.core.util.ParamUtils;
 import com.glaf.core.util.QueryUtils;
-
-import com.glaf.framework.system.domain.Database;
+import com.glaf.core.util.StringTools;
 import com.glaf.framework.system.factory.DatabaseFactory;
-import com.glaf.framework.system.service.IDatabaseService;
 import com.glaf.jxls.ext.JxlsImage;
 import com.glaf.jxls.ext.JxlsUtil;
+import com.glaf.matrix.export.util.Constants;
 
 /**
  * A class to help execute SQL queries via JDBC
  */
 public class JdbcHelper {
 	protected final static Log logger = LogFactory.getLog(JdbcHelper.class);
+	
+	public final static String newline = System.getProperty("line.separator");
 
 	protected final static int MAX_ROW_SIZE = 100000;
 
@@ -190,7 +195,7 @@ public class JdbcHelper {
 	}
 
 	public List<Map<String, Object>> query(java.sql.Connection connection, String sql, Object... params) {
-		List<Map<String, Object>> result = null;
+		List<Map<String, Object>> result = new ArrayList<Map<String, Object>>();
 		if (connection == null) {
 			throw new JxlsException("Null jdbc connection");
 		}
@@ -215,7 +220,7 @@ public class JdbcHelper {
 			try (ResultSet rs = stmt.executeQuery()) {
 				index++;
 				if (index <= MAX_ROW_SIZE) {
-					result = handle(rs);
+					handle(result, rs);
 				}
 			}
 		} catch (Exception e) {
@@ -284,33 +289,39 @@ public class JdbcHelper {
 			try (ResultSet rs = stmt.executeQuery()) {
 				index++;
 				if (index <= MAX_IMAGE_ROW_SIZE) {
-					result = handle(rs);
+					handle(result, rs);
 				}
 			}
 		} catch (Exception e) {
 			throw new JxlsException("Failed to execute sql", e);
 		}
 
-		if (result != null && !result.isEmpty()) {
+		if (!result.isEmpty()) {
+			// int index2 = 0;
 			for (Map<String, Object> dataMap : result) {
-				String imageName = ParamUtils.getString(dataMap, "filename");
-				if (StringUtils.isNotEmpty(imageName)) {
-					Map<String, Object> imageMap = new CaseInsensitiveHashMap();
-					Set<Entry<String, Object>> entrySet = dataMap.entrySet();
-					for (Entry<String, Object> entry : entrySet) {
-						String key = entry.getKey();
-						Object value = entry.getValue();
-						if (value != null) {
+				// if (index2 % 10 == 0) {
+				// logger.debug(dataMap);
+				// }
+				// index2++;
+				FileInputStream fin = null;
+				Map<String, Object> newDataMap = new CaseInsensitiveHashMap();
+				Set<Entry<String, Object>> entrySet = dataMap.entrySet();
+				for (Entry<String, Object> entry : entrySet) {
+					String key = entry.getKey();
+					Object value = entry.getValue();
+					if (value != null) {
+						String imageName = ParamUtils.getString(dataMap, "filename");
+						if (StringUtils.isNotEmpty(imageName)) {
 							if (value instanceof java.sql.Clob) {
 								java.sql.Clob clob = (java.sql.Clob) value;
 								String str = this.clobToString(clob);
-								imageMap.put(key, str);
+								newDataMap.put(key, str);
 							} else if (value instanceof java.sql.Blob) {
 								java.sql.Blob blob = (java.sql.Blob) value;
 								byte[] data = this.blobToBytes(blob);
 								try {
 									JxlsImage jxlsImage = JxlsUtil.me().getJxlsImage(data, imageName);
-									imageMap.put(key + "_img", jxlsImage);
+									newDataMap.put(key + "_img", jxlsImage);
 								} catch (IOException ex) {
 								}
 							} else if (value instanceof java.io.InputStream) {
@@ -318,22 +329,40 @@ public class JdbcHelper {
 								byte[] data = FileUtils.getBytes(inStream);
 								try {
 									JxlsImage jxlsImage = JxlsUtil.me().getJxlsImage(data, imageName);
-									imageMap.put(key + "_img", jxlsImage);
+									newDataMap.put(key + "_img", jxlsImage);
 								} catch (IOException ex) {
 								}
 							} else if (value instanceof byte[]) {
 								byte[] data = (byte[]) value;
 								try {
 									JxlsImage jxlsImage = JxlsUtil.me().getJxlsImage(data, imageName);
-									imageMap.put(key + "_img", jxlsImage);
+									newDataMap.put(key + "_img", jxlsImage);
 								} catch (IOException ex) {
 								}
 							}
 						}
+						if (StringUtils.startsWith(key, "image_path")) {
+							imageName = value.toString();
+							String full_path = SystemProperties.getAppPath() + value.toString();
+							logger.debug("读取图片:" + full_path);
+							try {
+								File file = new File(full_path);
+								if (file.exists() && file.isFile()) {
+									fin = new FileInputStream(file);
+									byte[] data = FileUtils.getBytes(fin);
+									JxlsImage jxlsImage = JxlsUtil.me().getJxlsImage(data, imageName);
+									newDataMap.put(key + "_img", jxlsImage);
+								}
+							} catch (IOException ex) {
+								logger.error("读取图片错误:" + ex.getMessage());
+							} finally {
+								IOUtils.closeQuietly(fin);
+							}
+						}
 					}
-					if (imageMap.size() > 0) {
-						dataMap.putAll(imageMap);
-					}
+				}
+				if (newDataMap.size() > 0) {
+					dataMap.putAll(newDataMap);
 				}
 			}
 		}
@@ -424,12 +453,10 @@ public class JdbcHelper {
 		}
 	}
 
-	public List<Map<String, Object>> handle(ResultSet rs) throws SQLException {
-		List<Map<String, Object>> rows = new ArrayList<>();
+	public void handle(List<Map<String, Object>> result, ResultSet rs) throws SQLException {
 		while (rs.next()) {
-			rows.add(handleRow(rs));
+			result.add(handleRow(rs));
 		}
-		return rows;
 	}
 
 	private Map<String, Object> handleRow(ResultSet rs) throws SQLException {
@@ -450,6 +477,13 @@ public class JdbcHelper {
 			}
 
 			result.put(columnName, value);
+
+			if (value != null && StringUtils.endsWith(columnName, "_newline")) {
+				String str = value.toString();
+				str = StringTools.replace(str, Constants.LINE_SP, newline);
+				result.put(columnName, str);
+				result.put(columnName.substring(0, columnName.length() - 8) + "_orig", str);
+			}
 		}
 		return result;
 	}

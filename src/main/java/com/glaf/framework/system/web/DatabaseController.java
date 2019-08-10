@@ -20,17 +20,18 @@ package com.glaf.framework.system.web;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.glaf.core.domain.Database;
+import com.glaf.core.query.DatabaseQuery;
 import com.glaf.core.security.LoginContext;
 import com.glaf.core.security.SecurityUtils;
+import com.glaf.core.service.IDatabaseService;
 import com.glaf.core.util.*;
 import com.glaf.framework.system.config.DBConfiguration;
 import com.glaf.framework.system.config.DatabaseConnectionConfig;
 import com.glaf.framework.system.config.JdbcConnectionFactory;
-import com.glaf.framework.system.domain.Database;
 import com.glaf.framework.system.factory.DatabaseFactory;
-import com.glaf.framework.system.query.DatabaseQuery;
 import com.glaf.framework.system.security.RSAUtils;
-import com.glaf.framework.system.service.IDatabaseService;
+
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;

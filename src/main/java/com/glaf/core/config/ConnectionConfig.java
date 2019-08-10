@@ -16,31 +16,14 @@
  * limitations under the License.
  */
 
-package com.glaf.framework.system.service;
+package com.glaf.core.config;
 
-import com.glaf.framework.system.domain.SystemProperty;
-import org.springframework.transaction.annotation.Transactional;
+import com.glaf.core.base.ConnectionDefinition;
 
 import java.util.List;
-import java.util.Map;
 
-@Transactional(readOnly = true)
-public interface ISystemPropertyService {
+public interface ConnectionConfig {
 
-	List<SystemProperty> getAllSystemProperties();
-
-	Map<String, SystemProperty> getProperyMap();
-
-	List<SystemProperty> getSystemProperties(String category);
-
-	SystemProperty getSystemProperty(String category, String name);
-
-	SystemProperty getSystemPropertyById(String id);
-
-	@Transactional
-	void save(SystemProperty property);
-
-	@Transactional
-	void saveAll(List<SystemProperty> props);
+	List<ConnectionDefinition> getConnectionDefinitions();
 
 }

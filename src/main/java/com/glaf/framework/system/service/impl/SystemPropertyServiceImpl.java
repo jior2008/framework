@@ -18,12 +18,13 @@
 
 package com.glaf.framework.system.service.impl;
 
+import com.glaf.core.domain.SystemProperty;
+import com.glaf.core.query.SystemPropertyQuery;
+import com.glaf.core.service.ISystemPropertyService;
 import com.glaf.core.util.UUID32;
 import com.glaf.framework.system.config.SystemConfig;
-import com.glaf.framework.system.domain.SystemProperty;
 import com.glaf.framework.system.mapper.SystemPropertyMapper;
-import com.glaf.framework.system.query.SystemPropertyQuery;
-import com.glaf.framework.system.service.ISystemPropertyService;
+
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;

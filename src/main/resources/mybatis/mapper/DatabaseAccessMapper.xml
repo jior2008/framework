@@ -6,7 +6,7 @@
 	namespace="com.glaf.framework.system.mapper.DatabaseAccessMapper">
 
 	<resultMap id="databaseAccessResultMap"
-		type="com.glaf.framework.system.domain.DatabaseAccess">
+		type="com.glaf.core.domain.DatabaseAccess">
 		<id property="id" column="ID_" jdbcType="BIGINT" />
 		<result property="databaseId" column="DATABASEID_"
 			jdbcType="BIGINT" />
@@ -15,7 +15,7 @@
 
 
 	<insert id="insertDatabaseAccess"
-		parameterType="com.glaf.framework.system.domain.DatabaseAccess">
+		parameterType="com.glaf.core.domain.DatabaseAccess">
 
 		insert into
 		SYS_DATABASE_ACCESS (ID_, DATABASEID_,
@@ -30,7 +30,7 @@
 
 
 	<delete id="deleteAccessor"
-		parameterType="com.glaf.framework.system.domain.DatabaseAccess">
+		parameterType="com.glaf.core.domain.DatabaseAccess">
 		delete from
 		SYS_DATABASE_ACCESS
 		where DATABASEID_ =
@@ -72,7 +72,7 @@
 		from SYS_DATABASE_ACCESS
 		where ACTORID_ = #{actorId}
 	</select>
-	
+
 
 	<select id="getAllDatabaseAccesses"
 		resultMap="databaseAccessResultMap">

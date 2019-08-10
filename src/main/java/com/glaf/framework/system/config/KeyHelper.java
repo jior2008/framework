@@ -18,10 +18,11 @@
 package com.glaf.framework.system.config;
 
 
+import com.glaf.core.domain.SysKey;
 import com.glaf.core.jdbc.DBConnectionFactory;
 import com.glaf.core.util.DateUtils;
 import com.glaf.core.util.JdbcUtils;
-import com.glaf.framework.system.domain.SysKey;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

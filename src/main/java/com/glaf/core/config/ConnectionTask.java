@@ -16,11 +16,13 @@
  * limitations under the License.
  */
 
-package com.glaf.framework.system.config;
+package com.glaf.core.config;
 
-import com.glaf.framework.system.domain.Database;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.glaf.core.domain.Database;
+import com.glaf.framework.system.config.DatabaseConnectionConfig;
 
 import java.util.concurrent.RecursiveTask;
 

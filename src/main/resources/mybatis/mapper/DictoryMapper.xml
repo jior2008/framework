@@ -6,7 +6,7 @@
 	namespace="com.glaf.framework.system.mapper.DictoryMapper">
 
 	<resultMap id="dictoryResultMap"
-		type="com.glaf.framework.system.domain.Dictory">
+		type="com.glaf.core.domain.Dictory">
 		<id property="id" column="ID" jdbcType="BIGINT" />
 		<result property="nodeId" column="TYPEID" jdbcType="BIGINT" />
 		<result property="category" column="CATEGORY"
@@ -49,7 +49,7 @@
 
 
 	<insert id="insertDictory"
-		parameterType="com.glaf.framework.system.domain.Dictory">
+		parameterType="com.glaf.core.domain.Dictory">
 		insert into SYS_DICTORY
 		<trim prefix="(" suffix=")" suffixOverrides=",">
 			ID
@@ -255,7 +255,7 @@
 
 
 	<update id="updateDictory"
-		parameterType="com.glaf.framework.system.domain.Dictory">
+		parameterType="com.glaf.core.domain.Dictory">
 		update SYS_DICTORY
 		set
 		<trim prefix="" suffix="" suffixOverrides=",">
@@ -361,7 +361,7 @@
 
 
 	<delete id="deleteDictories"
-		parameterType="com.glaf.framework.system.query.DictoryQuery">
+		parameterType="com.glaf.core.query.DictoryQuery">
 		delete from SYS_DICTORY
 		where (
 		ID IN
@@ -386,7 +386,7 @@
 
 
 	<select id="getDictories"
-		parameterType="com.glaf.framework.system.query.DictoryQuery"
+		parameterType="com.glaf.core.query.DictoryQuery"
 		resultMap="dictoryResultMap">
 		select E.*
 		<include refid="selectDictoriesSql" />
@@ -402,7 +402,7 @@
 
 
 	<select id="getDictoryCount"
-		parameterType="com.glaf.framework.system.query.DictoryQuery"
+		parameterType="com.glaf.core.query.DictoryQuery"
 		resultType="int">
 		select count(*)
 		<include refid="selectDictoriesSql" />

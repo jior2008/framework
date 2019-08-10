@@ -36,16 +36,16 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.glaf.core.config.ConnectionTask;
+import com.glaf.core.domain.Database;
+import com.glaf.core.factory.DatabaseDomainFactory;
 import com.glaf.core.jdbc.ConnectionThreadHolder;
 import com.glaf.core.jdbc.DBConnectionFactory;
 import com.glaf.core.model.TableDefinition;
 import com.glaf.core.util.DBUtils;
 import com.glaf.core.util.JdbcUtils;
-
-import com.glaf.framework.system.config.ConnectionTask;
 import com.glaf.framework.system.config.DBConfiguration;
 import com.glaf.framework.system.config.DatabaseConnectionConfig;
-import com.glaf.framework.system.domain.Database;
 import com.glaf.framework.system.jdbc.connection.ConnectionProvider;
 import com.glaf.framework.system.jdbc.connection.ConnectionProviderFactory;
  

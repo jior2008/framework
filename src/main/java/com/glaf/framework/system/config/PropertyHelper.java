@@ -17,9 +17,10 @@
  */
 package com.glaf.framework.system.config;
 
+import com.glaf.core.domain.SystemProperty;
 import com.glaf.core.jdbc.DBConnectionFactory;
 import com.glaf.core.util.JdbcUtils;
-import com.glaf.framework.system.domain.SystemProperty;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

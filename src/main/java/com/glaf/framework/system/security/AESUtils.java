@@ -19,8 +19,8 @@
 package com.glaf.framework.system.security;
 
 import com.glaf.core.context.ContextFactory;
-import com.glaf.framework.system.domain.SysKey;
-import com.glaf.framework.system.service.SysKeyService;
+import com.glaf.core.domain.SysKey;
+import com.glaf.core.service.SysKeyService;
 
 import javax.crypto.Cipher;
 import javax.crypto.KeyGenerator;

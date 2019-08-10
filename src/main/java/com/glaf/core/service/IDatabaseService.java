@@ -16,15 +16,16 @@
  * limitations under the License.
  */
 
-package com.glaf.framework.system.service;
-
-import com.glaf.framework.system.domain.Database;
-import com.glaf.framework.system.domain.DatabaseAccess;
-import com.glaf.framework.system.query.DatabaseQuery;
-import org.springframework.transaction.annotation.Transactional;
+package com.glaf.core.service;
 
 import java.util.Collection;
 import java.util.List;
+
+import org.springframework.transaction.annotation.Transactional;
+
+import com.glaf.core.domain.Database;
+import com.glaf.core.domain.DatabaseAccess;
+import com.glaf.core.query.DatabaseQuery;
 
 /**
  * 多数据库相关操作

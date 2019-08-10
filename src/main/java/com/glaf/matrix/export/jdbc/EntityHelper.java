@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-package com.glaf.matrix.export.sql;
+package com.glaf.matrix.export.jdbc;
 
 import java.util.*;
 
@@ -26,11 +26,10 @@ import org.jxls.common.JxlsException;
 
 import com.glaf.core.config.Environment;
 import com.glaf.core.context.ContextFactory;
- 
+import com.glaf.core.domain.Database;
+import com.glaf.core.service.IDatabaseService;
 import com.glaf.core.service.ITablePageService;
 import com.glaf.core.util.DBUtils;
-import com.glaf.framework.system.domain.Database;
-import com.glaf.framework.system.service.IDatabaseService;
 
 public class EntityHelper {
 	protected final static Log logger = LogFactory.getLog(EntityHelper.class);

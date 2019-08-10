@@ -36,13 +36,13 @@ import com.glaf.core.config.BaseConfiguration;
 import com.glaf.core.config.Configuration;
 import com.glaf.core.config.Environment;
 import com.glaf.core.context.ContextFactory;
+import com.glaf.core.domain.Database;
 import com.glaf.core.jdbc.DBConnectionFactory;
+import com.glaf.core.service.IDatabaseService;
 import com.glaf.core.util.DBUtils;
 import com.glaf.core.util.JdbcUtils;
 import com.glaf.core.util.UUID32;
 import com.glaf.framework.system.config.DatabaseConnectionConfig;
-import com.glaf.framework.system.domain.Database;
-import com.glaf.framework.system.service.IDatabaseService;
 import com.glaf.matrix.data.query.DataFileQuery;
 import com.glaf.matrix.data.service.IDataFileService;
 

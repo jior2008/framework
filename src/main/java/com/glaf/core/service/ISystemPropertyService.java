@@ -16,67 +16,32 @@
  * limitations under the License.
  */
 
-package com.glaf.framework.system.service;
+package com.glaf.core.service;
 
-import com.glaf.framework.system.domain.SysKey;
-import com.glaf.framework.system.query.SysKeyQuery;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.glaf.core.domain.SystemProperty;
+
 import java.util.List;
+import java.util.Map;
 
 @Transactional(readOnly = true)
-public interface SysKeyService {
+public interface ISystemPropertyService {
 
-	/**
-	 * 根据主键删除记录
-	 * 
-	 * @return
-	 */
+	List<SystemProperty> getAllSystemProperties();
+
+	Map<String, SystemProperty> getProperyMap();
+
+	List<SystemProperty> getSystemProperties(String category);
+
+	SystemProperty getSystemProperty(String category, String name);
+
+	SystemProperty getSystemPropertyById(String id);
+
 	@Transactional
-	void deleteById(String id);
+	void save(SystemProperty property);
 
-	/**
-	 * 根据主键删除多条记录
-	 * 
-	 * @return
-	 */
 	@Transactional
-	void deleteByIds(List<String> ids);
-
-	/**
-	 * 根据主键获取一条记录
-	 * 
-	 * @return
-	 */
-	SysKey getSysKey(String id);
-
-	/**
-	 * 根据查询参数获取记录总数
-	 * 
-	 * @return
-	 */
-	int getSysKeyCountByQueryCriteria(SysKeyQuery query);
-
-	/**
-	 * 根据查询参数获取一页的数据
-	 * 
-	 * @return
-	 */
-	List<SysKey> getSysKeysByQueryCriteria(int start, int pageSize, SysKeyQuery query);
-
-	/**
-	 * 根据查询参数获取记录列表
-	 * 
-	 * @return
-	 */
-	List<SysKey> list(SysKeyQuery query);
-
-	/**
-	 * 保存一条记录
-	 * 
-	 * @return
-	 */
-	@Transactional
-	void save(SysKey sysKey);
+	void saveAll(List<SystemProperty> props);
 
 }

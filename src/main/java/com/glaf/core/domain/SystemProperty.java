@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-package com.glaf.framework.system.domain;
+package com.glaf.core.domain;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;

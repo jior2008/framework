@@ -2,11 +2,14 @@
 
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.glaf.framework.system.mapper.DatabaseMapper">
+<mapper
+	namespace="com.glaf.framework.system.mapper.DatabaseMapper">
 
-	<resultMap id="databaseResultMap" type="com.glaf.framework.system.domain.Database">
+	<resultMap id="databaseResultMap"
+		type="com.glaf.core.domain.Database">
 		<id property="id" column="ID_" jdbcType="BIGINT" />
-		<result property="parentId" column="PARENTID_" jdbcType="BIGINT" />
+		<result property="parentId" column="PARENTID_"
+			jdbcType="BIGINT" />
 		<result property="name" column="NAME_" jdbcType="VARCHAR" />
 		<result property="code" column="CODE_" jdbcType="VARCHAR" />
 		<result property="discriminator" column="DISCRIMINATOR_"
@@ -17,44 +20,62 @@
 		<result property="host" column="HOST_" jdbcType="VARCHAR" />
 		<result property="port" column="PORT_" jdbcType="INTEGER" />
 		<result property="user" column="USER_" jdbcType="VARCHAR" />
-		<result property="password" column="PASSWORD_" jdbcType="VARCHAR" />
+		<result property="password" column="PASSWORD_"
+			jdbcType="VARCHAR" />
 		<result property="key" column="KEY_" jdbcType="VARCHAR" />
-		<result property="intToken" column="INTTOKEN_" jdbcType="INTEGER" />
+		<result property="intToken" column="INTTOKEN_"
+			jdbcType="INTEGER" />
 		<result property="token" column="TOKEN_" jdbcType="VARCHAR" />
 		<result property="type" column="TYPE_" jdbcType="VARCHAR" />
 		<result property="runType" column="RUNTYPE_" jdbcType="VARCHAR" />
 		<result property="useType" column="USEYPE_" jdbcType="VARCHAR" />
 		<result property="level" column="LEVEL_" jdbcType="INTEGER" />
-		<result property="priority" column="PRIORITY_" jdbcType="INTEGER" />
-		<result property="operation" column="OPERATION_" jdbcType="INTEGER" />
+		<result property="priority" column="PRIORITY_"
+			jdbcType="INTEGER" />
+		<result property="operation" column="OPERATION_"
+			jdbcType="INTEGER" />
 		<result property="dbname" column="DBNAME_" jdbcType="VARCHAR" />
 		<result property="bucket" column="BUCKET_" jdbcType="VARCHAR" />
 		<result property="catalog" column="CATALOG_" jdbcType="VARCHAR" />
-		<result property="infoServer" column="INFOSERVER_" jdbcType="VARCHAR" />
+		<result property="infoServer" column="INFOSERVER_"
+			jdbcType="VARCHAR" />
 		<result property="loginAs" column="LOGINAS_" jdbcType="VARCHAR" />
-		<result property="loginUrl" column="LOGINURL_" jdbcType="VARCHAR" />
+		<result property="loginUrl" column="LOGINURL_"
+			jdbcType="VARCHAR" />
 		<result property="ticket" column="TICKET_" jdbcType="VARCHAR" />
-		<result property="programId" column="PROGRAMID_" jdbcType="VARCHAR" />
-		<result property="programName" column="PROGRAMNAME_" jdbcType="VARCHAR" />
-		<result property="userNameKey" column="USERNAMEKEY_" jdbcType="VARCHAR" />
-		<result property="serverId" column="SERVERID_" jdbcType="BIGINT" />
+		<result property="programId" column="PROGRAMID_"
+			jdbcType="VARCHAR" />
+		<result property="programName" column="PROGRAMNAME_"
+			jdbcType="VARCHAR" />
+		<result property="userNameKey" column="USERNAMEKEY_"
+			jdbcType="VARCHAR" />
+		<result property="serverId" column="SERVERID_"
+			jdbcType="BIGINT" />
 		<result property="sysId" column="SYSID_" jdbcType="VARCHAR" />
 		<result property="active" column="ACTIVE_" jdbcType="VARCHAR" />
 		<result property="verify" column="VERIFY_" jdbcType="VARCHAR" />
-		<result property="initFlag" column="INITFLAG_" jdbcType="VARCHAR" />
-		<result property="removeFlag" column="REMOVEFLAG_" jdbcType="VARCHAR" />
+		<result property="initFlag" column="INITFLAG_"
+			jdbcType="VARCHAR" />
+		<result property="removeFlag" column="REMOVEFLAG_"
+			jdbcType="VARCHAR" />
 		<result property="providerClass" column="PROVIDERCLASS_"
 			jdbcType="VARCHAR" />
-		<result property="remoteUrl" column="REMOTEURL_" jdbcType="VARCHAR" />
+		<result property="remoteUrl" column="REMOTEURL_"
+			jdbcType="VARCHAR" />
 		<result property="sort" column="SORTNO_" jdbcType="INTEGER" />
-		<result property="createBy" column="CREATEBY_" jdbcType="VARCHAR" />
-		<result property="createTime" column="CREATETIME_" jdbcType="TIMESTAMP" />
-		<result property="updateBy" column="UPDATEBY_" jdbcType="VARCHAR" />
-		<result property="updateTime" column="UPDATETIME_" jdbcType="TIMESTAMP" />
+		<result property="createBy" column="CREATEBY_"
+			jdbcType="VARCHAR" />
+		<result property="createTime" column="CREATETIME_"
+			jdbcType="TIMESTAMP" />
+		<result property="updateBy" column="UPDATEBY_"
+			jdbcType="VARCHAR" />
+		<result property="updateTime" column="UPDATETIME_"
+			jdbcType="TIMESTAMP" />
 	</resultMap>
 
 
-	<insert id="insertDatabase" parameterType="com.glaf.framework.system.domain.Database">
+	<insert id="insertDatabase"
+		parameterType="com.glaf.core.domain.Database">
 		insert into SYS_DATABASE
 		<trim prefix="(" suffix=")" suffixOverrides=",">
 			ID_
@@ -325,7 +346,8 @@
 	</insert>
 
 
-	<update id="updateDatabase" parameterType="com.glaf.framework.system.domain.Database">
+	<update id="updateDatabase"
+		parameterType="com.glaf.core.domain.Database">
 		update SYS_DATABASE
 		set
 		<trim prefix="" suffix="" suffixOverrides=",">
@@ -440,7 +462,8 @@
 
 	</update>
 
-	<update id="verifyDatabase" parameterType="com.glaf.framework.system.domain.Database">
+	<update id="verifyDatabase"
+		parameterType="com.glaf.core.domain.Database">
 		update SYS_DATABASE
 		set
 		<trim prefix="" suffix="" suffixOverrides=",">
@@ -471,7 +494,8 @@
 		SYS_DATABASE
 		where ID_ = #{id}
 	</delete>
-	<select id="getDatabaseById" parameterType="long" resultMap="databaseResultMap">
+	<select id="getDatabaseById" parameterType="long"
+		resultMap="databaseResultMap">
 		select * from SYS_DATABASE where ID_ = #{id}
 	</select>
 	<select id="getDatabasesByActorId" parameterType="string"
@@ -489,15 +513,17 @@
 		E.SORTNO_ asc
 
 	</select>
-	
-	
+
+
 	<!-- 2016-09-01 根据系统编码获取数据库信息 -->
-    <select id="getDatabaseBySysId" parameterType="string" resultMap="databaseResultMap">
+	<select id="getDatabaseBySysId" parameterType="string"
+		resultMap="databaseResultMap">
 		select * from SYS_DATABASE where SYSID_ = #{id}
 	</select>
-	
-	
-	<select id="getDatabases" parameterType="com.glaf.framework.system.query.DatabaseQuery"
+
+
+	<select id="getDatabases"
+		parameterType="com.glaf.core.query.DatabaseQuery"
 		resultMap="databaseResultMap">
 		select *
 		<include refid="selectDatabasesSql" />
@@ -512,7 +538,8 @@
 	</select>
 
 
-	<select id="getDatabaseCount" parameterType="com.glaf.framework.system.query.DatabaseQuery"
+	<select id="getDatabaseCount"
+		parameterType="com.glaf.core.query.DatabaseQuery"
 		resultType="int">
 		select count(*)
 		<include refid="selectDatabasesSql" />
@@ -528,8 +555,8 @@
 
 			<if test="databaseIds != null and databaseIds.size() &gt; 0">
 				and E.ID_ IN
-				<foreach item="x_databaseId" index="index" collection="databaseIds"
-					open="(" separator="," close=")">
+				<foreach item="x_databaseId" index="index"
+					collection="databaseIds" open="(" separator="," close=")">
 					#{x_databaseId}
 				</foreach>
 			</if>
@@ -540,8 +567,8 @@
 
 			<if test="parentIds != null and parentIds.size() &gt; 0">
 				and E.PARENTID_ IN
-				<foreach item="x_parentId" index="index" collection="parentIds"
-					open="(" separator="," close=")">
+				<foreach item="x_parentId" index="index"
+					collection="parentIds" open="(" separator="," close=")">
 					#{x_parentId}
 				</foreach>
 			</if>

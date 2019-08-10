@@ -16,14 +16,36 @@
  * limitations under the License.
  */
 
-package com.glaf.framework.system.config;
+package com.glaf.core.service;
 
-import com.glaf.core.base.ConnectionDefinition;
+import com.glaf.core.base.TableModel;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
+@Transactional(readOnly = true)
+public interface ITableDataService {
 
-public interface ConnectionConfig {
+	/**
+	 * 删除数据
+	 * 
+	 * @param model
+	 */
+	@Transactional
+	void deleteTableData(TableModel model);
 
-	List<ConnectionDefinition> getConnectionDefinitions();
+	/**
+	 * 插入一条记录
+	 * 
+	 * @param model
+	 */
+	@Transactional
+	void insertTableData(TableModel model);
+
+	/**
+	 * 更新一条记录
+	 * 
+	 * @param model
+	 */
+	@Transactional
+	void updateTableData(TableModel model);
 
 }

@@ -6,7 +6,7 @@
 	namespace="com.glaf.framework.system.mapper.SystemPropertyMapper">
 
 	<resultMap id="systemPropertyResultMap"
-		type="com.glaf.framework.system.domain.SystemProperty">
+		type="com.glaf.core.domain.SystemProperty">
 		<id property="id" column="ID_" jdbcType="VARCHAR" />
 		<result property="name" column="NAME_" jdbcType="VARCHAR" />
 		<result property="title" column="TITLE_" jdbcType="VARCHAR" />
@@ -29,7 +29,7 @@
 
 
 	<insert id="insertSystemProperty"
-		parameterType="com.glaf.framework.system.domain.SystemProperty">
+		parameterType="com.glaf.core.domain.SystemProperty">
 		insert into
 		SYS_PROPERTY ( ID_
 		,NAME_
@@ -68,7 +68,7 @@
 
 
 	<update id="updateSystemProperty"
-		parameterType="com.glaf.framework.system.domain.SystemProperty">
+		parameterType="com.glaf.core.domain.SystemProperty">
 
 		update
 		SYS_PROPERTY
@@ -93,7 +93,7 @@
 
 
 	<delete id="deleteSystemProperties"
-		parameterType="com.glaf.framework.system.query.SystemPropertyQuery">
+		parameterType="com.glaf.core.query.SystemPropertyQuery">
 		delete from SYS_PROPERTY
 		where (
 		ID_ IN
@@ -112,7 +112,7 @@
 
 
 	<select id="getSystemProperties"
-		parameterType="com.glaf.framework.system.query.SystemPropertyQuery"
+		parameterType="com.glaf.core.query.SystemPropertyQuery"
 		resultMap="systemPropertyResultMap">
 		select E.*
 		<include refid="selectSystemPropertysSql" />
@@ -123,7 +123,7 @@
 
 
 	<select id="getSystemPropertyCount"
-		parameterType="com.glaf.framework.system.query.SystemPropertyQuery"
+		parameterType="com.glaf.core.query.SystemPropertyQuery"
 		resultType="int">
 		select count(*)
 		<include refid="selectSystemPropertysSql" />

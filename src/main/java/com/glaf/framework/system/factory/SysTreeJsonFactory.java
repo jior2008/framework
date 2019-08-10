@@ -22,8 +22,8 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.glaf.core.domain.SysTree;
 import com.glaf.core.util.DateUtils;
-import com.glaf.framework.system.domain.SysTree;
 
 public class SysTreeJsonFactory {
 

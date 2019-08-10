@@ -16,36 +16,68 @@
  * limitations under the License.
  */
 
-package com.glaf.framework.service;
+package com.glaf.core.service;
 
-import com.glaf.core.base.TableModel;
+import com.glaf.core.domain.SysKey;
+import com.glaf.core.query.SysKeyQuery;
+
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Transactional(readOnly = true)
-public interface ITableDataService {
+public interface SysKeyService {
 
 	/**
-	 * 删除数据
+	 * 根据主键删除记录
 	 * 
-	 * @param model
+	 * @return
 	 */
 	@Transactional
-	void deleteTableData(TableModel model);
+	void deleteById(String id);
 
 	/**
-	 * 插入一条记录
+	 * 根据主键删除多条记录
 	 * 
-	 * @param model
+	 * @return
 	 */
 	@Transactional
-	void insertTableData(TableModel model);
+	void deleteByIds(List<String> ids);
 
 	/**
-	 * 更新一条记录
+	 * 根据主键获取一条记录
 	 * 
-	 * @param model
+	 * @return
+	 */
+	SysKey getSysKey(String id);
+
+	/**
+	 * 根据查询参数获取记录总数
+	 * 
+	 * @return
+	 */
+	int getSysKeyCountByQueryCriteria(SysKeyQuery query);
+
+	/**
+	 * 根据查询参数获取一页的数据
+	 * 
+	 * @return
+	 */
+	List<SysKey> getSysKeysByQueryCriteria(int start, int pageSize, SysKeyQuery query);
+
+	/**
+	 * 根据查询参数获取记录列表
+	 * 
+	 * @return
+	 */
+	List<SysKey> list(SysKeyQuery query);
+
+	/**
+	 * 保存一条记录
+	 * 
+	 * @return
 	 */
 	@Transactional
-	void updateTableData(TableModel model);
+	void save(SysKey sysKey);
 
 }

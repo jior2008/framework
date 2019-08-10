@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-package com.glaf.framework.system.factory;
+package com.glaf.core.factory;
 
 import com.glaf.core.model.ColumnDefinition;
 import com.glaf.core.model.TableDefinition;

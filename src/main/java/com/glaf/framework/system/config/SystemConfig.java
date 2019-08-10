@@ -22,11 +22,12 @@ import com.alibaba.fastjson.JSONObject;
 import com.glaf.core.config.Environment;
 import com.glaf.core.config.SystemProperties;
 import com.glaf.core.context.ContextFactory;
+import com.glaf.core.domain.SystemProperty;
+import com.glaf.core.service.ISystemPropertyService;
 import com.glaf.core.util.DateUtils;
 import com.glaf.core.util.StringTools;
-import com.glaf.framework.system.domain.SystemProperty;
 import com.glaf.framework.system.factory.SystemPropertyJsonFactory;
-import com.glaf.framework.system.service.ISystemPropertyService;
+
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;

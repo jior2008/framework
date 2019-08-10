@@ -31,9 +31,9 @@ import org.apache.commons.lang.StringUtils;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.glaf.core.config.Environment;
+import com.glaf.core.domain.SysKey;
 import com.glaf.core.util.UUID32;
 import com.glaf.framework.system.config.KeyHelper;
-import com.glaf.framework.system.domain.SysKey;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtBuilder;

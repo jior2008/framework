@@ -18,8 +18,9 @@
 
 package com.glaf.framework.system.mapper;
 
-import com.glaf.framework.system.domain.Dictory;
-import com.glaf.framework.system.query.DictoryQuery;
+import com.glaf.core.domain.Dictory;
+import com.glaf.core.query.DictoryQuery;
+
 import org.springframework.stereotype.Component;
 
 import java.util.List;

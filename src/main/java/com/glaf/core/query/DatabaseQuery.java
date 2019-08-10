@@ -16,9 +16,7 @@
  * limitations under the License.
  */
 
-package com.glaf.framework.system.query;
-
-import com.glaf.core.query.DataQuery;
+package com.glaf.core.query;
 
 import java.util.Collection;
 import java.util.Date;
